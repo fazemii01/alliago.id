@@ -1,85 +1,106 @@
-<section id="detail" class="py-20 px-4 section-soft">
+@props(['product'])
+
+@php
+$tags = array_filter([
+    $product->country->name ?? null,
+    $product->type ?? null,
+    $product->promo_label ?? null,
+]);
+@endphp
+
+<section id="detail" class="scroll-mt-32 px-4 py-14 section-soft md:scroll-mt-36 md:py-20">
   <div class="container mx-auto">
-    <div class="grid lg:grid-cols-[1fr_370px] gap-8 items-start">
-      <div class="card rounded-[28px] p-5 md:p-8">
-        <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-5 mb-8">
+    <div class="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-8 xl:grid-cols-[minmax(0,1fr)_370px]">
+      <div class="card overflow-hidden rounded-[24px] p-4 md:rounded-[28px] md:p-8">
+        <div class="mb-6 flex flex-col gap-4 md:mb-8 md:flex-row md:items-start md:justify-between md:gap-5">
           <div>
-            <div class="flex flex-wrap gap-2 mb-4">
-              <span class="tag-blue rounded-full px-3 py-1 text-xs font-black">Japan</span>
-              <span class="tag-pink rounded-full px-3 py-1 text-xs font-black">Visa Waiver</span>
-              <span class="tag-blue rounded-full px-3 py-1 text-xs font-black">100% Online</span>
+            <div class="mb-3 flex flex-wrap gap-2 md:mb-4">
+              @foreach($tags as $tag)
+              <span class="tag-blue rounded-full px-3 py-1 text-xs font-bold">{{ $tag }}</span>
+              @endforeach
             </div>
-            <h2 class="text-4xl md:text-5xl font-black tracking-[-0.05em] mb-3">Japan Visa Waiver</h2>
-            <p class="text-slate-500 text-lg font-medium max-w-3xl">Untuk pemegang e-paspor Indonesia yang ingin berkunjung ke Jepang hingga 15 hari.</p>
+            <h2 class="mb-3 text-3xl font-bold tracking-[-0.05em] sm:text-[2.15rem] md:text-5xl">{{ $product->name }}</h2>
+            <p class="max-w-3xl text-base font-medium text-slate-600 sm:text-[17px] md:text-lg">{{ $product->short_description }}</p>
           </div>
-          <div class="bg-soft-blue rounded-2xl p-4 min-w-[160px]">
-            <p class="text-[10px] font-black uppercase tracking-[0.18em] text-slate-400">Mulai dari</p>
-            <p class="text-2xl font-black text-brand">IDR 239k</p>
+          <div class="min-w-0 rounded-2xl border border-slate-100 bg-slate-50 p-4 sm:min-w-[160px] md:self-start">
+            <p class="text-[10px] font-bold tracking-wide font-medium text-slate-500">Mulai dari</p>
+            <p class="text-2xl font-bold text-brand">IDR {{ number_format($product->discount_price ?? $product->base_price, 0, ',', '.') }}</p>
           </div>
         </div>
 
-        <div class="flex gap-3 overflow-x-auto pb-4 mb-8 border-b border-slate-100">
-          <button class="tab active rounded-full px-5 py-3 text-sm font-black">Deskripsi</button>
-          <button class="tab rounded-full px-5 py-3 text-sm font-black">Syarat</button>
-          <button class="tab rounded-full px-5 py-3 text-sm font-black">Dokumen</button>
-          <button class="tab rounded-full px-5 py-3 text-sm font-black">Proses</button>
-          <button class="tab rounded-full px-5 py-3 text-sm font-black">Promo</button>
-          <button class="tab rounded-full px-5 py-3 text-sm font-black">Add-ons</button>
-          <button class="tab rounded-full px-5 py-3 text-sm font-black">FAQs</button>
-          <button class="tab rounded-full px-5 py-3 text-sm font-black">Testimoni</button>
+        <div class="mb-6 grid grid-cols-2 gap-3 md:mb-8 md:grid-cols-4">
+          @if($product->processing_time)
+          <div class="rounded-2xl border border-slate-100 bg-slate-50 p-3.5 md:p-4"><p class="text-[10px] font-bold tracking-wide text-slate-500 font-semibold">Proses</p><p class="text-lg font-bold text-slate-800 md:text-xl">{{ $product->processing_time }}</p></div>
+          @endif
+          @if($product->stay_duration)
+          <div class="rounded-2xl border border-slate-100 bg-slate-50 p-3.5 md:p-4"><p class="text-[10px] font-bold tracking-wide text-slate-500 font-semibold">Stay</p><p class="text-lg font-bold text-slate-800 md:text-xl">{{ $product->stay_duration }}</p></div>
+          @endif
+          @if($product->validity)
+          <div class="rounded-2xl border border-slate-100 bg-slate-50 p-3.5 md:p-4"><p class="text-[10px] font-bold tracking-wide text-slate-500 font-semibold">Berlaku</p><p class="text-lg font-bold text-slate-800 md:text-xl">{{ $product->validity }}</p></div>
+          @endif
+          <div class="rounded-2xl border border-slate-100 bg-slate-50 p-3.5 md:p-4"><p class="text-[10px] font-bold tracking-wide text-slate-500 font-semibold">Tipe</p><p class="text-lg font-bold text-slate-800 md:text-xl">{{ $product->type }}</p></div>
         </div>
 
-        <div class="grid md:grid-cols-4 gap-3 mb-8">
-          <div class="bg-soft-blue rounded-2xl p-4"><p class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Proses</p><p class="text-xl font-black">2–5 hari</p></div>
-          <div class="bg-soft-pink rounded-2xl p-4"><p class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Durasi isi</p><p class="text-xl font-black">15 menit</p></div>
-          <div class="bg-soft-blue rounded-2xl p-4"><p class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Berlaku</p><p class="text-xl font-black">3 tahun</p></div>
-          <div class="bg-soft-pink rounded-2xl p-4"><p class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Stay</p><p class="text-xl font-black">15 hari</p></div>
-        </div>
-
-        <div class="grid md:grid-cols-2 gap-6">
+        <div class="grid gap-6 md:grid-cols-2">
           <div>
-            <h3 class="text-2xl font-black mb-4">Deskripsi</h3>
-            <p class="text-slate-600 leading-relaxed font-medium mb-5">Visa waiver Jepang membantu traveler Indonesia dengan e-paspor mengajukan izin kunjungan singkat secara lebih sederhana. Cocok untuk wisata, kunjungan keluarga, atau perjalanan singkat.</p>
-            <ul class="space-y-3 text-slate-700 font-semibold">
-              <li>✓ Untuk pemegang e-paspor Indonesia</li>
-              <li>✓ Tidak perlu appointment fisik</li>
-              <li>✓ Dokumen dikirim dan dicek online</li>
+            <h3 class="mb-4 text-xl font-bold md:text-2xl">Deskripsi</h3>
+            <p class="mb-5 text-sm leading-relaxed font-medium text-slate-700 sm:text-base">{{ $product->description }}</p>
+            @if($product->requirements->count())
+            <ul class="space-y-3 text-slate-800 font-semibold">
+              @foreach($product->requirements as $req)
+              <li>✓ {{ $req->title }}</li>
+              @endforeach
             </ul>
+            @endif
           </div>
+          @if($product->documents->count())
           <div>
-            <h3 class="text-2xl font-black mb-4">Dokumen utama</h3>
+            <h3 class="mb-4 text-xl font-bold md:text-2xl">Dokumen utama</h3>
             <div class="space-y-3">
-              <div class="flex items-center gap-3 bg-slate-50 rounded-2xl p-4"><span class="w-8 h-8 rounded-xl bg-brand text-white flex items-center justify-center font-black">1</span><p class="font-bold">Paspor elektronik</p></div>
-              <div class="flex items-center gap-3 bg-slate-50 rounded-2xl p-4"><span class="w-8 h-8 rounded-xl bg-pink-brand text-white flex items-center justify-center font-black">2</span><p class="font-bold">KTP dan Kartu Keluarga</p></div>
-              <div class="flex items-center gap-3 bg-slate-50 rounded-2xl p-4"><span class="w-8 h-8 rounded-xl bg-brand text-white flex items-center justify-center font-black">3</span><p class="font-bold">Halaman pengesahan paspor</p></div>
+              @foreach($product->documents as $doc)
+              <div class="flex items-center gap-3 rounded-2xl border border-slate-100 bg-white p-3.5 md:p-4">
+                <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-soft-blue font-bold text-brand">{{ $loop->iteration }}</span>
+                <p class="text-sm font-bold text-slate-800 sm:text-base">{{ $doc->name }}</p>
+              </div>
+              @endforeach
             </div>
           </div>
+          @endif
         </div>
       </div>
 
-      <aside class="summary-card rounded-[28px] p-6 sticky top-28">
-        <div class="flex items-start justify-between mb-5">
+      <aside class="summary-card rounded-[24px] p-4 md:rounded-[28px] md:p-6 lg:sticky lg:top-28">
+        <div class="mb-5 flex items-start justify-between gap-3">
           <div>
-            <p class="text-xs font-black uppercase tracking-[0.18em] text-slate-400 mb-1">Paket visa</p>
-            <h3 class="text-2xl font-black">Reguler</h3>
+            <p class="mb-1 text-xs font-bold tracking-wide font-medium text-slate-500">Paket visa</p>
+            <h3 class="text-xl font-bold md:text-2xl">{{ $product->type }}</h3>
           </div>
-          <span class="tag-pink rounded-full px-3 py-1 text-xs font-black">14% OFF</span>
+          @if($product->discount_price && $product->discount_price < $product->base_price)
+          @php $pct = round((1 - $product->discount_price / $product->base_price) * 100); @endphp
+          <span class="tag-pink rounded-full px-3 py-1 text-xs font-bold">{{ $pct }}% OFF</span>
+          @endif
         </div>
 
-        <div class="grid grid-cols-2 gap-3 mb-5">
-          <div class="bg-soft-blue rounded-2xl p-4"><p class="text-xs font-bold text-slate-400">Proses</p><p class="font-black">2–5 hari</p></div>
-          <div class="bg-soft-pink rounded-2xl p-4"><p class="text-xs font-bold text-slate-400">Tipe</p><p class="font-black">Online</p></div>
+        <div class="mb-5 grid grid-cols-2 gap-3">
+          @if($product->processing_time)
+          <div class="rounded-2xl border border-slate-100 bg-slate-50 p-3.5 md:p-4"><p class="text-xs font-bold text-slate-500">Proses</p><p class="font-bold text-slate-800">{{ $product->processing_time }}</p></div>
+          @endif
+          <div class="rounded-2xl border border-slate-100 bg-slate-50 p-3.5 md:p-4"><p class="text-xs font-bold text-slate-500">Tipe</p><p class="font-bold text-slate-800">{{ $product->type }}</p></div>
         </div>
 
-        <div class="border-t border-slate-100 pt-5 mb-5">
-          <div class="flex justify-between text-sm font-bold text-slate-400 mb-2"><span>Harga normal</span><span class="line-through">IDR 279.000</span></div>
-          <div class="flex justify-between items-end"><span class="font-black">Total</span><span class="text-3xl font-black text-brand">IDR 239.000</span></div>
+        <div class="mb-5 border-t border-slate-100 pt-5">
+          @if($product->discount_price && $product->discount_price < $product->base_price)
+          <div class="mb-2 flex justify-between gap-3 text-sm font-bold text-slate-500"><span>Harga normal</span><span class="line-through">IDR {{ number_format($product->base_price, 0, ',', '.') }}</span></div>
+          <div class="flex items-end justify-between gap-3"><span class="font-bold">Total</span><span class="text-2xl font-bold text-brand sm:text-3xl">IDR {{ number_format($product->discount_price, 0, ',', '.') }}</span></div>
+          @else
+          <div class="flex items-end justify-between gap-3"><span class="font-bold">Total</span><span class="text-2xl font-bold text-brand sm:text-3xl">IDR {{ number_format($product->base_price, 0, ',', '.') }}</span></div>
+          @endif
         </div>
 
-        <button class="btn-primary w-full rounded-2xl py-4 font-black uppercase tracking-wider mb-3">Ajukan Sekarang</button>
-        <button class="btn-light w-full rounded-2xl py-4 font-black uppercase tracking-wider">Chat Konsultan</button>
+        <a href="{{ route('visa.show', $product->slug) }}" class="btn-primary mb-3 w-full rounded-2xl py-3.5 font-bold tracking-wide font-semibold md:py-4 block text-center">Ajukan Sekarang</a>
+        <a href="https://wa.me/6281234567890" class="btn-light w-full rounded-2xl py-3.5 font-bold tracking-wide font-semibold md:py-4 block text-center">Chat Konsultan</a>
 
-        <ul class="mt-5 space-y-2 text-sm text-slate-600 font-semibold">
+        <ul class="mt-5 space-y-2 text-sm font-semibold text-slate-700">
           <li>✓ Harga terlihat sebelum bayar</li>
           <li>✓ Reminder dokumen kurang</li>
           <li>✓ Update status via WhatsApp</li>

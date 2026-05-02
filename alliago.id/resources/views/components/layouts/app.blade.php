@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{ $title ?? 'GlobalPass | Visa Assistance' }}</title>
+    <title>{{ $title ?? 'Alliago.id | Visa Assistance' }}</title>
+    <link rel="icon" type="image/jpeg" href="/favicon.jpeg">
+    <link rel="apple-touch-icon" href="/images/alliago-logo.jpeg">
     
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.ts'])
@@ -15,5 +17,7 @@
 </head>
 <body>
     {{ $slot }}
+    
+    @stack('scripts')
 </body>
 </html>
