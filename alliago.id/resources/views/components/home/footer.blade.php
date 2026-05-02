@@ -9,7 +9,7 @@
     </div>
     <div><h4 class="font-bold mb-5">Layanan</h4><ul class="space-y-3 text-sm text-slate-400 font-medium"><li><a href="#" class="hover:text-white">Visa Jepang</a></li><li><a href="#" class="hover:text-white">Visa Korea</a></li><li><a href="#" class="hover:text-white">Visa Australia</a></li><li><a href="#" class="hover:text-white">Visa Schengen</a></li></ul></div>
     <div><h4 class="font-bold mb-5">Perusahaan</h4><ul class="space-y-3 text-sm text-slate-400 font-medium"><li><a href="#" class="hover:text-white">Tentang Kami</a></li><li><a href="#" class="hover:text-white">Cara Kerja</a></li><li><a href="#" class="hover:text-white">Kebijakan Refund</a></li><li><a href="#" class="hover:text-white">Privacy Policy</a></li></ul></div>
-    <div><h4 class="font-bold mb-5">Kontak</h4><p class="text-sm text-slate-400 font-medium leading-relaxed mb-4">WhatsApp: +62 812-3456-7890<br>Email: support@Alliago.id.id</p><a href="https://wa.me/6281234567890" class="inline-flex bg-white text-slate-950 rounded-2xl px-5 py-3 text-xs font-bold tracking-wide font-semibold">Hubungi Kami</a></div>
+    <div><h4 class="font-bold mb-5">Kontak</h4><p class="text-sm text-slate-400 font-medium leading-relaxed mb-4">WhatsApp: +62 812-3456-7890<br>Email: support@Alliago.id.id</p><a href="https://wa.me/6281334455616" class="inline-flex bg-white text-slate-950 rounded-2xl px-5 py-3 text-xs font-bold tracking-wide font-semibold">Hubungi Kami</a></div>
   </div>
   <div class="container mx-auto mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between gap-4 text-xs text-slate-500 font-bold">
     <p>© 2026 Alliago.id. All rights reserved.</p>

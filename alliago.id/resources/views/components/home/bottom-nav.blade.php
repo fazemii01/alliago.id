@@ -16,7 +16,7 @@
             <span class="text-[9px] font-medium leading-none whitespace-nowrap">Detail</span>
         </a>
 
-        <a href="https://wa.me/6281234567890" class="flex h-12 min-w-0 shrink items-center justify-center rounded-full bg-[#ff7a1a] px-3 text-[10px] font-black uppercase tracking-[0.12em] text-white shadow-[0_12px_24px_rgba(255,122,26,0.24)] whitespace-nowrap sm:px-4">
+        <a href="https://wa.me/6281334455616" class="flex h-12 min-w-0 shrink items-center justify-center rounded-full bg-[#ff7a1a] px-3 text-[10px] font-black uppercase tracking-[0.12em] text-white shadow-[0_12px_24px_rgba(255,122,26,0.24)] whitespace-nowrap sm:px-4">
             <span class="truncate">Konsultasi</span>
         </a>
 
