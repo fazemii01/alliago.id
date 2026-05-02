@@ -1,111 +1,203 @@
-<main class="hero-main pt-36 md:pt-40 pb-16 px-4">
-  <div class="hero-decor" aria-hidden="true">
-    <div class="hero-shape-blue"></div>
-    <div class="hero-shape-pink"></div>
+@props(['countries' => collect(), 'featuredProducts' => collect()])
 
-    <svg class="hero-globe" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="300" cy="300" r="210" class="globe-blue" />
-      <ellipse cx="300" cy="300" rx="210" ry="70" class="globe-blue" />
-      <ellipse cx="300" cy="300" rx="210" ry="120" class="globe-blue" />
-      <ellipse cx="300" cy="300" rx="210" ry="165" class="globe-pink" />
-      <ellipse cx="300" cy="300" rx="70" ry="210" class="globe-blue" />
-      <ellipse cx="300" cy="300" rx="120" ry="210" class="globe-blue" />
-      <ellipse cx="300" cy="300" rx="165" ry="210" class="globe-pink" />
-      <line x1="90" y1="300" x2="510" y2="300" class="globe-blue" />
-      <line x1="300" y1="90" x2="300" y2="510" class="globe-blue" />
-      <circle cx="220" cy="210" r="6" class="globe-dots" />
-      <circle cx="365" cy="245" r="6" class="globe-dots" />
-      <circle cx="270" cy="360" r="6" class="globe-dots" />
-      <circle cx="410" cy="330" r="6" class="globe-dots" />
+<section class="hero-section relative overflow-hidden">
+  <!-- Hero Background with Texture -->
+  <div class="hero-bg-wrapper" aria-hidden="true">
+    <!-- Warm gradient base -->
+    <div class="hero-gradient"></div>
+    
+    <!-- Dotted world map SVG overlay — bold like spun.global -->
+    <svg class="hero-world-map" viewBox="0 0 1200 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Main globe circle (outer) -->
+      <circle cx="600" cy="220" r="280" stroke="currentColor" stroke-width="1.5" opacity="0.35" fill="none"/>
+      <circle cx="600" cy="220" r="220" stroke="currentColor" stroke-width="1.2" opacity="0.25" fill="none"/>
+      <circle cx="600" cy="220" r="150" stroke="currentColor" stroke-width="1" opacity="0.2" fill="none"/>
+      
+      <!-- Latitude ellipses -->
+      <ellipse cx="600" cy="220" rx="280" ry="70" stroke="currentColor" stroke-width="1.2" opacity="0.3" fill="none"/>
+      <ellipse cx="600" cy="220" rx="280" ry="140" stroke="currentColor" stroke-width="1" opacity="0.22" fill="none"/>
+      <ellipse cx="600" cy="220" rx="280" ry="210" stroke="currentColor" stroke-width="0.8" opacity="0.15" fill="none"/>
+      
+      <!-- Longitude ellipses -->
+      <ellipse cx="600" cy="220" rx="70" ry="280" stroke="currentColor" stroke-width="1.2" opacity="0.3" fill="none"/>
+      <ellipse cx="600" cy="220" rx="140" ry="280" stroke="currentColor" stroke-width="1" opacity="0.22" fill="none"/>
+      <ellipse cx="600" cy="220" rx="210" ry="280" stroke="currentColor" stroke-width="0.8" opacity="0.15" fill="none"/>
+      
+      <!-- Cross lines through center -->
+      <line x1="320" y1="220" x2="880" y2="220" stroke="currentColor" stroke-width="1" opacity="0.2"/>
+      <line x1="600" y1="-60" x2="600" y2="500" stroke="currentColor" stroke-width="1" opacity="0.2"/>
+
+      <!-- Connecting arcs (flight paths) -->
+      <path d="M340 200 Q470 60 600 100" stroke="currentColor" stroke-width="1.5" opacity="0.3" fill="none" stroke-dasharray="6 4"/>
+      <path d="M600 100 Q730 40 860 160" stroke="currentColor" stroke-width="1.5" opacity="0.3" fill="none" stroke-dasharray="6 4"/>
+      <path d="M380 340 Q500 220 680 300" stroke="currentColor" stroke-width="1.2" opacity="0.2" fill="none" stroke-dasharray="5 4"/>
+      <path d="M450 120 Q550 180 750 130" stroke="currentColor" stroke-width="1" opacity="0.18" fill="none" stroke-dasharray="4 4"/>
+      
+      <!-- City / node dots — bigger and bolder -->
+      <circle cx="380" cy="170" r="5" fill="currentColor" opacity="0.4"/>
+      <circle cx="430" cy="210" r="4" fill="currentColor" opacity="0.35"/>
+      <circle cx="520" cy="130" r="6" fill="currentColor" opacity="0.45"/>
+      <circle cx="600" cy="100" r="5" fill="currentColor" opacity="0.4"/>
+      <circle cx="680" cy="150" r="5.5" fill="currentColor" opacity="0.42"/>
+      <circle cx="750" cy="200" r="4" fill="currentColor" opacity="0.35"/>
+      <circle cx="820" cy="170" r="5.5" fill="currentColor" opacity="0.4"/>
+      <circle cx="860" cy="240" r="4" fill="currentColor" opacity="0.3"/>
+      <circle cx="480" cy="280" r="4.5" fill="currentColor" opacity="0.32"/>
+      <circle cx="560" cy="300" r="4" fill="currentColor" opacity="0.28"/>
+      <circle cx="710" cy="270" r="5" fill="currentColor" opacity="0.35"/>
+      <circle cx="350" cy="300" r="4" fill="currentColor" opacity="0.25"/>
+      <circle cx="850" cy="130" r="4" fill="currentColor" opacity="0.3"/>
+      <circle cx="440" cy="350" r="3.5" fill="currentColor" opacity="0.22"/>
+      <circle cx="760" cy="320" r="4" fill="currentColor" opacity="0.25"/>
+
+      <!-- Static rings on key city nodes -->
+      <circle cx="520" cy="130" r="14" stroke="currentColor" stroke-width="1" opacity="0.18" fill="none"/>
+      <circle cx="680" cy="150" r="12" stroke="currentColor" stroke-width="1" opacity="0.15" fill="none"/>
+      <circle cx="820" cy="170" r="14" stroke="currentColor" stroke-width="1" opacity="0.18" fill="none"/>
+      <circle cx="600" cy="100" r="11" stroke="currentColor" stroke-width="0.8" opacity="0.14" fill="none"/>
+      
+      <!-- Scattered smaller dots for texture -->
+      @for ($d = 0; $d < 50; $d++)
+      <circle cx="{{ 180 + ($d * 37 % 840) }}" cy="{{ 40 + ($d * 23 % 440) }}" r="{{ 1.5 + ($d % 3) * 0.8 }}" fill="currentColor" opacity="{{ 0.08 + ($d % 5) * 0.04 }}"/>
+      @endfor
     </svg>
-
-    <div class="hero-chip blue chip-1">Japan Visa</div>
-    <div class="hero-chip pink chip-2">Korea Visa</div>
-    <div class="hero-chip blue chip-3">Schengen</div>
-    <div class="hero-chip pink chip-4">Australia</div>
   </div>
 
-  <section class="container mx-auto hero-content">
-    <div class="grid lg:grid-cols-[1fr_420px] gap-10 items-center">
-      <div>
-        <div class="inline-flex items-center gap-2 bg-soft-blue border border-[#dbe8ff] rounded-full px-4 py-2 mb-7">
-          <span class="w-2 h-2 rounded-full bg-pink-brand"></span>
-          <span class="text-xs font-black uppercase tracking-[0.18em] text-brand">Visa online & assisted application</span>
-        </div>
+  <!-- Hero Content -->
+  <div class="relative z-10 pt-32 pb-20 px-6">
+    <div class="max-w-5xl mx-auto text-center">
+      
+      <!-- Live badge -->
+      <!-- <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-slate-200 shadow-sm mb-6">
+        <span class="relative flex h-2 w-2">
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-pink-brand"></span>
+        </span>
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Live processing updates</span>
+      </div> -->
+      
+      <!-- Heading -->
+      <h1 class="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight mb-8 leading-[1.1] text-slate-950">
+        Platform Visa Andalan <br />
+        <span class="text-brand">Butuh visa ke mana?</span>
+      </h1>
+      
+      <!-- Subtitle -->
+      <p class="text-base sm:text-lg text-slate-500 max-w-2xl mx-auto mb-12 font-medium">
+        Platform visa paling transparan. Harga real-time, timeline jujur, dan dukungan manusia ahli.
+      </p>
 
-        <h1 class="hero-title text-5xl md:text-7xl font-black tracking-[-0.065em] leading-[0.95] text-slate-950 mb-7">
-          Urus visa tanpa ribet, dari rumah.
-        </h1>
-        <p class="text-lg md:text-xl text-slate-600 leading-relaxed max-w-2xl mb-9 font-medium">
-          Cari visa berdasarkan negara tujuan, lihat syarat dokumen, estimasi proses, harga, dan add-ons sebelum mulai mengajukan.
-        </p>
-
-        <div class="flex flex-wrap gap-3 mb-9">
-          <span class="tag-blue rounded-full px-4 py-2 text-sm font-black">Harga transparan</span>
-          <span class="tag-pink rounded-full px-4 py-2 text-sm font-black">Review dokumen</span>
-          <span class="tag-blue rounded-full px-4 py-2 text-sm font-black">Update via WhatsApp</span>
-        </div>
-
-        <div class="grid grid-cols-3 gap-4 max-w-xl">
-          <div class="card rounded-2xl p-4">
-            <p class="text-3xl font-black text-brand">190+</p>
-            <p class="text-xs font-bold text-slate-500">Negara tujuan</p>
-          </div>
-          <div class="card rounded-2xl p-4">
-            <p class="text-3xl font-black text-pink">4.9</p>
-            <p class="text-xs font-bold text-slate-500">Rating klien</p>
-          </div>
-          <div class="card rounded-2xl p-4">
-            <p class="text-3xl font-black text-brand">24/7</p>
-            <p class="text-xs font-bold text-slate-500">Support</p>
-          </div>
-        </div>
-      </div>
-
-      <aside id="search" class="search-shell rounded-[30px] p-5 md:p-6">
-        <div class="flex items-start justify-between gap-4 mb-6">
-          <div>
-            <p class="text-xs font-black uppercase tracking-[0.22em] text-brand mb-2">Cari visa</p>
-            <h2 class="text-2xl font-black tracking-tight">Mau pergi ke mana?</h2>
-          </div>
-          <span class="tag-pink rounded-full px-3 py-1 text-xs font-black">Gratis cek</span>
-        </div>
-
-        <form class="grid gap-3">
-          <label class="field rounded-2xl p-4 block">
-            <span class="block text-[10px] font-black uppercase tracking-[0.18em] text-slate-400 mb-1">Paspor saya</span>
-            <select class="font-extrabold text-slate-900">
-              <option>Indonesia</option>
-              <option>Malaysia</option>
-              <option>Singapore</option>
+      <!-- Functional Search UI - Pill Search Bar -->
+      <div class="max-w-3xl mx-auto bg-white p-2 rounded-2xl md:rounded-full shadow-2xl shadow-blue-900/10 border border-slate-100 flex flex-col md:flex-row items-center gap-2">
+        
+        <!-- From field -->
+        <div class="flex-1 w-full flex items-center px-5 gap-3">
+          <svg class="w-5 h-5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+          <label class="w-full block">
+            <span class="block text-[10px] font-bold tracking-wide text-slate-400 text-left">Dari</span>
+            <select class="w-full py-1.5 text-slate-700 outline-none font-semibold bg-transparent text-sm">
+              @foreach($countries->whereIn('code', ['ID', 'MY', 'SG']) as $c)
+              <option>{{ $c->name }}</option>
+              @endforeach
             </select>
           </label>
-
-          <label class="field rounded-2xl p-4 block">
-            <span class="block text-[10px] font-black uppercase tracking-[0.18em] text-slate-400 mb-1">Negara tujuan</span>
-            <input list="countries" placeholder="Contoh: Jepang" class="font-extrabold text-slate-900 placeholder:text-slate-300" />
-            <datalist id="countries">
-              <option value="Jepang"></option>
-              <option value="Korea Selatan"></option>
-              <option value="Australia"></option>
-              <option value="Schengen"></option>
-              <option value="Amerika Serikat"></option>
+        </div>
+        
+        <!-- Divider -->
+        <div class="hidden md:block w-[1px] h-8 bg-slate-200"></div>
+        
+        <!-- To field -->
+        <div class="flex-1 w-full flex items-center px-5 gap-3">
+          <svg class="w-5 h-5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <label class="w-full block">
+            <span class="block text-[10px] font-bold tracking-wide text-slate-400 text-left">Ke</span>
+            <input list="hero-countries" placeholder="Pilih negara tujuan" class="w-full py-1.5 text-slate-700 outline-none font-semibold placeholder:text-slate-300 bg-transparent text-sm" />
+            <datalist id="hero-countries">
+              @foreach($countries as $c)
+              <option value="{{ $c->name }}"></option>
+              @endforeach
             </datalist>
           </label>
-
-          <label class="field rounded-2xl p-4 block">
-            <span class="block text-[10px] font-black uppercase tracking-[0.18em] text-slate-400 mb-1">Tujuan perjalanan</span>
-            <select class="font-extrabold text-slate-900">
+        </div>
+        
+        <!-- Divider -->
+        <div class="hidden md:block w-[1px] h-8 bg-slate-200"></div>
+        
+        <!-- Purpose field -->
+        <div class="w-full md:w-auto flex items-center px-5 gap-3">
+          <svg class="w-5 h-5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+          </svg>
+          <label class="w-full block">
+            <span class="block text-[10px] font-bold tracking-wide text-slate-400 text-left">Tujuan perjalanan</span>
+            <select class="w-full py-1.5 text-slate-700 outline-none font-semibold bg-transparent text-sm whitespace-nowrap">
               <option>Wisata / Liburan</option>
               <option>Bisnis</option>
               <option>Keluarga</option>
               <option>Pelajar</option>
             </select>
           </label>
+        </div>
+        
+        <!-- Search Button -->
+        <button type="button" class="w-full md:w-auto px-8 py-3.5 rounded-xl md:rounded-full bg-brand text-white font-bold transition-all hover:brightness-110 flex items-center justify-center gap-2 shrink-0 shadow-md shadow-blue-500/20">
+          Cari Visa
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+          </svg>
+        </button>
+      </div>
 
-          <button type="button" class="btn-primary rounded-2xl py-4 font-black uppercase tracking-wider mt-1">Tampilkan Visa</button>
-        </form>
-      </aside>
+      <!-- Quick category pills -->
+      <!-- <div class="flex flex-wrap justify-center gap-3 mt-10">
+        @foreach($featuredProducts->take(5) as $product)
+        <a href="#services" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-white border border-slate-200/80 text-sm font-semibold text-slate-600 shadow-sm hover:border-blue-200 hover:text-brand hover:shadow-md transition-all duration-200">
+          <svg class="w-4 h-4 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          {{ $product->name }}
+          <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </a>
+        @endforeach
+      </div> -->
+
+      <!-- Trust stats row -->
+      <!-- <div class="flex flex-wrap justify-center gap-8 mt-12">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-soft-blue flex items-center justify-center">
+            <svg class="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          </div>
+          <div class="text-left">
+            <p class="text-xl font-extrabold text-slate-800">{{ $countries->count() }}+</p>
+            <p class="text-xs font-semibold text-slate-400">Negara tujuan</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-soft-pink flex items-center justify-center">
+            <svg class="w-5 h-5 text-pink" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
+          </div>
+          <div class="text-left">
+            <p class="text-xl font-extrabold text-slate-800">4.9</p>
+            <p class="text-xs font-semibold text-slate-400">Rating klien</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-soft-blue flex items-center justify-center">
+            <svg class="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+          </div>
+          <div class="text-left">
+            <p class="text-xl font-extrabold text-slate-800">24/7</p>
+            <p class="text-xs font-semibold text-slate-400">Support</p>
+          </div>
+        </div>
+      </div> -->
+
     </div>
-  </section>
-</main>
+  </div>
+  
+</section>
