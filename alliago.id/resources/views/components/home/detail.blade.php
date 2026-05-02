@@ -98,7 +98,7 @@ $tags = array_filter([
         </div>
 
         <a href="{{ route('visa.show', $product->slug) }}" class="btn-primary mb-3 w-full rounded-2xl py-3.5 font-bold tracking-wide font-semibold md:py-4 block text-center">Ajukan Sekarang</a>
-        <a href="https://wa.me/6281234567890" class="btn-light w-full rounded-2xl py-3.5 font-bold tracking-wide font-semibold md:py-4 block text-center">Chat Konsultan</a>
+        <a href="https://wa.me/6281334455616" class="btn-light w-full rounded-2xl py-3.5 font-bold tracking-wide font-semibold md:py-4 block text-center">Chat Konsultan</a>
 
         <ul class="mt-5 space-y-2 text-sm font-semibold text-slate-700">
           <li>✓ Harga terlihat sebelum bayar</li>

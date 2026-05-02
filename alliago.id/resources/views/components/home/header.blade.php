@@ -59,7 +59,7 @@
         <a href="/login" class="mobile-nav-link rounded-full border border-slate-200 px-4 py-3 text-center text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-[#0361fc]">
           Log in
         </a>
-        <a href="https://wa.me/6281234567890" class="mobile-nav-link rounded-full border border-slate-200 px-4 py-3 text-center text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-[#0361fc]">
+        <a href="https://wa.me/6281334455616" class="mobile-nav-link rounded-full border border-slate-200 px-4 py-3 text-center text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-[#0361fc]">
           WhatsApp
         </a>
         <a href="#search" class="mobile-nav-link rounded-full bg-[#0361fc] px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-blue-700">
