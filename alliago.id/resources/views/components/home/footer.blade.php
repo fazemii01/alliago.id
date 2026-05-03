@@ -13,6 +13,6 @@
   </div>
   <div class="container mx-auto mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between gap-4 text-xs text-slate-500 font-bold">
     <p>© 2026 Alliago.id. All rights reserved.</p>
-    <p>Replace prices, claims, and contact details with your real data.</p>
+    <!-- <p>Replace prices, claims, and contact details with your real data.</p> -->
   </div>
 </footer>
