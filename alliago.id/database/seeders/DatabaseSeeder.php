@@ -24,6 +24,10 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             AdminUserSeeder::class,
+            NormalizeUserRolesSeeder::class,
+            PaymentMethodSeeder::class,
+            VisaDataSeeder::class,
+            LandingPageDataSeeder::class,
         ]);
     }
 }
