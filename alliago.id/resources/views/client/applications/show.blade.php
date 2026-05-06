@@ -21,6 +21,17 @@
                     <div>
                         <h2 class="text-2xl font-bold text-slate-900">Document checklist</h2>
                         <p class="mt-1 text-sm text-slate-500">Upload or replace the requested files here. If admin asks for a revision, their feedback will appear directly under the related document.</p>
+                        
+                        @if (($application->metadata['delivery_method'] ?? 'soft_file') === 'hard_file')
+                            <div class="mt-4 flex items-start gap-3 bg-blue-50 p-4 rounded-xl border border-blue-100">
+                                <svg class="w-5 h-5 text-[#0361fc] shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                <div>
+                                    <h4 class="text-sm font-bold text-blue-900">Proses Pra-Verifikasi Dokumen</h4>
+                                    <p class="text-sm text-blue-800 mt-1">Meskipun Anda memilih penyerahan dokumen fisik (Hard File), Anda tetap <strong>diwajibkan mengunggah versi digital (Soft File)</strong> dari seluruh persyaratan dokumen di bawah ini terlebih dahulu.</p>
+                                    <p class="text-sm text-blue-800 mt-1">Tim Alliago akan memverifikasi kesesuaian dokumen digital Anda. Dokumen fisik hanya akan diambil/diserahkan setelah semua dokumen digital dinyatakan <strong>valid</strong> guna meminimalisir kesalahan logistik.</p>
+                                </div>
+                            </div>
+                        @endif
                     </div>
 
                     <div class="space-y-4 mt-6">
@@ -67,6 +78,48 @@
                                 <p class="text-xs font-bold uppercase tracking-wider text-slate-500">Traveler phone</p>
                                 <p class="mt-1 text-lg font-bold text-slate-900">{{ $application->traveler_phone ?: 'Not provided yet' }}</p>
                             </div>
+                        </div>
+                    </section>
+
+                    @php
+                        $metadata = $application->metadata ?? [];
+                        $deliveryMethod = $metadata['delivery_method'] ?? 'soft_file';
+                        $pickupMethod = $metadata['hard_file_pickup'] ?? null;
+                        $deliveryMethodLogistics = $metadata['hard_file_delivery'] ?? null;
+                        $pickupAddress = $metadata['pickup_address'] ?? null;
+                        $deliveryAddress = $metadata['delivery_address'] ?? null;
+                    @endphp
+
+                    <section class="rounded-3xl border border-slate-200 bg-white p-6 sm:p-8 shadow-sm">
+                        <h2 class="text-2xl font-bold text-slate-900">Logistics status</h2>
+                        <div class="mt-6 space-y-4">
+                            <div class="rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                                <p class="text-xs font-bold uppercase tracking-wider text-slate-500">Metode Pengiriman Dokumen</p>
+                                <p class="mt-1 text-lg font-bold text-slate-900">
+                                    {{ $deliveryMethod === 'soft_file' ? 'Digital (Soft File)' : 'Fisik (Hard File)' }}
+                                </p>
+                            </div>
+
+                            @if($deliveryMethod === 'hard_file')
+                                <div class="rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                                    <p class="text-xs font-bold uppercase tracking-wider text-slate-500">Penyerahan Dokumen (Pickup)</p>
+                                    <p class="mt-1 text-base font-bold text-slate-900">
+                                        {{ $pickupMethod === 'kurir' ? 'Penjemputan oleh Kurir Alliago' : 'Antar Sendiri ke Kantor Alliago' }}
+                                    </p>
+                                    @if($pickupMethod === 'kurir' && $pickupAddress)
+                                        <p class="mt-2 text-sm text-slate-600 bg-white p-3 rounded-xl border border-slate-200">{{ $pickupAddress }}</p>
+                                    @endif
+                                </div>
+                                <div class="rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                                    <p class="text-xs font-bold uppercase tracking-wider text-slate-500">Pengembalian Dokumen (Delivery)</p>
+                                    <p class="mt-1 text-base font-bold text-slate-900">
+                                        {{ $deliveryMethodLogistics === 'kurir' ? 'Pengiriman oleh Kurir Alliago' : 'Ambil Sendiri di Kantor Alliago' }}
+                                    </p>
+                                    @if($deliveryMethodLogistics === 'kurir' && $deliveryAddress)
+                                        <p class="mt-2 text-sm text-slate-600 bg-white p-3 rounded-xl border border-slate-200">{{ $deliveryAddress }}</p>
+                                    @endif
+                                </div>
+                            @endif
                         </div>
                     </section>
 

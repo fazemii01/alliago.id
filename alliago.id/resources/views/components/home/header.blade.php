@@ -14,10 +14,10 @@
     </a>
 
     <nav class="hidden items-center gap-7 text-sm font-semibold text-slate-600 md:flex">
-      <a href="#services" class="transition hover:text-[#0361fc]">Visa</a>
-      <a href="#detail" class="transition hover:text-[#0361fc]">Detail</a>
-      <a href="#process" class="transition hover:text-[#0361fc]">Proses</a>
-      <a href="#faq" class="transition hover:text-[#0361fc]">FAQ</a>
+      <a href="{{ route('visa.index') }}" class="transition hover:text-[#0361fc] {{ request()->routeIs('visa.index') ? 'text-[#0361fc]' : '' }}">Visa</a>
+      <a href="{{ route('pages.detail') }}" class="transition hover:text-[#0361fc] {{ request()->routeIs('pages.detail') ? 'text-[#0361fc]' : '' }}">Detail</a>
+      <a href="{{ route('pages.process') }}" class="transition hover:text-[#0361fc] {{ request()->routeIs('pages.process') ? 'text-[#0361fc]' : '' }}">Proses</a>
+      <a href="{{ route('pages.faq') }}" class="transition hover:text-[#0361fc] {{ request()->routeIs('pages.faq') ? 'text-[#0361fc]' : '' }}">FAQ</a>
     </nav>
 
     <div class="hidden items-center gap-3 md:flex">
@@ -36,36 +36,38 @@
             </svg>
           </button>
 
-          <div id="userDropdown" class="absolute right-0 mt-2 hidden w-56 origin-top-right rounded-xl border border-slate-100 bg-white p-2 shadow-xl ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
-              <div class="flex items-center gap-3 border-b border-slate-100 px-3 pb-3 pt-1">
-                  <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-orange-500 text-sm font-bold text-white">
+          <div id="userDropdown" class="absolute right-0 mt-2 hidden w-64 origin-top-right rounded-2xl border border-slate-200/80 bg-white/95 backdrop-blur-md p-2 shadow-2xl ring-1 ring-slate-900/5 focus:outline-none z-50 transition-all duration-200 opacity-0 translate-y-1">
+              <div class="flex items-center gap-3 border-b border-slate-100 px-3 pb-3 pt-2">
+                  <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-orange-400 to-orange-600 text-base font-bold text-white shadow-sm">
                       {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                   </div>
                   <div class="flex min-w-0 flex-col">
-                      <span class="truncate text-sm font-semibold text-slate-900">{{ Auth::user()->name }}</span>
-                      <span class="text-xs text-slate-500">Personal</span>
+                      <span class="truncate text-sm font-bold text-slate-900">{{ Auth::user()->name }}</span>
+                      <span class="text-[11px] font-medium text-slate-500">Personal Account</span>
                   </div>
               </div>
-              <div class="py-1">
-                  <a href="{{ route('client.dashboard') }}" class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-50">
-                      <svg class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
-                      Dokumen Saya
+              <div class="py-1.5">
+                  <a href="{{ route('client.dashboard') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 hover:text-[#0361fc]">
+                      <svg class="h-4 w-4 text-slate-400 transition-colors group-hover:text-[#0361fc]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+                      Dashboard & Dokumen
                   </a>
               </div>
-              <div class="py-1 border-t border-slate-100">
-                  <div class="px-3 py-2 text-sm font-bold text-slate-900">Akun</div>
-                  <a href="#" class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-50">
-                      <svg class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+              <div class="py-1.5 border-t border-slate-100">
+                  <div class="px-3 pb-2 pt-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">Pengaturan</div>
+                  <a href="{{ route('client.profile.edit') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 hover:text-[#0361fc]">
+                      <svg class="h-4 w-4 text-slate-400 transition-colors group-hover:text-[#0361fc]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
                       Ubah Profil
                   </a>
-                  <a href="#" class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-50">
-                      <svg class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                  <a href="{{ route('client.profile.edit') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 hover:text-[#0361fc]">
+                      <svg class="h-4 w-4 text-slate-400 transition-colors group-hover:text-[#0361fc]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                       Ubah Password
                   </a>
+              </div>
+              <div class="py-1.5 border-t border-slate-100">
                   <form method="POST" action="{{ route('client.logout') }}" class="block w-full">
                       @csrf
-                      <button type="submit" class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-50">
-                          <svg class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                      <button type="submit" class="group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-red-600 transition-colors hover:bg-red-50">
+                          <svg class="h-4 w-4 text-red-400 transition-colors group-hover:text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
                           Keluar
                       </button>
                   </form>
@@ -115,19 +117,20 @@
         </div>
       @endauth
 
-      <a href="#services" class="mobile-nav-link rounded-2xl px-3 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 hover:text-[#0361fc]">Visa</a>
-      <a href="#detail" class="mobile-nav-link rounded-2xl px-3 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 hover:text-[#0361fc]">Detail</a>
-      <a href="#process" class="mobile-nav-link rounded-2xl px-3 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 hover:text-[#0361fc]">Proses</a>
-      <a href="#faq" class="mobile-nav-link rounded-2xl px-3 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 hover:text-[#0361fc]">FAQ</a>
-
-      <div class="mt-3 grid gap-3 border-t border-slate-100 pt-4">
+      <div class="grid gap-3 pt-2">
         @auth
           <a href="{{ route('client.dashboard') }}" class="mobile-nav-link rounded-full border border-slate-200 px-4 py-3 text-center text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-[#0361fc]">
-            Client Area
+            Dashboard & Dokumen
+          </a>
+          <a href="{{ route('client.profile.edit') }}" class="mobile-nav-link rounded-full border border-slate-200 px-4 py-3 text-center text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-[#0361fc]">
+            Ubah Profil
+          </a>
+          <a href="{{ route('client.profile.edit') }}" class="mobile-nav-link rounded-full border border-slate-200 px-4 py-3 text-center text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-[#0361fc]">
+            Ubah Password
           </a>
           <form method="POST" action="{{ route('client.logout') }}" class="block w-full">
             @csrf
-            <button type="submit" class="mobile-nav-link w-full rounded-full border border-slate-200 px-4 py-3 text-center text-sm font-semibold text-red-600 transition hover:border-red-300 hover:text-red-700">
+            <button type="submit" class="mobile-nav-link w-full rounded-full border border-red-200 bg-red-50 px-4 py-3 text-center text-sm font-semibold text-red-600 transition hover:border-red-300 hover:bg-red-100 hover:text-red-700">
                 Keluar
             </button>
           </form>
@@ -153,14 +156,36 @@
     const dropdown = document.getElementById('userDropdown');
 
     if (userBtn && dropdown) {
+      const closeDropdown = () => {
+        dropdown.classList.remove('opacity-100', 'translate-y-0');
+        dropdown.classList.add('opacity-0', 'translate-y-1', 'pointer-events-none');
+        setTimeout(() => {
+          if (dropdown.classList.contains('opacity-0')) {
+            dropdown.classList.add('hidden');
+          }
+        }, 200);
+      };
+
+      const openDropdown = () => {
+        dropdown.classList.remove('hidden');
+        // Force reflow
+        void dropdown.offsetWidth;
+        dropdown.classList.remove('opacity-0', 'translate-y-1', 'pointer-events-none');
+        dropdown.classList.add('opacity-100', 'translate-y-0');
+      };
+
       userBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        dropdown.classList.toggle('hidden');
+        if (dropdown.classList.contains('hidden') || dropdown.classList.contains('opacity-0')) {
+          openDropdown();
+        } else {
+          closeDropdown();
+        }
       });
 
       document.addEventListener('click', (e) => {
-        if (!userBtn.contains(e.target) && !dropdown.contains(e.target)) {
-          dropdown.classList.add('hidden');
+        if (!userBtn.contains(e.target) && !dropdown.contains(e.target) && !dropdown.classList.contains('hidden')) {
+          closeDropdown();
         }
       });
     }

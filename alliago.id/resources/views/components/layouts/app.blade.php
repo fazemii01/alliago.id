@@ -15,8 +15,10 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="pb-16 md:pb-0">
     {{ $slot }}
+    
+    <x-home.bottom-nav />
     
     @stack('scripts')
 </body>

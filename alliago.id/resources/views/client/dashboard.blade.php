@@ -93,27 +93,36 @@
                                         </div>
 
                                         <div class="mt-4 space-y-3">
-                                            @foreach ($application->documents as $document)
-                                                <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                                                    <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                                                        <div>
-                                                            <p class="font-bold text-slate-900">{{ $document->label }}</p>
-                                                            <p class="mt-0.5 text-[10px] font-bold uppercase tracking-wider text-[#0361fc]">{{ str_replace('_', ' ', $document->status) }}</p>
-                                                            @if ($document->admin_feedback)
-                                                                <p class="mt-2 text-xs font-medium text-rose-600 bg-rose-50 p-2 rounded-lg border border-rose-100">Admin note: {{ $document->admin_feedback }}</p>
-                                                            @endif
-                                                        </div>
-
-                                                        <form method="POST" action="{{ route('client.documents.store', [$application, $document]) }}" enctype="multipart/form-data" class="flex flex-col gap-2 md:items-end">
-                                                            @csrf
-                                                            <input type="file" name="document" class="block w-full max-w-[200px] text-xs text-slate-500 file:mr-2 file:rounded-full file:border-0 file:bg-slate-200 file:px-3 file:py-1.5 file:text-xs file:font-bold file:text-slate-700 hover:file:bg-slate-300">
-                                                            <button type="submit" class="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 shadow-sm transition hover:bg-slate-50 hover:border-slate-300">
-                                                                {{ $document->file_path ? 'Replace' : 'Upload' }}
-                                                            </button>
-                                                        </form>
+                                            @if ($application->status === 'pending_payment')
+                                                <div class="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4 text-center text-sm text-slate-500">
+                                                    Silakan selesaikan pembayaran untuk mengunggah dokumen.
+                                                    <div class="mt-2">
+                                                        <a href="{{ route('client.applications.checkout', $application) }}" class="inline-flex items-center justify-center rounded-full bg-[#0361fc] px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-blue-700 transition">Bayar Sekarang</a>
                                                     </div>
                                                 </div>
-                                            @endforeach
+                                            @else
+                                                @foreach ($application->documents as $document)
+                                                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                                                        <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                                                            <div>
+                                                                <p class="font-bold text-slate-900">{{ $document->label }}</p>
+                                                                <p class="mt-0.5 text-[10px] font-bold uppercase tracking-wider text-[#0361fc]">{{ str_replace('_', ' ', $document->status) }}</p>
+                                                                @if ($document->admin_feedback)
+                                                                    <p class="mt-2 text-xs font-medium text-rose-600 bg-rose-50 p-2 rounded-lg border border-rose-100">Admin note: {{ $document->admin_feedback }}</p>
+                                                                @endif
+                                                            </div>
+
+                                                            <form method="POST" action="{{ route('client.documents.store', [$application, $document]) }}" enctype="multipart/form-data" class="flex flex-col gap-2 md:items-end">
+                                                                @csrf
+                                                                <input type="file" name="document" class="block w-full max-w-[200px] text-xs text-slate-500 file:mr-2 file:rounded-full file:border-0 file:bg-slate-200 file:px-3 file:py-1.5 file:text-xs file:font-bold file:text-slate-700 hover:file:bg-slate-300">
+                                                                <button type="submit" class="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-700 shadow-sm transition hover:bg-slate-50 hover:border-slate-300">
+                                                                    {{ $document->file_path ? 'Replace' : 'Upload' }}
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            @endif
                                         </div>
                                     </div>
 

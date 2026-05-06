@@ -21,11 +21,13 @@ class Application extends Model
         'traveler_email',
         'traveler_phone',
         'notes',
+        'metadata',
         'submitted_at',
     ];
 
     protected $casts = [
         'submitted_at' => 'datetime',
+        'metadata' => 'array',
     ];
 
     protected static function booted(): void

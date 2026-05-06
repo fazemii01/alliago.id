@@ -19,6 +19,10 @@ Route::redirect('/login', '/client/login')->name('login');
 Route::get('/visa', [VisaCatalogController::class, 'index'])->name('visa.index');
 Route::get('/visa/{slug}', [VisaCatalogController::class, 'show'])->name('visa.show');
 
+Route::get('/detail', [\App\Http\Controllers\PageController::class, 'detail'])->name('pages.detail');
+Route::get('/proses', [\App\Http\Controllers\PageController::class, 'process'])->name('pages.process');
+Route::get('/faq', [\App\Http\Controllers\PageController::class, 'faq'])->name('pages.faq');
+
 Route::middleware('guest')->group(function () {
     Route::get('/client/login', [ClientAuthController::class, 'showLogin'])->name('client.login');
     Route::post('/client/login', [ClientAuthController::class, 'login'])->name('client.login.store');
@@ -33,5 +37,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/client/applications/{visaProduct:slug}', [ClientApplicationController::class, 'store'])->name('client.applications.store');
     Route::post('/client/applications/{application}/documents/{document}', [ClientDocumentController::class, 'store'])->name('client.documents.store');
     Route::post('/client/applications/{application}/messages', [ClientMessageController::class, 'store'])->name('client.messages.store');
+    Route::get('/client/applications/{application}/checkout', [\App\Http\Controllers\ClientCheckoutController::class, 'show'])->name('client.applications.checkout');
+    Route::post('/client/applications/{application}/checkout', [\App\Http\Controllers\ClientCheckoutController::class, 'store'])->name('client.applications.checkout.store');
+    Route::get('/client/profile', [\App\Http\Controllers\ClientProfileController::class, 'edit'])->name('client.profile.edit');
+    Route::patch('/client/profile', [\App\Http\Controllers\ClientProfileController::class, 'update'])->name('client.profile.update');
+    Route::put('/client/password', [\App\Http\Controllers\ClientProfileController::class, 'updatePassword'])->name('client.password.update');
+    
     Route::post('/client/logout', [ClientAuthController::class, 'logout'])->name('client.logout');
 });
+
+Route::post('/webhooks/xendit', [\App\Http\Controllers\XenditWebhookController::class, 'handle'])->name('webhooks.xendit');
