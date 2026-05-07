@@ -81,9 +81,13 @@
                                         Layanan Pembuatan Visa {{ $application->visaProduct->country->name }}<br>
                                         <span class="text-slate-500 font-normal">{{ $application->visaProduct->name }}</span>
                                     </td>
-                                    <td class="py-6 text-sm font-bold text-slate-900 text-right whitespace-nowrap">
-                                        Rp {{ number_format($invoiceAmount, 0, ',', '.') }}
-                                    </td>
+                                     <td class="py-6 text-sm font-bold text-slate-900 text-right whitespace-nowrap">
+                                        @if($invoiceAmount)
+                                            Rp {{ number_format($invoiceAmount, 0, ',', '.') }}
+                                        @else
+                                            <span class="text-slate-400 text-xs">Menghubungi sistem...</span>
+                                        @endif
+                                     </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -92,25 +96,19 @@
                     <!-- Summary -->
                     <div class="mt-8 flex justify-end">
                         <div class="w-full max-w-sm space-y-4 bg-slate-50 p-6 rounded-2xl">
-                            <div class="flex justify-between">
-                                <span class="text-sm text-slate-600">Subtotal</span>
-                                <span class="text-sm font-bold text-slate-900">Rp {{ number_format($invoiceAmount, 0, ',', '.') }}</span>
-                            </div>
-                            
-                            <div class="flex justify-between border-b border-slate-200 pb-4">
-                                <span class="text-sm text-slate-600">Pajak (0%)</span>
-                                <span class="text-sm font-bold text-slate-900">Rp 0</span>
-                            </div>
-                            
-                            <div class="flex justify-between pt-2">
-                                <span class="text-base font-bold text-slate-900">Total Keseluruhan</span>
-                                <span class="text-lg font-black text-[#0361fc]">Rp {{ number_format($invoiceAmount, 0, ',', '.') }}</span>
-                            </div>
+                            <div class="flex justify-between"><span class="text-sm text-slate-600">Subtotal</span><span class="text-sm font-bold text-slate-900">{{ $invoiceAmount ? 'Rp '.number_format($invoiceAmount, 0, ',', '.') : '-' }}</span></div>
+                            <div class="flex justify-between border-b border-slate-200 pb-4"><span class="text-sm text-slate-600">Pajak (0%)</span><span class="text-sm font-bold text-slate-900">Rp 0</span></div>
+                            <div class="flex justify-between pt-2"><span class="text-base font-bold text-slate-900">Total Keseluruhan</span><span class="text-lg font-black text-[#0361fc]">{{ $invoiceAmount ? 'Rp '.number_format($invoiceAmount, 0, ',', '.') : 'Menghubungi sistem...' }}</span></div>
                         </div>
                     </div>
 
-                    @if($application->status === 'pending_payment')
-                        <div class="mt-10 flex justify-center print:hidden">
+                    @if(in_array($application->status, ['pending_payment', 'payment_failed']))
+                        <div class="mt-10 flex flex-col items-center gap-3 print:hidden">
+                            @if($application->status === 'payment_failed')
+                                <p class="text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-2xl px-5 py-3 text-center">
+                                    ⚠️ Pembayaran sebelumnya tidak berhasil atau jumlah kurang. Silakan coba bayar kembali.
+                                </p>
+                            @endif
                             <a href="{{ route('client.applications.checkout', $application) }}" class="rounded-full bg-[#0361fc] px-8 py-3 text-sm font-bold text-white shadow-sm hover:bg-blue-700 transition">
                                 Lanjutkan Pembayaran
                             </a>
