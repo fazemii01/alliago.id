@@ -28,13 +28,27 @@ class Application extends Model
     protected $casts = [
         'submitted_at' => 'datetime',
         'metadata' => 'array',
+        'is_locked' => 'boolean',
     ];
 
-    protected static function booted(): void
+    /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
     {
-        static::creating(function (Application $application): void {
-            if (blank($application->reference_number)) {
-                $application->reference_number = 'GP-'.strtoupper(Str::random(8));
+        return 'uuid';
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->uuid = (string) Str::uuid();
+            if (empty($model->reference_number)) {
+                $model->reference_number = 'VSA-' . strtoupper(Str::random(10));
             }
         });
     }

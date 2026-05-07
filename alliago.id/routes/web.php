@@ -39,6 +39,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/client/applications/{application}/messages', [ClientMessageController::class, 'store'])->name('client.messages.store');
     Route::get('/client/applications/{application}/checkout', [\App\Http\Controllers\ClientCheckoutController::class, 'show'])->name('client.applications.checkout');
     Route::post('/client/applications/{application}/checkout', [\App\Http\Controllers\ClientCheckoutController::class, 'store'])->name('client.applications.checkout.store');
+    Route::get('/client/applications/{application}/invoice', [\App\Http\Controllers\ClientInvoiceController::class, 'show'])->name('client.applications.invoice');
     Route::get('/client/profile', [\App\Http\Controllers\ClientProfileController::class, 'edit'])->name('client.profile.edit');
     Route::patch('/client/profile', [\App\Http\Controllers\ClientProfileController::class, 'update'])->name('client.profile.update');
     Route::put('/client/password', [\App\Http\Controllers\ClientProfileController::class, 'updatePassword'])->name('client.password.update');

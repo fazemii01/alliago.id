@@ -49,12 +49,15 @@
                                         @endif
                                     </div>
 
-                                    <form method="POST" action="{{ route('client.documents.store', [$application, $document]) }}" enctype="multipart/form-data" class="flex flex-col gap-2 md:items-end w-full md:w-auto mt-4 md:mt-0">
+                                    <form method="POST" action="{{ route('client.documents.store', [$application, $document]) }}" enctype="multipart/form-data" class="document-upload-form flex flex-col gap-2 md:items-end w-full md:w-auto mt-4 md:mt-0">
                                         @csrf
-                                        <input type="file" name="document" class="block w-full max-w-[250px] text-xs text-slate-500 file:mr-2 file:rounded-full file:border-0 file:bg-slate-200 file:px-3 file:py-1.5 file:font-bold file:text-slate-700 hover:file:bg-slate-300">
-                                        <button type="submit" class="mt-1 w-full md:w-auto inline-flex justify-center rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-bold text-slate-700 shadow-sm transition hover:bg-slate-50 hover:border-slate-300">
-                                            {{ $document->file_path ? 'Replace file' : 'Upload file' }}
-                                        </button>
+                                        <input type="file" name="document" required class="block w-full max-w-[250px] text-xs text-slate-500 file:mr-2 file:rounded-full file:border-0 file:bg-slate-200 file:px-3 file:py-1.5 file:font-bold file:text-slate-700 hover:file:bg-slate-300">
+                                        <div class="flex items-center gap-2">
+                                            <span class="upload-status hidden text-xs font-bold text-emerald-600"></span>
+                                            <button type="submit" class="upload-btn mt-1 w-full md:w-auto inline-flex justify-center rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-bold text-slate-700 shadow-sm transition hover:bg-slate-50 hover:border-slate-300">
+                                                {{ $document->file_path ? 'Replace file' : 'Upload file' }}
+                                            </button>
+                                        </div>
                                     </form>
                                 </div>
                             </div>
@@ -179,4 +182,55 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.document-upload-form').forEach(form => {
+                form.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    
+                    const btn = form.querySelector('.upload-btn');
+                    const statusSpan = form.querySelector('.upload-status');
+                    const originalText = btn.innerText;
+                    
+                    btn.innerText = 'Uploading...';
+                    btn.disabled = true;
+                    btn.classList.add('opacity-50', 'cursor-not-allowed');
+                    statusSpan.classList.add('hidden');
+                    
+                    const formData = new FormData(form);
+                    
+                    try {
+                        const response = await fetch(form.action, {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        });
+                        
+                        if (response.ok) {
+                            btn.innerText = 'Replace file';
+                            statusSpan.innerText = 'Uploaded ✅';
+                            statusSpan.classList.remove('hidden', 'text-rose-600');
+                            statusSpan.classList.add('text-emerald-600');
+                        } else {
+                            btn.innerText = originalText;
+                            statusSpan.innerText = 'Failed ❌';
+                            statusSpan.classList.remove('hidden', 'text-emerald-600');
+                            statusSpan.classList.add('text-rose-600');
+                        }
+                    } catch (error) {
+                        btn.innerText = originalText;
+                        statusSpan.innerText = 'Error ❌';
+                        statusSpan.classList.remove('hidden', 'text-emerald-600');
+                        statusSpan.classList.add('text-rose-600');
+                    } finally {
+                        btn.disabled = false;
+                        btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    }
+                });
+            });
+        });
+    </script>
 </x-layouts.app>

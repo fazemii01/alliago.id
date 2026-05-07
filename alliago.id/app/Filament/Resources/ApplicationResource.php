@@ -47,20 +47,34 @@ class ApplicationResource extends Resource
                     Forms\Components\Repeater::make('documents')
                         ->relationship()
                         ->schema([
-                            Forms\Components\TextInput::make('label')->disabled(),
-                            Forms\Components\TextInput::make('file_path')->disabled(),
-                            Forms\Components\Select::make('status')
-                                ->options([
-                                    'pending_upload' => 'Pending upload',
-                                    'pending_review' => 'Pending review',
-                                    'approved' => 'Approved',
-                                    'needs_revision' => 'Needs revision',
-                                    'optional' => 'Optional',
-                                ])
-                                ->required(),
-                            Forms\Components\Textarea::make('admin_feedback')->rows(3),
+                            Forms\Components\Grid::make(3)->schema([
+                                Forms\Components\TextInput::make('label')
+                                    ->disabled()
+                                    ->columnSpan(1),
+                                Forms\Components\Placeholder::make('file')
+                                    ->label('Uploaded Document')
+                                    ->content(fn ($record) => $record && $record->file_path 
+                                        ? new \Illuminate\Support\HtmlString('<a href="'.\Illuminate\Support\Facades\Storage::url($record->file_path).'" target="_blank" class="font-bold text-primary-600 hover:text-primary-500 underline">View Document &rarr;</a>') 
+                                        : 'No file uploaded')
+                                    ->columnSpan(1),
+                                Forms\Components\Select::make('status')
+                                    ->options([
+                                        'pending_upload' => 'Menunggu Upload',
+                                        'pending_review' => 'Menunggu Review Admin',
+                                        'approved' => 'Dokumen Valid (Approved)',
+                                        'declined' => 'Ditolak (Declined)',
+                                        'needs_revision' => 'Perlu Revisi',
+                                        'optional' => 'Opsional',
+                                    ])
+                                    ->required()
+                                    ->columnSpan(1),
+                            ]),
+                            Forms\Components\Textarea::make('admin_feedback')
+                                ->label('Feedback / Notes for Client')
+                                ->rows(3)
+                                ->columnSpanFull(),
                         ])
-                        ->columns(2)
+                        ->columnSpanFull()
                         ->addable(false)
                         ->deletable(false)
                         ->reorderable(false),
@@ -85,7 +99,11 @@ class ApplicationResource extends Resource
                 Tables\Columns\TextColumn::make('updated_at')->since()->sortable(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->label('Process')
+                    ->icon('heroicon-o-cog-8-tooth')
+                    ->color('primary')
+                    ->button(),
             ]);
     }
 

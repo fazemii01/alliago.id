@@ -51,9 +51,11 @@ class ClientCheckoutController extends Controller
 
             $path = $request->file('payment_proof')->store("payments/{$application->id}", 'public');
 
-            // Update metadata with proof path
-            $metadata = $application->metadata;
+            // Update metadata with proof path and lock amount
+            $amount = $application->visaProduct->discount_price ?? $application->visaProduct->base_price;
+            $metadata = $application->metadata ?? [];
             $metadata['payment_proof_path'] = $path;
+            $metadata['invoice_amount'] = $amount;
             $application->metadata = $metadata;
             
             // Advance status to draft (or we could have a 'pending_verification' status for manual payments)
@@ -73,9 +75,16 @@ class ClientCheckoutController extends Controller
 
         if ($paymentMethod->provider === 'xendit') {
             $metadata = $application->metadata ?? [];
+            $amount = $application->visaProduct->discount_price ?? $application->visaProduct->base_price;
             
             // Reuse existing invoice if it exists
             if (isset($metadata['xendit_invoice_url'])) {
+                // Ensure amount is locked
+                if (!isset($metadata['invoice_amount'])) {
+                    $metadata['invoice_amount'] = $amount;
+                    $application->metadata = $metadata;
+                    $application->save();
+                }
                 return redirect($metadata['xendit_invoice_url']);
             }
 
@@ -84,8 +93,6 @@ class ClientCheckoutController extends Controller
                 return back()->with('error', 'Konfigurasi Xendit tidak valid.');
             }
 
-            $amount = $application->visaProduct->discount_price ?? $application->visaProduct->base_price;
-            
             $response = \Illuminate\Support\Facades\Http::withBasicAuth($secretKey, '')
                 ->post('https://api.xendit.co/v2/invoices', [
                     'external_id' => $application->reference_number,
@@ -102,6 +109,7 @@ class ClientCheckoutController extends Controller
                 
                 $metadata['xendit_invoice_url'] = $invoice['invoice_url'];
                 $metadata['xendit_invoice_id'] = $invoice['id'];
+                $metadata['invoice_amount'] = $amount;
                 
                 $application->metadata = $metadata;
                 $application->save();
