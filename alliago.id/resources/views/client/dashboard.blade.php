@@ -100,7 +100,7 @@
                                         </div>
 
                                         <div class="mt-4 space-y-3">
-                                            @if ($application->status === 'pending_payment')
+                                            @if (in_array($application->status, ['pending_payment', 'payment_failed']))
                                                 <div class="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4 text-center text-sm text-slate-500">
                                                     Silakan selesaikan pembayaran untuk mengunggah dokumen.
                                                     <div class="mt-2">

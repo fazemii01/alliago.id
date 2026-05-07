@@ -42,23 +42,36 @@ class XenditWebhookController extends Controller
         if (in_array($status, ['PAID', 'SETTLED'])) {
             $paidAmount = $request->input('paid_amount') ?? $request->input('amount');
 
-            if ($application->status === 'pending_payment') {
-                $application->status = 'draft';
+            if (in_array($application->status, ['pending_payment', 'payment_failed'])) {
+                $metadata = $application->metadata ?? [];
+                $expectedAmount = $metadata['price_breakdown']['total'] ?? ($application->visaProduct->discount_price ?? $application->visaProduct->base_price);
+                
+                if ($paidAmount < $expectedAmount) {
+                    $application->status = 'payment_failed';
+                    $application->save();
 
-                if ($paidAmount) {
-                    $metadata = $application->metadata ?? [];
-                    // Force the actual paid amount to ensure accuracy
-                    $metadata['invoice_amount'] = $paidAmount;
-                    $application->metadata = $metadata;
+                    ApplicationStatusLog::create([
+                        'application_id' => $application->id,
+                        'to_status' => 'payment_failed',
+                        'message' => 'Pembayaran kurang dari jumlah tagihan (Dibayar: Rp ' . number_format($paidAmount, 0, ',', '.') . '). Silakan hubungi admin.',
+                    ]);
+                } else {
+                    $application->status = 'draft';
+
+                    if ($paidAmount) {
+                        // Force the actual paid amount to ensure accuracy
+                        $metadata['invoice_amount'] = $paidAmount;
+                        $application->metadata = $metadata;
+                    }
+
+                    $application->save();
+
+                    ApplicationStatusLog::create([
+                        'application_id' => $application->id,
+                        'to_status' => 'draft',
+                        'message' => 'Pembayaran Xendit berhasil. Aplikasi sekarang dalam status draft untuk kelengkapan dokumen.',
+                    ]);
                 }
-
-                $application->save();
-
-                ApplicationStatusLog::create([
-                    'application_id' => $application->id,
-                    'to_status' => 'draft',
-                    'message' => 'Pembayaran Xendit berhasil. Aplikasi sekarang dalam status draft untuk kelengkapan dokumen.',
-                ]);
             }
         }
 

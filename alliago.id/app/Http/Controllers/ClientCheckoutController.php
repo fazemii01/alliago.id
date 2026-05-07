@@ -11,8 +11,8 @@ class ClientCheckoutController extends Controller
 {
     public function show(Application $application)
     {
-        // Only allow checkout if status is pending_payment
-        if ($application->status !== 'pending_payment') {
+        // Only allow checkout if status is pending_payment or payment_failed
+        if (!in_array($application->status, ['pending_payment', 'payment_failed'])) {
             return redirect()->route('client.applications.show', $application)
                 ->with('error', 'Checkout tidak tersedia untuk aplikasi ini.');
         }
@@ -33,7 +33,7 @@ class ClientCheckoutController extends Controller
 
     public function store(Request $request, Application $application)
     {
-        if ($application->status !== 'pending_payment') {
+        if (!in_array($application->status, ['pending_payment', 'payment_failed'])) {
             return back()->with('error', 'Checkout tidak tersedia untuk aplikasi ini.');
         }
 
@@ -52,8 +52,8 @@ class ClientCheckoutController extends Controller
             $path = $request->file('payment_proof')->store("payments/{$application->id}", 'public');
 
             // Update metadata with proof path and lock amount
-            $amount = $application->visaProduct->discount_price ?? $application->visaProduct->base_price;
             $metadata = $application->metadata ?? [];
+            $amount = $metadata['price_breakdown']['total'] ?? ($application->visaProduct->discount_price ?? $application->visaProduct->base_price);
             $metadata['payment_proof_path'] = $path;
             $metadata['invoice_amount'] = $amount;
             $application->metadata = $metadata;
@@ -75,7 +75,8 @@ class ClientCheckoutController extends Controller
 
         if ($paymentMethod->provider === 'xendit') {
             $metadata = $application->metadata ?? [];
-            $amount = $application->visaProduct->discount_price ?? $application->visaProduct->base_price;
+            // Use the calculated total from price_breakdown to include all fees, addons, and taxes
+            $amount = $metadata['price_breakdown']['total'] ?? ($application->visaProduct->discount_price ?? $application->visaProduct->base_price);
             
             // Reuse existing invoice if it exists
             if (isset($metadata['xendit_invoice_url'])) {
