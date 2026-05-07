@@ -40,8 +40,18 @@ class XenditWebhookController extends Controller
         }
 
         if (in_array($status, ['PAID', 'SETTLED'])) {
+            $paidAmount = $request->input('paid_amount') ?? $request->input('amount');
+
             if ($application->status === 'pending_payment') {
                 $application->status = 'draft';
+
+                if ($paidAmount) {
+                    $metadata = $application->metadata ?? [];
+                    // Force the actual paid amount to ensure accuracy
+                    $metadata['invoice_amount'] = $paidAmount;
+                    $application->metadata = $metadata;
+                }
+
                 $application->save();
 
                 ApplicationStatusLog::create([
