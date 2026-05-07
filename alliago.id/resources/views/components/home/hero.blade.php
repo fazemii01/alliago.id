@@ -1,6 +1,6 @@
 @props(['countries' => collect(), 'featuredProducts' => collect()])
 
-<section class="hero-section relative overflow-hidden">
+<section class="hero-section relative overflow-hidden -mx-[24px] md:mx-0">
   <!-- Hero Background with Texture -->
   <div class="hero-bg-wrapper" aria-hidden="true">
     <!-- Warm gradient base -->
