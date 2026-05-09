@@ -3,24 +3,24 @@
 <div class="space-y-5">
 
     <div>
-        <h2 class="{{ $h2 }}">🔐 Roles & Permissions</h2>
-        <p class="{{ $p }} text-gray-500">Control what each staff member can see and do inside the admin dashboard.</p>
+        <h2 class="{{ $h2 }}">🔐 Peran & Izin</h2>
+        <p class="{{ $p }} text-gray-500">Kontrol apa yang dapat dilihat dan dilakukan oleh setiap anggota staf di dalam dasbor admin.</p>
     </div>
 
     <div class="{{ $section }}">
-        <h3 class="{{ $h3 }}">Important: Scope of Permissions</h3>
+        <h3 class="{{ $h3 }}">Penting: Cakupan Izin</h3>
         <div class="rounded-lg bg-blue-50 border border-blue-100 p-3 text-sm text-blue-800">
-            🔒 Permissions <strong>only control the admin dashboard</strong>. They have zero effect on the public-facing website
-            (landing page, visa catalog, client checkout, etc.). A user without any admin role cannot access the dashboard at all.
+            🔒 Izin <strong>hanya mengontrol dasbor admin</strong>. Izin tidak berpengaruh sama sekali pada situs web yang dilihat publik
+            (halaman arahan, katalog visa, checkout klien, dll.). Pengguna tanpa peran admin sama sekali tidak dapat mengakses dasbor.
         </div>
     </div>
 
     <div class="{{ $section }}">
-        <h3 class="{{ $h3 }}">Built-in Roles</h3>
+        <h3 class="{{ $h3 }}">Peran Bawaan</h3>
         <div class="space-y-3">
             @foreach([
-                ['admin', 'danger', 'Full access to all dashboard features. Cannot be deleted. Automatically receives all permissions.'],
-                ['staff', 'warning', 'Starts with zero permissions. Grant access to specific sections using the role editor.'],
+                ['admin', 'danger', 'Akses penuh ke semua fitur dasbor. Tidak dapat dihapus. Secara otomatis menerima semua izin.'],
+                ['staff', 'warning', 'Dimulai dengan nol izin. Berikan akses ke bagian tertentu menggunakan editor peran.'],
             ] as [$role, $color, $desc])
             <div class="flex items-start gap-3">
                 <span class="inline-block rounded-md px-2.5 py-1 text-xs font-bold bg-{{ $color }}-100 text-{{ $color }}-700 shrink-0 font-mono">{{ $role }}</span>
@@ -28,18 +28,18 @@
             </div>
             @endforeach
         </div>
-        <p class="{{ $p }} text-gray-400 text-xs">You can create additional custom roles (e.g. <code>finance-manager</code>, <code>support-agent</code>) from the Roles list.</p>
+        <p class="{{ $p }} text-gray-400 text-xs">Anda dapat membuat peran kustom tambahan (misalnya <code>manajer-keuangan</code>, <code>agen-dukungan</code>) dari daftar Peran.</p>
     </div>
 
     <div class="{{ $section }}">
-        <h3 class="{{ $h3 }}">Permission Groups</h3>
-        <p class="{{ $p }} mb-3">Permissions are organized into 4 categories that mirror the admin navigation:</p>
+        <h3 class="{{ $h3 }}">Grup Izin</h3>
+        <p class="{{ $p }} mb-3">Izin diatur ke dalam 4 kategori yang mencerminkan navigasi admin:</p>
         <div class="grid grid-cols-2 gap-3">
             @foreach([
-                ['Operations', 'amber', 'heroicon-o-clipboard-document-list', 'Applications processing, User management'],
-                ['Finance',    'emerald','heroicon-o-banknotes',              'Invoice viewing, Payment method management'],
-                ['Catalog',    'blue',   'heroicon-o-globe-alt',              'Visa products, Countries management'],
-                ['Settings',   'purple', 'heroicon-o-cog-6-tooth',           'FAQs, Testimonials, Role management'],
+                ['Operasional', 'amber', 'heroicon-o-clipboard-document-list', 'Pemrosesan aplikasi, Manajemen pengguna'],
+                ['Keuangan',    'emerald','heroicon-o-banknotes',              'Melihat faktur, Manajemen metode pembayaran'],
+                ['Katalog',    'blue',   'heroicon-o-globe-alt',              'Produk visa, Manajemen negara'],
+                ['Pengaturan',   'purple', 'heroicon-o-cog-6-tooth',           'FAQ, Testimoni, Manajemen peran'],
             ] as [$group, $color, $icon, $covers])
             <div class="rounded-lg border border-{{ $color }}-100 bg-{{ $color }}-50 p-3">
                 <div class="flex items-center gap-2 mb-1">
@@ -53,14 +53,14 @@
     </div>
 
     <div class="{{ $section }}">
-        <h3 class="{{ $h3 }}">Editing a Role's Permissions</h3>
+        <h3 class="{{ $h3 }}">Mengedit Izin Peran</h3>
         <ol class="space-y-2 text-sm text-gray-600 list-none">
             @foreach([
-                'Go to <strong>Settings → Roles & Permissions</strong>.',
-                'Click <strong>Edit</strong> on the role you want to configure.',
-                'Use the tab bar to switch between permission groups (Operations / Finance / Catalog / Settings).',
-                'Check individual permissions, or click <strong>Toggle all</strong> to grant/revoke the entire group at once.',
-                'Save changes.',
+                'Pergi ke <strong>Pengaturan → Peran & Izin</strong>.',
+                'Klik <strong>Edit</strong> pada peran yang ingin Anda konfigurasikan.',
+                'Gunakan bilah tab untuk beralih antara grup izin (Operasional / Keuangan / Katalog / Pengaturan).',
+                'Centang izin individual, atau klik <strong>Pilih semua</strong> untuk memberikan/mencabut seluruh grup sekaligus.',
+                'Simpan perubahan.',
             ] as $i => $step)
             <li class="flex items-start gap-3">
                 <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-purple-100 text-xs font-bold text-purple-700">{{ $i + 1 }}</span>
@@ -71,13 +71,13 @@
     </div>
 
     <div class="{{ $section }}">
-        <h3 class="{{ $h3 }}">Table Coverage Badges</h3>
+        <h3 class="{{ $h3 }}">Lencana Cakupan Tabel</h3>
         <p class="{{ $p }}">
-            The Roles list table shows <strong>X/Y coverage badges</strong> for each permission group.
-            For example, <span class="rounded px-1.5 py-0.5 bg-emerald-100 text-emerald-700 text-xs font-bold">5/5</span> means full access,
-            <span class="rounded px-1.5 py-0.5 bg-yellow-100 text-yellow-700 text-xs font-bold">2/5</span> means partial,
-            and <span class="rounded px-1.5 py-0.5 bg-gray-100 text-gray-600 text-xs font-bold">0/5</span> means no access for that section.
-            Use the <strong>"Has access to category"</strong> filter to find roles by which dashboard section they can access.
+            Tabel daftar Peran menampilkan <strong>lencana cakupan X/Y</strong> untuk setiap grup izin.
+            Misalnya, <span class="rounded px-1.5 py-0.5 bg-emerald-100 text-emerald-700 text-xs font-bold">5/5</span> berarti akses penuh,
+            <span class="rounded px-1.5 py-0.5 bg-yellow-100 text-yellow-700 text-xs font-bold">2/5</span> berarti sebagian,
+            dan <span class="rounded px-1.5 py-0.5 bg-gray-100 text-gray-600 text-xs font-bold">0/5</span> berarti tidak ada akses untuk bagian tersebut.
+            Gunakan filter <strong>"Memiliki akses ke kategori"</strong> untuk menemukan peran berdasarkan bagian dasbor mana yang dapat mereka akses.
         </p>
     </div>
 

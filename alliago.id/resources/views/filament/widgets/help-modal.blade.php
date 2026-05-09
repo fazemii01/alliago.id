@@ -20,13 +20,13 @@
                     </svg>
                 </div>
                 <div>
-                    <h2 class="text-lg font-bold text-gray-900 dark:text-white">Admin Help & Guides</h2>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">New here? Check out the documentation to get started.</p>
+                    <h2 class="text-lg font-bold text-gray-900 dark:text-white">Bantuan & Panduan Admin</h2>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Baru di sini? Cek dokumentasi untuk memulai.</p>
                 </div>
             </div>
             
             <x-filament::button @click="$dispatch('open-modal', { id: 'help-modal' })" color="warning">
-                Open Guide
+                Buka Panduan
             </x-filament::button>
 
         </div>
@@ -36,8 +36,8 @@
                 <div class="flex items-center gap-3">
                     <span class="flex items-center justify-center w-8 h-8 bg-amber-100 border border-amber-300 rounded-lg text-lg">👋</span>
                     <div>
-                        <div class="text-lg font-bold text-gray-900 dark:text-white" style="line-height:1.2;">Welcome to Alliago.id</div>
-                        <div class="text-sm text-gray-500 dark:text-gray-400 font-normal mt-1">Here is a quick overview to get you started.</div>
+                        <div class="text-lg font-bold text-gray-900 dark:text-white" style="line-height:1.2;">Selamat datang di Alliago.id</div>
+                        <div class="text-sm text-gray-500 dark:text-gray-400 font-normal mt-1">Berikut ringkasan singkat untuk Anda memulai.</div>
                     </div>
                 </div>
             </x-slot>
@@ -50,21 +50,21 @@
                         :class="tab === 'started' ? 'border-amber-500 text-amber-600 dark:text-amber-400' : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'"
                         class="flex items-center gap-2 border-b-2 px-3 py-2 text-sm font-medium transition-colors"
                     >
-                        Getting Started
+                        Mulai
                     </button>
                     <button
                         @click="tab = 'changelog'"
                         :class="tab === 'changelog' ? 'border-amber-500 text-amber-600 dark:text-amber-400' : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'"
                         class="flex items-center gap-2 border-b-2 px-3 py-2 text-sm font-medium transition-colors"
                     >
-                        What's New
+                        Apa yang Baru
                     </button>
                     <button
                         @click="tab = 'docs'"
                         :class="tab === 'docs' ? 'border-amber-500 text-amber-600 dark:text-amber-400' : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'"
                         class="flex items-center gap-2 border-b-2 px-3 py-2 text-sm font-medium transition-colors"
                     >
-                        Documentation
+                        Dokumentasi
                     </button>
                 </div>
 
@@ -73,17 +73,17 @@
                     {{-- Getting Started --}}
                     <div x-show="tab === 'started'">
                         <div class="bg-amber-50 border border-amber-200 dark:bg-amber-500/10 dark:border-amber-500/20 rounded-xl p-4 mb-5">
-                            <p class="text-sm font-bold text-amber-800 dark:text-amber-400 mb-1">👋 Welcome to the Admin Panel</p>
-                            <p class="text-sm text-amber-700 dark:text-amber-500/80 leading-relaxed m-0">This dashboard allows you to oversee all visa operations, client applications, and financial metrics in one place.</p>
+                            <p class="text-sm font-bold text-amber-800 dark:text-amber-400 mb-1">👋 Selamat datang di Panel Admin</p>
+                            <p class="text-sm text-amber-700 dark:text-amber-500/80 leading-relaxed m-0">Dasbor ini memungkinkan Anda untuk mengawasi semua operasi visa, aplikasi klien, dan metrik keuangan di satu tempat.</p>
                         </div>
                         
-                        <p class="text-sm font-bold text-gray-900 dark:text-white mb-3">Quick Start Guide</p>
+                        <p class="text-sm font-bold text-gray-900 dark:text-white mb-3">Panduan Mulai Cepat</p>
                         
                         @foreach([
-                            ['🌐','bg-blue-50 dark:bg-blue-500/10','border-blue-200 dark:border-blue-500/20','Set Up Your Visa Catalog',   'Start by adding Countries and Visa Products in the Visa Catalog section. Each product needs a country and price before it goes live.'],
-                            ['📋','bg-amber-50 dark:bg-amber-500/10','border-amber-200 dark:border-amber-500/20','Process Client Applications', 'Once clients submit orders they appear in Operations → Applications. Review documents, update statuses, and send feedback.'],
-                            ['💰','bg-emerald-50 dark:bg-emerald-500/10','border-emerald-200 dark:border-emerald-500/20','Track Invoices & Payments',   'Paid orders generate invoices automatically. Visit Finance → Invoices. Configure payment options under Finance → Payment Methods.'],
-                            ['🔐','bg-purple-50 dark:bg-purple-500/10','border-purple-200 dark:border-purple-500/20','Configure Team Access',       'Add staff under Operations → Users. Then set which dashboard sections each role can access in Settings → Roles & Permissions.'],
+                            ['🌐','bg-blue-50 dark:bg-blue-500/10','border-blue-200 dark:border-blue-500/20','Atur Katalog Visa Anda',   'Mulai dengan menambahkan Negara dan Produk Visa di bagian Katalog Visa. Setiap produk memerlukan negara dan harga sebelum dapat ditayangkan.'],
+                            ['📋','bg-amber-50 dark:bg-amber-500/10','border-amber-200 dark:border-amber-500/20','Proses Aplikasi Klien', 'Setelah klien mengirimkan pesanan, aplikasi akan muncul di Operasi → Aplikasi. Tinjau dokumen, perbarui status, dan kirim masukan.'],
+                            ['💰','bg-emerald-50 dark:bg-emerald-500/10','border-emerald-200 dark:border-emerald-500/20','Lacak Faktur & Pembayaran',   'Pesanan yang dibayar menghasilkan faktur secara otomatis. Kunjungi Keuangan → Faktur. Konfigurasikan opsi pembayaran di bawah Keuangan → Metode Pembayaran.'],
+                            ['🔐','bg-purple-50 dark:bg-purple-500/10','border-purple-200 dark:border-purple-500/20','Konfigurasi Akses Tim',       'Tambahkan staf di bawah Operasi → Pengguna. Kemudian atur bagian dasbor mana yang dapat diakses oleh setiap peran di Pengaturan → Peran & Izin.'],
                         ] as [$emoji, $bg, $border, $title, $desc])
                         <div class="flex items-start gap-4 p-4 bg-white dark:bg-white/5 border border-gray-100 dark:border-white/10 rounded-xl shadow-sm mb-3">
                             <div class="flex items-center justify-center w-10 h-10 rounded-full {{ $bg }} border {{ $border }} text-lg flex-shrink-0">{{ $emoji }}</div>
@@ -97,12 +97,12 @@
 
                     {{-- Changelog --}}
                     <div x-show="tab === 'changelog'">
-                        <p class="text-sm font-bold text-gray-900 dark:text-white mb-5">Recent Updates</p>
+                        <p class="text-sm font-bold text-gray-900 dark:text-white mb-5">Pembaruan Terbaru</p>
                         
                         @foreach([
-                            ['v1.5.0','May 9, 2026',  'Latest', 'bg-emerald-100 dark:bg-emerald-500/20','text-emerald-800 dark:text-emerald-400',['🔐 Grouped Roles & Permissions by category (Operations, Finance, Catalog, Settings).','🗑️ Delete action on Applications — row, header, and bulk delete.','🏳️ Fixed missing flag emojis in the animated countries marquee.','📖 Welcome modal + Help & Guides + Documentation Center.']],
-                            ['v1.4.0','May 5, 2026',  'Feature','bg-purple-100 dark:bg-purple-500/20','text-purple-800 dark:text-purple-400',['📊 Dashboard stats widget with trend tracking.','💳 Xendit payment gateway with automatic webhook handling.','🔔 Auto-revision messages sent to clients when documents are flagged.']],
-                            ['v1.3.0','Apr 15, 2026', 'Feature','bg-blue-100 dark:bg-blue-500/20','text-blue-800 dark:text-blue-400',['💬 Real-time messaging between admin and clients.','🌟 Testimonials and Site FAQs management pages.','🗺️ Animated country marquee strip on the landing page.']],
+                            ['v1.5.0','Mei 9, 2026',  'Terbaru', 'bg-emerald-100 dark:bg-emerald-500/20','text-emerald-800 dark:text-emerald-400',['🔐 Peran & Izin dikelompokkan berdasarkan kategori (Operasi, Keuangan, Katalog, Pengaturan).','🗑️ Tindakan Hapus pada Aplikasi — hapus baris, header, dan hapus massal.','🏳️ Memperbaiki emoji bendera yang hilang pada marquee negara yang dianimasikan.','📖 Modal selamat datang + Bantuan & Panduan + Pusat Dokumentasi.']],
+                            ['v1.4.0','Mei 5, 2026',  'Fitur','bg-purple-100 dark:bg-purple-500/20','text-purple-800 dark:text-purple-400',['📊 Widget statistik dasbor dengan pelacakan tren.','💳 Gateway pembayaran Xendit dengan penanganan webhook otomatis.','🔔 Pesan revisi otomatis dikirim ke klien saat dokumen ditandai.']],
+                            ['v1.3.0','Apr 28, 2026', 'Fitur','bg-blue-100 dark:bg-blue-500/20','text-blue-800 dark:text-blue-400',['💬 Perpesanan waktu nyata antara admin dan klien.','🌟 Halaman manajemen Testimoni dan FAQ Situs.','🗺️ Strip marquee negara yang dianimasikan di halaman arahan.']],
                         ] as [$ver, $date, $tag, $tagBg, $tagClr, $changes])
                         <div class="relative pl-5 border-l-2 border-gray-200 dark:border-gray-700 mb-6">
                             <div class="absolute -left-[5px] top-1.5 w-2 h-2 rounded-full border-2 border-amber-500 bg-white dark:bg-gray-900"></div>
@@ -124,20 +124,20 @@
                     {{-- Documentation --}}
                     <div x-show="tab === 'docs'">
                         <div class="bg-gray-900 dark:bg-gray-800 rounded-xl p-5 mb-5">
-                            <p class="text-base font-bold text-white mb-1">📖 Knowledge Base</p>
-                            <p class="text-sm text-gray-400 mb-4">Detailed guides for every admin feature.</p>
+                            <p class="text-base font-bold text-white mb-1">📖 Basis Pengetahuan</p>
+                            <p class="text-sm text-gray-400 mb-4">Panduan terperinci untuk setiap fitur admin.</p>
                             <a href="{{ route('filament.admin.pages.documentation-page') }}" @click="$dispatch('close-modal', { id: 'help-modal' })" class="flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold py-2 px-4 rounded-lg transition-colors">
-                                ↗ Open Documentation Center
+                                ↗ Buka Pusat Dokumentasi
                             </a>
                         </div>
                         
-                        <p class="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">Quick Links</p>
+                        <p class="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">Tautan Cepat</p>
                         @foreach([
-                            ['📋','Applications & Document Review','Process orders, review docs, message clients.'],
-                            ['🗺️','Visa Catalog Management',        'Countries, visa products, pricing.'],
-                            ['💰','Finance & Payments',             'Invoices, payment gateway, reports.'],
-                            ['🔐','Roles & Permissions',            'Team access control by category.'],
-                            ['⚙️','Settings & Site Content',        'FAQs, testimonials, user management.'],
+                            ['📋','Aplikasi & Tinjauan Dokumen','Proses pesanan, tinjau dokumen, pesan klien.'],
+                            ['🗺️','Manajemen Katalog Visa',        'Negara, produk visa, harga.'],
+                            ['💰','Keuangan & Pembayaran',             'Faktur, gateway pembayaran, laporan.'],
+                            ['🔐','Peran & Izin',            'Kontrol akses tim berdasarkan kategori.'],
+                            ['⚙️','Pengaturan & Konten Situs',        'FAQ, testimoni, manajemen pengguna.'],
                         ] as [$e, $t, $d])
                         <a href="{{ route('filament.admin.pages.documentation-page') }}" @click="$dispatch('close-modal', { id: 'help-modal' })" class="flex items-center gap-3 bg-white dark:bg-white/5 border border-gray-100 dark:border-white/10 hover:border-amber-300 dark:hover:border-amber-500/50 rounded-xl p-3 mb-2 transition-colors">
                             <span class="text-xl flex-shrink-0">{{ $e }}</span>
@@ -155,11 +155,11 @@
             <x-slot name="footer">
                 <div class="flex items-center justify-between w-full">
                     <p class="text-sm text-gray-500 dark:text-gray-400 m-0">
-                        Need more help? 
-                        <a href="{{ route('filament.admin.pages.help-page') }}" @click="$dispatch('close-modal', { id: 'help-modal' })" class="text-amber-600 dark:text-amber-500 font-semibold hover:underline">View full guide</a>
+                        Butuh bantuan lebih lanjut? 
+                        <a href="{{ route('filament.admin.pages.help-page') }}" @click="$dispatch('close-modal', { id: 'help-modal' })" class="text-amber-600 dark:text-amber-500 font-semibold hover:underline">Lihat panduan lengkap</a>
                     </p>
                     <x-filament::button @click="$dispatch('close-modal', { id: 'help-modal' })" color="warning">
-                        Let's Go &rarr;
+                        Mulai &rarr;
                     </x-filament::button>
                 </div>
             </x-slot>

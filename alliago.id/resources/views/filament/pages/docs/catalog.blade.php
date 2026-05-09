@@ -3,38 +3,38 @@
 <div class="space-y-5">
 
     <div>
-        <h2 class="{{ $h2 }}">🗺️ Visa Catalog</h2>
-        <p class="{{ $p }} text-gray-500">Manage countries and the visa products clients can order.</p>
+        <h2 class="{{ $h2 }}">🗺️ Katalog Visa</h2>
+        <p class="{{ $p }} text-gray-500">Kelola negara dan produk visa yang dapat dipesan klien.</p>
     </div>
 
     <div class="{{ $section }}">
-        <h3 class="{{ $h3 }}">Countries</h3>
+        <h3 class="{{ $h3 }}">Negara</h3>
         <p class="{{ $p }}">
-            Countries form the foundation of the catalog. Every Visa Product must be linked to a Country.
-            Each country has a <strong>name</strong>, <strong>slug</strong>, <strong>flag emoji</strong>, <strong>ISO code</strong>, and an <strong>active</strong> toggle.
+            Negara membentuk dasar katalog. Setiap Produk Visa harus dikaitkan dengan sebuah Negara.
+            Setiap negara memiliki <strong>nama</strong>, <strong>slug</strong>, <strong>emoji bendera</strong>, <strong>kode ISO</strong>, dan tombol alih <strong>aktif</strong>.
         </p>
         <ul class="space-y-1.5 text-sm text-gray-600 list-disc list-inside">
-            <li>Flag emojis are seeded automatically based on country name — you can override them in the edit form.</li>
-            <li>Inactive countries are hidden from the public website but remain in the database.</li>
-            <li>Deleting a country will also affect all its linked visa products — be careful.</li>
+            <li>Emoji bendera disemai secara otomatis berdasarkan nama negara — Anda dapat menggantinya di formulir edit.</li>
+            <li>Negara yang tidak aktif disembunyikan dari situs web publik tetapi tetap ada dalam database.</li>
+            <li>Menghapus negara juga akan memengaruhi semua produk visa yang tertaut dengannya — berhati-hatilah.</li>
         </ul>
     </div>
 
     <div class="{{ $section }}">
-        <h3 class="{{ $h3 }}">Visa Products</h3>
+        <h3 class="{{ $h3 }}">Produk Visa</h3>
         <p class="{{ $p }}">
-            Visa Products are the individual services clients can purchase. Each product belongs to one Country and includes:
+            Produk Visa adalah layanan individual yang dapat dibeli klien. Setiap produk milik satu Negara dan mencakup:
         </p>
         <div class="grid grid-cols-2 gap-2 text-sm">
             @foreach([
-                ['Name', 'The full service name shown to clients.'],
-                ['Slug', 'URL-friendly identifier (auto-generated).'],
-                ['Base Price', 'The standard price before any discount.'],
-                ['Discount Price', 'Optional discounted price shown with a strikethrough of base price.'],
-                ['Processing Time', 'e.g. "3-5 business days" — shown on product page.'],
-                ['Short Description', 'Brief summary shown in catalog cards.'],
-                ['Sort Order', 'Controls display order in the catalog.'],
-                ['Active', 'Toggle visibility on the public website.'],
+                ['Nama', 'Nama layanan lengkap yang ditampilkan kepada klien.'],
+                ['Slug', 'Pengenal yang ramah URL (dibuat secara otomatis).'],
+                ['Harga Dasar', 'Harga standar sebelum diskon apa pun.'],
+                ['Harga Diskon', 'Harga diskon opsional yang ditampilkan dengan coretan pada harga dasar.'],
+                ['Waktu Pemrosesan', 'mis. "3-5 hari kerja" — ditampilkan di halaman produk.'],
+                ['Deskripsi Singkat', 'Ringkasan singkat yang ditampilkan di kartu katalog.'],
+                ['Urutan Sortir', 'Mengontrol urutan tampilan dalam katalog.'],
+                ['Aktif', 'Alihkan visibilitas di situs web publik.'],
             ] as [$field, $desc])
             <div class="rounded-lg border border-gray-100 bg-gray-50 p-3">
                 <p class="font-semibold text-gray-800">{{ $field }}</p>
@@ -45,11 +45,11 @@
     </div>
 
     <div class="{{ $section }}">
-        <h3 class="{{ $h3 }}">Pricing Tips</h3>
+        <h3 class="{{ $h3 }}">Kiat Penetapan Harga</h3>
         <ul class="space-y-2 text-sm text-gray-600 list-disc list-inside">
-            <li>If a <strong>Discount Price</strong> is set and lower than the Base Price, it is shown as the active price with the original crossed out.</li>
-            <li>When a client purchases, the invoice amount is locked at the time of payment — future price changes won't affect existing invoices.</li>
-            <li>All prices are in <strong>IDR (Indonesian Rupiah)</strong>.</li>
+            <li>Jika <strong>Harga Diskon</strong> diatur dan lebih rendah dari Harga Dasar, ini akan ditampilkan sebagai harga aktif dengan harga aslinya dicoret.</li>
+            <li>Saat klien membeli, jumlah faktur dikunci pada saat pembayaran — perubahan harga di masa mendatang tidak akan memengaruhi faktur yang ada.</li>
+            <li>Semua harga dalam <strong>IDR (Rupiah Indonesia)</strong>.</li>
         </ul>
     </div>
 

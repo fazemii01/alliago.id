@@ -10,7 +10,7 @@
         <div class="mb-6">
             <a href="{{ route('filament.admin.pages.help-page') }}" class="inline-flex items-center gap-1.5 text-sm font-medium text-gray-500 hover:text-amber-600 transition-colors">
                 <x-heroicon-o-arrow-left class="h-4 w-4" />
-                Back to Help & Guides
+                Kembali ke Bantuan & Panduan
             </a>
         </div>
 
@@ -19,14 +19,14 @@
             {{-- ── Sticky Sidebar Navigation ─────────────────────────────── --}}
             <aside class="hidden lg:block w-56 shrink-0">
                 <div class="sticky top-4 space-y-1">
-                    <p class="mb-2 text-xs font-bold uppercase tracking-wider text-gray-400 px-3">Contents</p>
+                    <p class="mb-2 text-xs font-bold uppercase tracking-wider text-gray-400 px-3">Daftar Isi</p>
                     @foreach([
-                        ['id' => 'overview',      'icon' => 'heroicon-o-home',                    'label' => 'Overview'],
-                        ['id' => 'applications',  'icon' => 'heroicon-o-clipboard-document-list', 'label' => 'Applications'],
-                        ['id' => 'catalog',       'icon' => 'heroicon-o-globe-alt',               'label' => 'Visa Catalog'],
-                        ['id' => 'finance',       'icon' => 'heroicon-o-banknotes',               'label' => 'Finance'],
-                        ['id' => 'roles',         'icon' => 'heroicon-o-shield-check',            'label' => 'Roles & Permissions'],
-                        ['id' => 'settings',      'icon' => 'heroicon-o-cog-6-tooth',            'label' => 'Settings'],
+                        ['id' => 'overview',      'icon' => 'heroicon-o-home',                    'label' => 'Ringkasan'],
+                        ['id' => 'applications',  'icon' => 'heroicon-o-clipboard-document-list', 'label' => 'Aplikasi'],
+                        ['id' => 'catalog',       'icon' => 'heroicon-o-globe-alt',               'label' => 'Katalog Visa'],
+                        ['id' => 'finance',       'icon' => 'heroicon-o-banknotes',               'label' => 'Keuangan'],
+                        ['id' => 'roles',         'icon' => 'heroicon-o-shield-check',            'label' => 'Peran & Izin'],
+                        ['id' => 'settings',      'icon' => 'heroicon-o-cog-6-tooth',            'label' => 'Pengaturan'],
                         ['id' => 'faq',           'icon' => 'heroicon-o-question-mark-circle',   'label' => 'FAQ'],
                     ] as $nav)
                     <button
@@ -47,22 +47,22 @@
                 {{-- ── OVERVIEW ─────────────────────────────────────────── --}}
                 <div x-show="activeSection === 'overview'" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0 translate-y-1" x-transition:enter-end="opacity-100 translate-y-0">
                     <div class="rounded-2xl border border-amber-100 bg-amber-50 p-6 mb-6">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-2">📖 Alliago.id Admin — Documentation Center</h2>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-2">📖 Admin Alliago.id — Pusat Dokumentasi</h2>
                         <p class="text-amber-800/70 leading-relaxed">
-                            This documentation covers every section of the Alliago.id administration panel.
-                            Use the sidebar to jump to any topic. This panel only covers the <strong>admin dashboard</strong>;
-                            public-facing pages (landing page, visa catalog, checkout) are not affected by admin settings here.
+                            Dokumentasi ini mencakup setiap bagian dari panel administrasi Alliago.id.
+                            Gunakan bilah sisi untuk melompat ke topik apa pun. Panel ini hanya mencakup <strong>dasbor admin</strong>;
+                            halaman publik (halaman arahan, katalog visa, pembayaran) tidak terpengaruh oleh pengaturan admin di sini.
                         </p>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
                         @foreach([
-                            ['emoji'=>'📋','title'=>'Applications','desc'=>'Process client visa orders','id'=>'applications'],
-                            ['emoji'=>'🗺️','title'=>'Visa Catalog','desc'=>'Countries & visa products','id'=>'catalog'],
-                            ['emoji'=>'💰','title'=>'Finance','desc'=>'Invoices & payments','id'=>'finance'],
-                            ['emoji'=>'🔐','title'=>'Roles','desc'=>'Access control','id'=>'roles'],
-                            ['emoji'=>'⚙️','title'=>'Settings','desc'=>'Site content','id'=>'settings'],
-                            ['emoji'=>'❓','title'=>'FAQ','desc'=>'Common questions','id'=>'faq'],
+                            ['emoji'=>'📋','title'=>'Aplikasi','desc'=>'Proses pesanan visa klien','id'=>'applications'],
+                            ['emoji'=>'🗺️','title'=>'Katalog Visa','desc'=>'Negara & produk visa','id'=>'catalog'],
+                            ['emoji'=>'💰','title'=>'Keuangan','desc'=>'Faktur & pembayaran','id'=>'finance'],
+                            ['emoji'=>'🔐','title'=>'Peran','desc'=>'Kontrol akses','id'=>'roles'],
+                            ['emoji'=>'⚙️','title'=>'Pengaturan','desc'=>'Konten situs','id'=>'settings'],
+                            ['emoji'=>'❓','title'=>'FAQ','desc'=>'Pertanyaan umum','id'=>'faq'],
                         ] as $card)
                         <button
                             @click="activeSection = '{{ $card['id'] }}'"

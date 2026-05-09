@@ -14,9 +14,9 @@
                 👋
             </div>
             <div>
-                <h2 class="text-xl font-bold text-gray-900">Welcome to Alliago.id Admin</h2>
+                <h2 class="text-xl font-bold text-gray-900">Selamat datang di Admin Alliago.id</h2>
                 <p class="mt-1 text-sm text-amber-800/70">
-                    This page has everything you need — quick start guide, recent updates, and full documentation.
+                    Halaman ini memiliki semua yang Anda butuhkan — panduan mulai cepat, pembaruan terbaru, dan dokumentasi lengkap.
                 </p>
             </div>
         </div>
@@ -31,7 +31,7 @@
                 class="flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-all"
             >
                 <x-heroicon-o-play-circle class="h-4 w-4" />
-                Getting Started
+                Mulai
             </button>
             <button
                 @click="activeTab = 'changelog'"
@@ -41,7 +41,7 @@
                 class="flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-all"
             >
                 <x-heroicon-o-clock class="h-4 w-4" />
-                What's New
+                Apa yang Baru
             </button>
             <button
                 @click="activeTab = 'docs'"
@@ -51,7 +51,7 @@
                 class="flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-all"
             >
                 <x-heroicon-o-book-open class="h-4 w-4" />
-                Documentation
+                Dokumentasi
             </button>
         </div>
 
@@ -60,7 +60,7 @@
         {{-- ══════════════════════════════════════════════════════════════ --}}
         <div x-show="activeTab === 'started'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0">
 
-            <h3 class="mb-4 text-base font-bold text-gray-900">Quick Start Guide</h3>
+            <h3 class="mb-4 text-base font-bold text-gray-900">Panduan Mulai Cepat</h3>
 
             <div class="relative space-y-4 before:absolute before:inset-y-0 before:left-5 before:w-px before:bg-gradient-to-b before:from-transparent before:via-gray-200 before:to-transparent">
 
@@ -69,46 +69,46 @@
                         'step' => '1',
                         'color' => 'blue',
                         'icon' => 'heroicon-o-globe-alt',
-                        'title' => 'Set Up Your Visa Catalog',
-                        'desc' => 'Start by adding Countries and Visa Products under the Visa Catalog section. Each product needs a country, price, and processing time before it appears on the public site.',
+                        'title' => 'Atur Katalog Visa Anda',
+                        'desc' => 'Mulai dengan menambahkan Negara dan Produk Visa di bawah bagian Katalog Visa. Setiap produk memerlukan negara, harga, dan waktu pemrosesan sebelum muncul di situs publik.',
                         'link' => '/admin/visa-products',
-                        'linkLabel' => 'Go to Visa Products →',
+                        'linkLabel' => 'Buka Produk Visa →',
                     ],
                     [
                         'step' => '2',
                         'color' => 'amber',
                         'icon' => 'heroicon-o-clipboard-document-list',
-                        'title' => 'Process Client Applications',
-                        'desc' => 'Once clients submit orders, they appear in Operations → Applications. Review documents, update statuses, and leave feedback directly in the application edit page.',
+                        'title' => 'Proses Aplikasi Klien',
+                        'desc' => 'Setelah klien mengirimkan pesanan, aplikasi akan muncul di Operasi → Aplikasi. Tinjau dokumen, perbarui status, dan berikan masukan langsung di halaman edit aplikasi.',
                         'link' => '/admin/applications',
-                        'linkLabel' => 'Go to Applications →',
+                        'linkLabel' => 'Buka Aplikasi →',
                     ],
                     [
                         'step' => '3',
                         'color' => 'emerald',
                         'icon' => 'heroicon-o-banknotes',
-                        'title' => 'Track Invoices & Payments',
-                        'desc' => 'All paid orders generate an invoice automatically. Go to Finance → Invoices to view payment status. Configure payment gateways under Finance → Payment Methods.',
+                        'title' => 'Lacak Faktur & Pembayaran',
+                        'desc' => 'Semua pesanan yang dibayar menghasilkan faktur secara otomatis. Buka Keuangan → Faktur untuk melihat status pembayaran. Konfigurasikan gateway pembayaran di bawah Keuangan → Metode Pembayaran.',
                         'link' => '/admin/invoices',
-                        'linkLabel' => 'Go to Invoices →',
+                        'linkLabel' => 'Buka Faktur →',
                     ],
                     [
                         'step' => '4',
                         'color' => 'purple',
                         'icon' => 'heroicon-o-users',
-                        'title' => 'Manage Team Access',
-                        'desc' => 'Add staff accounts under Operations → Users. Assign them to the "staff" role, then configure exactly which dashboard sections they can access under Settings → Roles & Permissions.',
+                        'title' => 'Kelola Akses Tim',
+                        'desc' => 'Tambahkan akun staf di bawah Operasi → Pengguna. Tetapkan mereka ke peran "staff", kemudian konfigurasikan bagian dasbor mana yang dapat mereka akses di bawah Pengaturan → Peran & Izin.',
                         'link' => '/admin/roles',
-                        'linkLabel' => 'Go to Roles →',
+                        'linkLabel' => 'Buka Peran →',
                     ],
                     [
                         'step' => '5',
                         'color' => 'rose',
                         'icon' => 'heroicon-o-star',
-                        'title' => 'Customize Site Content',
-                        'desc' => 'Manage the public-facing landing page content — FAQs and Testimonials — from Settings. These feed directly into the Alliago.id homepage without any code changes.',
+                        'title' => 'Sesuaikan Konten Situs',
+                        'desc' => 'Kelola konten halaman arahan publik — FAQ dan Testimoni — dari Pengaturan. Ini langsung masuk ke beranda Alliago.id tanpa perubahan kode.',
                         'link' => '/admin/site-faqs',
-                        'linkLabel' => 'Go to Site FAQs →',
+                        'linkLabel' => 'Buka FAQ Situs →',
                     ],
                 ] as $item)
                 <div class="relative flex items-start gap-4 rounded-xl border border-gray-100 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
@@ -130,7 +130,7 @@
 
             {{-- Tips box --}}
             <div class="mt-6 rounded-xl border border-blue-100 bg-blue-50 p-4 text-sm text-blue-800">
-                <strong>💡 Pro Tip:</strong> Use the <strong>Dashboard</strong> stats at the top to spot applications that need immediate attention — orange "Needs Attention" count means clients are waiting.
+                <strong>💡 Kiat Pro:</strong> Gunakan statistik <strong>Dasbor</strong> di bagian atas untuk menemukan aplikasi yang membutuhkan perhatian segera — jumlah oranye "Perlu Perhatian" berarti klien sedang menunggu.
             </div>
         </div>
 
@@ -139,57 +139,57 @@
         {{-- ══════════════════════════════════════════════════════════════ --}}
         <div x-show="activeTab === 'changelog'" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0">
 
-            <h3 class="mb-4 text-base font-bold text-gray-900">Recent Updates</h3>
+            <h3 class="mb-4 text-base font-bold text-gray-900">Pembaruan Terbaru</h3>
 
             <div class="space-y-8">
                 @foreach([
                     [
                         'version' => 'v1.5.0',
-                        'date' => 'May 9, 2026',
-                        'tag' => 'Latest',
+                        'date' => 'Mei 9, 2026',
+                        'tag' => 'Terbaru',
                         'tagClass' => 'bg-emerald-100 text-emerald-700',
                         'dotClass' => 'border-amber-500',
                         'changes' => [
-                            ['icon' => '🔐', 'text' => 'Rebuilt Roles & Permissions with grouped categories (Operations, Finance, Catalog, Settings) — much easier to manage.'],
-                            ['icon' => '🗑️', 'text' => 'Added Delete action to Applications — single delete on table row and bulk delete.'],
-                            ['icon' => '🏳️', 'text' => 'Fixed missing country flag emojis in the animated countries marquee on the landing page.'],
-                            ['icon' => '📖', 'text' => 'Added this Help & Guides page with changelog, quick-start, and full Documentation Center.'],
+                            ['icon' => '🔐', 'text' => 'Membangun ulang Peran & Izin dengan kategori yang dikelompokkan (Operasi, Keuangan, Katalog, Pengaturan) — lebih mudah dikelola.'],
+                            ['icon' => '🗑️', 'text' => 'Menambahkan tindakan Hapus pada Aplikasi — hapus tunggal pada baris tabel dan hapus massal.'],
+                            ['icon' => '🏳️', 'text' => 'Memperbaiki emoji bendera negara yang hilang pada marquee negara yang dianimasikan di halaman arahan.'],
+                            ['icon' => '📖', 'text' => 'Menambahkan halaman Bantuan & Panduan ini dengan catatan perubahan, mulai cepat, dan Pusat Dokumentasi lengkap.'],
                         ],
                     ],
                     [
                         'version' => 'v1.4.0',
-                        'date' => 'May 5, 2026',
-                        'tag' => 'Feature',
+                        'date' => 'Mei 5, 2026',
+                        'tag' => 'Fitur',
                         'tagClass' => 'bg-purple-100 text-purple-700',
                         'dotClass' => 'border-gray-300',
                         'changes' => [
-                            ['icon' => '📊', 'text' => 'Added analytical stats widget to the Filament dashboard (Total Applications, Needs Attention, Total Clients).'],
-                            ['icon' => '💳', 'text' => 'Integrated Xendit payment gateway with automated webhook handling and invoice amount locking.'],
-                            ['icon' => '🔔', 'text' => 'Automatic revision-request messages sent to clients when admin marks a document as "needs revision".'],
+                            ['icon' => '📊', 'text' => 'Menambahkan widget statistik analitis ke dasbor Filament (Total Aplikasi, Perlu Perhatian, Total Klien).'],
+                            ['icon' => '💳', 'text' => 'Mengintegrasikan gateway pembayaran Xendit dengan penanganan webhook otomatis dan penguncian jumlah faktur.'],
+                            ['icon' => '🔔', 'text' => 'Pesan permintaan revisi otomatis dikirim ke klien saat admin menandai dokumen sebagai "perlu revisi".'],
                         ],
                     ],
                     [
                         'version' => 'v1.3.0',
                         'date' => 'April 15, 2026',
-                        'tag' => 'Feature',
+                        'tag' => 'Fitur',
                         'tagClass' => 'bg-blue-100 text-blue-700',
                         'dotClass' => 'border-gray-300',
                         'changes' => [
-                            ['icon' => '💬', 'text' => 'Launched real-time messaging between admin and clients inside each application.'],
-                            ['icon' => '🌟', 'text' => 'Testimonials and Site FAQs management added to the admin Settings section.'],
-                            ['icon' => '🗺️', 'text' => 'Animated country marquee strip added to the landing page with flag emojis.'],
+                            ['icon' => '💬', 'text' => 'Meluncurkan perpesanan waktu nyata antara admin dan klien di dalam setiap aplikasi.'],
+                            ['icon' => '🌟', 'text' => 'Manajemen Testimoni dan FAQ Situs ditambahkan ke bagian Pengaturan admin.'],
+                            ['icon' => '🗺️', 'text' => 'Strip marquee negara yang dianimasikan ditambahkan ke halaman arahan dengan emoji bendera.'],
                         ],
                     ],
                     [
                         'version' => 'v1.2.0',
                         'date' => 'April 1, 2026',
-                        'tag' => 'Update',
+                        'tag' => 'Pembaruan',
                         'tagClass' => 'bg-slate-100 text-slate-600',
                         'dotClass' => 'border-gray-300',
                         'changes' => [
-                            ['icon' => '🎨', 'text' => 'Full light-theme redesign for the client portal and landing page.'],
-                            ['icon' => '🚀', 'text' => 'Deployed to production on Nginx with proper routing configuration.'],
-                            ['icon' => '🔑', 'text' => 'Admin panel dark mode disabled — forced to light theme for consistency.'],
+                            ['icon' => '🎨', 'text' => 'Desain ulang tema terang penuh untuk portal klien dan halaman arahan.'],
+                            ['icon' => '🚀', 'text' => 'Dikerahkan ke produksi di Nginx dengan konfigurasi perutean yang tepat.'],
+                            ['icon' => '🔑', 'text' => 'Mode gelap panel admin dinonaktifkan — dipaksa menggunakan tema terang untuk konsistensi.'],
                         ],
                     ],
                 ] as $entry)
@@ -228,8 +228,8 @@
                 <div class="flex items-center gap-3 mb-3">
                     <x-heroicon-o-book-open class="h-8 w-8 text-amber-400" />
                     <div>
-                        <h3 class="text-lg font-bold">Documentation Center</h3>
-                        <p class="text-sm text-gray-400">Detailed guides for every feature in the admin dashboard.</p>
+                        <h3 class="text-lg font-bold">Pusat Dokumentasi</h3>
+                        <p class="text-sm text-gray-400">Panduan terperinci untuk setiap fitur di dasbor admin.</p>
                     </div>
                 </div>
                 <a
@@ -237,20 +237,20 @@
                     class="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-amber-500 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-amber-600"
                 >
                     <x-heroicon-o-arrow-top-right-on-square class="h-4 w-4" />
-                    Open Full Documentation Center
+                    Buka Pusat Dokumentasi Lengkap
                 </a>
             </div>
 
             {{-- Quick links --}}
-            <h4 class="mb-3 text-xs font-bold uppercase tracking-wider text-gray-500">Quick Links</h4>
+            <h4 class="mb-3 text-xs font-bold uppercase tracking-wider text-gray-500">Tautan Cepat</h4>
 
             <div class="space-y-3">
                 @foreach([
-                    ['icon' => '📋', 'color' => 'amber', 'title' => 'Applications & Document Review', 'desc' => 'How to process applications, review documents, and communicate with clients.', 'anchor' => '#applications'],
-                    ['icon' => '🗺️', 'color' => 'blue', 'title' => 'Visa Catalog Management', 'desc' => 'Creating countries, visa products, pricing, and setting processing times.', 'anchor' => '#catalog'],
-                    ['icon' => '💰', 'color' => 'emerald', 'title' => 'Finance & Payments', 'desc' => 'Understanding invoices, payment gateway setup, and financial reporting.', 'anchor' => '#finance'],
-                    ['icon' => '🔐', 'color' => 'purple', 'title' => 'Roles & Permissions', 'desc' => 'Managing admin users, roles, and granular permission groups.', 'anchor' => '#roles'],
-                    ['icon' => '⚙️', 'color' => 'rose', 'title' => 'Site Content & Settings', 'desc' => 'Managing public FAQs, testimonials, and site-wide settings.', 'anchor' => '#settings'],
+                    ['icon' => '📋', 'color' => 'amber', 'title' => 'Aplikasi & Tinjauan Dokumen', 'desc' => 'Cara memproses aplikasi, meninjau dokumen, dan berkomunikasi dengan klien.', 'anchor' => '#applications'],
+                    ['icon' => '🗺️', 'color' => 'blue', 'title' => 'Manajemen Katalog Visa', 'desc' => 'Membuat negara, produk visa, harga, dan menetapkan waktu pemrosesan.', 'anchor' => '#catalog'],
+                    ['icon' => '💰', 'color' => 'emerald', 'title' => 'Keuangan & Pembayaran', 'desc' => 'Memahami faktur, pengaturan gateway pembayaran, dan pelaporan keuangan.', 'anchor' => '#finance'],
+                    ['icon' => '🔐', 'color' => 'purple', 'title' => 'Peran & Izin', 'desc' => 'Mengelola pengguna admin, peran, dan grup izin granular.', 'anchor' => '#roles'],
+                    ['icon' => '⚙️', 'color' => 'rose', 'title' => 'Konten & Pengaturan Situs', 'desc' => 'Mengelola FAQ publik, testimoni, dan pengaturan seluruh situs.', 'anchor' => '#settings'],
                 ] as $doc)
                 <a
                     href="{{ route('filament.admin.pages.documentation-page') }}{{ $doc['anchor'] }}"
@@ -275,9 +275,9 @@
 
         {{-- Footer --}}
         <div class="mt-8 flex items-center justify-between rounded-xl border border-gray-100 bg-gray-50 px-5 py-4 text-sm text-gray-500">
-            <span>Need more help? Contact your system administrator.</span>
+            <span>Butuh bantuan lebih lanjut? Hubungi administrator sistem Anda.</span>
             <a href="{{ route('filament.admin.pages.documentation-page') }}" class="font-semibold text-amber-600 hover:underline">
-                Full Documentation →
+                Dokumentasi Lengkap →
             </a>
         </div>
     </div>

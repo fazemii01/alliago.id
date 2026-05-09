@@ -3,38 +3,38 @@
 <div class="space-y-5">
 
     <div>
-        <h2 class="{{ $h2 }}">❓ Frequently Asked Questions</h2>
-        <p class="{{ $p }} text-gray-500">Common questions from admin team members.</p>
+        <h2 class="{{ $h2 }}">❓ Pertanyaan yang Sering Diajukan</h2>
+        <p class="{{ $p }} text-gray-500">Pertanyaan umum dari anggota tim admin.</p>
     </div>
 
     @foreach([
         [
-            'q' => 'Why can\'t my staff member see a certain section?',
-            'a' => 'Staff members need explicit permissions for each dashboard section. Go to <strong>Settings → Roles & Permissions</strong>, edit the "staff" role, and enable the appropriate permission group tab. Remember: permissions only affect the admin dashboard, not the public website.',
+            'q' => 'Mengapa anggota staf saya tidak dapat melihat bagian tertentu?',
+            'a' => 'Anggota staf memerlukan izin eksplisit untuk setiap bagian dasbor. Pergi ke <strong>Pengaturan → Peran & Izin</strong>, edit peran "staff", dan aktifkan tab grup izin yang sesuai. Ingat: izin hanya memengaruhi dasbor admin, bukan situs web publik.',
         ],
         [
-            'q' => 'Can I delete an invoice?',
-            'a' => 'No — invoices are permanent financial records and cannot be deleted from the admin UI. This is intentional to maintain financial audit integrity. If you need to void a transaction, contact your payment gateway (Xendit) directly.',
+            'q' => 'Bisakah saya menghapus faktur?',
+            'a' => 'Tidak — faktur adalah catatan keuangan permanen dan tidak dapat dihapus dari UI admin. Ini disengaja untuk menjaga integritas audit keuangan. Jika Anda perlu membatalkan transaksi, hubungi gateway pembayaran Anda (Xendit) secara langsung.',
         ],
         [
-            'q' => 'How do I change the price of a visa product without affecting existing paid orders?',
-            'a' => 'Just update the price in <strong>Visa Catalog → Visa Products</strong>. Invoice amounts are locked at the time of payment, so existing invoices are unaffected by any price changes you make.',
+            'q' => 'Bagaimana cara mengubah harga produk visa tanpa memengaruhi pesanan berbayar yang sudah ada?',
+            'a' => 'Cukup perbarui harga di <strong>Katalog Visa → Produk Visa</strong>. Jumlah faktur dikunci pada saat pembayaran, jadi faktur yang sudah ada tidak terpengaruh oleh perubahan harga yang Anda buat.',
         ],
         [
-            'q' => 'How do I notify a client that their application needs changes?',
-            'a' => 'Open the application, change the relevant document\'s status to <strong>Needs Revision</strong>, and add your note in the Feedback field. When you save, a message is automatically sent to the client with your feedback. You can also send free-form messages via the Messages tab at the bottom of the application.',
+            'q' => 'Bagaimana cara memberi tahu klien bahwa aplikasi mereka perlu perubahan?',
+            'a' => 'Buka aplikasi, ubah status dokumen yang relevan menjadi <strong>Perlu Revisi</strong>, dan tambahkan catatan Anda di kolom Umpan Balik. Saat Anda menyimpan, pesan otomatis dikirim ke klien dengan umpan balik Anda. Anda juga dapat mengirim pesan bentuk bebas melalui tab Pesan di bagian bawah aplikasi.',
         ],
         [
-            'q' => 'What happens when all documents are approved?',
-            'a' => 'The application status automatically changes to <strong>Ready</strong>. The client will see this in their portal. You can then manually set it to <strong>Completed</strong> once the visa has been obtained.',
+            'q' => 'Apa yang terjadi ketika semua dokumen disetujui?',
+            'a' => 'Status aplikasi otomatis berubah menjadi <strong>Siap</strong>. Klien akan melihat ini di portal mereka. Anda kemudian dapat mengaturnya secara manual ke <strong>Selesai</strong> setelah visa diperoleh.',
         ],
         [
-            'q' => 'Can I add new permission groups or permissions?',
-            'a' => 'Not from the UI — the permission structure is defined in code (<code>RolesAndPermissionsSeeder</code>). Contact your developer to add new resource permissions if you add new admin sections.',
+            'q' => 'Bisakah saya menambahkan grup izin atau izin baru?',
+            'a' => 'Tidak dari UI — struktur izin ditentukan dalam kode (<code>RolesAndPermissionsSeeder</code>). Hubungi pengembang Anda untuk menambahkan izin sumber daya baru jika Anda menambahkan bagian admin baru.',
         ],
         [
-            'q' => 'How do I add a new staff member?',
-            'a' => 'Go to <strong>Operations → Users → New User</strong>. Fill in their name, email, and a temporary password. Assign them the <strong>staff</strong> role. Then go to <strong>Settings → Roles</strong> and configure what sections they can access.',
+            'q' => 'Bagaimana cara menambahkan anggota staf baru?',
+            'a' => 'Pergi ke <strong>Operasional → Pengguna → Pengguna Baru</strong>. Isi nama, email, dan kata sandi sementara mereka. Tetapkan peran <strong>staff</strong> kepada mereka. Kemudian pergi ke <strong>Pengaturan → Peran</strong> dan konfigurasikan bagian mana yang dapat mereka akses.',
         ],
     ] as $faq)
     <div x-data="{ open: false }" class="rounded-xl border border-gray-100 bg-white shadow-sm overflow-hidden">

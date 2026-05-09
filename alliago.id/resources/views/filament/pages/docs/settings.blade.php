@@ -3,49 +3,49 @@
 <div class="space-y-5">
 
     <div>
-        <h2 class="{{ $h2 }}">⚙️ Settings</h2>
-        <p class="{{ $p }} text-gray-500">Manage public-facing site content — FAQs and Testimonials.</p>
+        <h2 class="{{ $h2 }}">⚙️ Pengaturan</h2>
+        <p class="{{ $p }} text-gray-500">Kelola konten situs yang menghadap publik — FAQ dan Testimoni.</p>
     </div>
 
     <div class="{{ $section }}">
-        <h3 class="{{ $h3 }}">Site FAQs</h3>
+        <h3 class="{{ $h3 }}">FAQ Situs</h3>
         <p class="{{ $p }}">
-            FAQs appear on the public landing page in the FAQ accordion section.
-            You can add, edit, reorder, and delete FAQ entries from <strong>Settings → Site FAQs</strong>.
+            FAQ muncul di halaman arahan publik di bagian akordeon FAQ.
+            Anda dapat menambah, mengedit, mengurutkan ulang, dan menghapus entri FAQ dari <strong>Pengaturan → FAQ Situs</strong>.
         </p>
         <ul class="space-y-1.5 text-sm text-gray-600 list-disc list-inside">
-            <li>Each FAQ has a <strong>Question</strong> and <strong>Answer</strong>.</li>
-            <li>Use the <strong>Sort Order</strong> field to control display order on the page.</li>
-            <li>Inactive FAQs are hidden from the public site but preserved in the database.</li>
+            <li>Setiap FAQ memiliki <strong>Pertanyaan</strong> dan <strong>Jawaban</strong>.</li>
+            <li>Gunakan kolom <strong>Urutan Sortir</strong> untuk mengontrol urutan tampilan di halaman.</li>
+            <li>FAQ yang tidak aktif disembunyikan dari situs publik tetapi dipertahankan di database.</li>
         </ul>
     </div>
 
     <div class="{{ $section }}">
-        <h3 class="{{ $h3 }}">Testimonials</h3>
+        <h3 class="{{ $h3 }}">Testimoni</h3>
         <p class="{{ $p }}">
-            Testimonials are client reviews displayed on the landing page.
-            Go to <strong>Settings → Testimonials</strong> to manage them.
+            Testimoni adalah ulasan klien yang ditampilkan di halaman arahan.
+            Pergi ke <strong>Pengaturan → Testimoni</strong> untuk mengelolanya.
         </p>
         <ul class="space-y-1.5 text-sm text-gray-600 list-disc list-inside">
-            <li>Each testimonial has a <strong>Client Name</strong>, <strong>Content</strong>, optional <strong>Rating</strong>, and an optional <strong>Avatar URL</strong>.</li>
-            <li>Inactive testimonials are hidden from the homepage automatically.</li>
-            <li>Sort order controls carousel/display sequence.</li>
+            <li>Setiap testimoni memiliki <strong>Nama Klien</strong>, <strong>Konten</strong>, <strong>Peringkat</strong> opsional, dan <strong>URL Avatar</strong> opsional.</li>
+            <li>Testimoni yang tidak aktif disembunyikan dari beranda secara otomatis.</li>
+            <li>Urutan sortir mengontrol korsel/urutan tampilan.</li>
         </ul>
     </div>
 
     <div class="{{ $section }}">
-        <h3 class="{{ $h3 }}">Users</h3>
+        <h3 class="{{ $h3 }}">Pengguna</h3>
         <p class="{{ $p }}">
-            <strong>Operations → Users</strong> lets you manage all registered accounts:
+            <strong>Operasional → Pengguna</strong> memungkinkan Anda mengelola semua akun terdaftar:
         </p>
         <ul class="space-y-1.5 text-sm text-gray-600 list-disc list-inside">
-            <li>View all users (admin staff and clients).</li>
-            <li>Create new admin/staff users and assign them roles.</li>
-            <li>Edit user details (name, email, role).</li>
-            <li>Delete users — with care, as this cannot be undone.</li>
+            <li>Melihat semua pengguna (staf admin dan klien).</li>
+            <li>Membuat pengguna admin/staf baru dan menetapkan peran mereka.</li>
+            <li>Mengedit detail pengguna (nama, email, peran).</li>
+            <li>Menghapus pengguna — dengan hati-hati, karena ini tidak dapat dibatalkan.</li>
         </ul>
         <div class="rounded-lg bg-amber-50 border border-amber-100 p-3 text-sm text-amber-800">
-            ⚠️ Client accounts (users who signed up through the public portal) should generally not be deleted — their application history will be lost.
+            ⚠️ Akun klien (pengguna yang mendaftar melalui portal publik) pada umumnya tidak boleh dihapus — riwayat aplikasi mereka akan hilang.
         </div>
     </div>
 
