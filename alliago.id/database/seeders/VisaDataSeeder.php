@@ -39,9 +39,13 @@ class VisaDataSeeder extends Seeder
             
             $countryName = $this->extractCountry($serviceName, $category);
             
-            $country = Country::firstOrCreate(
+            $country = Country::updateOrCreate(
                 ['name' => $countryName],
-                ['is_active' => true, 'slug' => Str::slug($countryName)]
+                [
+                    'is_active' => true, 
+                    'slug' => Str::slug($countryName),
+                    'flag_emoji' => $this->getFlagEmoji($countryName)
+                ]
             );
 
             // determine type
@@ -93,5 +97,34 @@ class VisaDataSeeder extends Seeder
         
         $first = explode(' ', $name)[0];
         return $first ?: 'Unknown';
+    }
+
+    private function getFlagEmoji($countryName) {
+        $map = [
+            'Indonesia' => '🇮🇩', 'Malaysia' => '🇲🇾', 'Singapore' => '🇸🇬', 'Jepang' => '🇯🇵', 
+            'Korea Selatan' => '🇰🇷', 'Australia' => '🇦🇺', 'Amerika Serikat' => '🇺🇸', 
+            'Myanmar' => '🇲🇲', 'Brunei' => '🇧🇳', 'Kamboja' => '🇰🇭', 'Laos' => '🇱🇦', 
+            'Fiji' => '🇫🇯', 'Kiribati' => '🇰🇮', 'Vietnam' => '🇻🇳', 'Bangladesh' => '🇧🇩', 
+            'Bhutan' => '🇧🇹', 'India' => '🇮🇳', 'Maladewa' => '🇲🇻', 'Nepal' => '🇳🇵', 
+            'Pakistan' => '🇵🇰', 'Afganistan' => '🇦🇫', 'Lithuania' => '🇱🇹', 'Luksemburg' => '🇱🇺', 
+            'Malta' => '🇲🇹', 'Monako' => '🇲🇨', 'Montenegro' => '🇲🇪', 'Belanda' => '🇳🇱', 
+            'Liechtenstein' => '🇱🇮', 'Schengen' => '🇪🇺', 'Honduras' => '🇭🇳', 'Nikaragua' => '🇳🇮', 
+            'Panama' => '🇵🇦', 'Antigua dan Barbuda' => '🇦🇬', 'Bahama' => '🇧🇸', 'Barbados' => '🇧🇧', 
+            'Sudan' => '🇸🇩', 'Swaziland' => '🇸🇿', 'Tanzania' => '🇹🇿', 'Togo' => '🇹🇬', 
+            'Tunisia' => '🇹🇳', 'Uganda' => '🇺🇬', 'Zambia' => '🇿🇲', 'China' => '🇨🇳', 
+            'Japan' => '🇯🇵', 'South Korea' => '🇰🇷', 'Taiwan' => '🇹🇼', 'Mongolia' => '🇲🇳', 
+            'Kyrgyzstan' => '🇰🇬', 'APEC' => '🌐', 'New Zealand' => '🇳🇿', 'Papua New Guinea' => '🇵🇬', 
+            'United Kingdom' => '🇬🇧', 'Netherlands' => '🇳🇱', 'Spain' => '🇪🇸', 'France' => '🇫🇷', 
+            'Italy' => '🇮🇹', 'Germany' => '🇩🇪', 'Belgium' => '🇧🇪', 'Switzerland' => '🇨🇭', 
+            'Portugal' => '🇵🇹', 'Czech' => '🇨🇿', 'Austria' => '🇦🇹', 'Sweden' => '🇸🇪', 
+            'Denmark' => '🇩🇰', 'Finland' => '🇫🇮', 'Iceland' => '🇮🇸', 'Greece' => '🇬🇷', 
+            'Poland' => '🇵🇱', 'Hungary' => '🇭🇺', 'Norway' => '🇳🇴', 'Slovakia' => '🇸🇰', 
+            'Bulgaria' => '🇧🇬', 'Croatia' => '🇭🇷', 'Albania' => '🇦🇱', 'Georgia' => '🇬🇪', 
+            'Ireland' => '🇮🇪', 'Russia' => '🇷🇺', 'United States' => '🇺🇸', 'Canada' => '🇨🇦', 
+            'Mexico' => '🇲🇽', 'Argentina' => '🇦🇷', 'Bahrain' => '🇧🇭', 'Egypt' => '🇪🇬', 
+            'South Africa' => '🇿🇦', 'Saudi Arabia' => '🇸🇦', 'United Arab Emirates' => '🇦🇪', 
+            'Global/Add-on' => '🌐', 'Czech Republic' => '🇨🇿'
+        ];
+        return $map[$countryName] ?? '🏳️';
     }
 }

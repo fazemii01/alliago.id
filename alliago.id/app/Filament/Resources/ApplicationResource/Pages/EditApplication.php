@@ -22,6 +22,13 @@ class EditApplication extends EditRecord
             ->update(['read_at' => now()]);
     }
 
+    protected function getHeaderActions(): array
+    {
+        return [
+            \Filament\Actions\DeleteAction::make(),
+        ];
+    }
+
     protected function mutateFormDataBeforeSave(array $data): array
     {
         $originalStatus = $this->record->status;

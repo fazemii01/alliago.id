@@ -33,4 +33,14 @@ class PageController extends Controller
 
         return view('pages.faq', compact('siteFaqs'));
     }
+
+    public function refundPolicy()
+    {
+        return view('pages.refund-policy');
+    }
+
+    public function privacyPolicy()
+    {
+        return view('pages.privacy-policy');
+    }
 }

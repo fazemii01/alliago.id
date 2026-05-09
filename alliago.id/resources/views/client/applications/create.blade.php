@@ -388,7 +388,7 @@
                                                             <span class="text-[10px] font-bold bg-blue-100 text-[#0361fc] px-2 py-0.5 rounded-full">Otomatis</span>
                                                         @endif
                                                     </div>
-                                                    <p class="text-xs text-slate-600 mt-1">{{ $pm->description ?? 'Lanjutkan pembayaran dengan ' . $pm->name }}</p>
+                                                    <p class="text-xs text-slate-600 mt-1">{{ $pm->description ? strip_tags($pm->description) : 'Lanjutkan pembayaran dengan ' . $pm->name }}</p>
                                                 </div>
                                             </label>
                                         @endforeach

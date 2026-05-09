@@ -1,0 +1,56 @@
+<?php
+
+return [
+    'hero_title_main' => 'Platform Visa Andalan',
+    'hero_title_sub' => 'Butuh visa ke mana?',
+    'hero_subtitle' => 'Platform visa paling transparan. Harga real-time, timeline jujur, dan dukungan manusia ahli.',
+    'hero_from' => 'Dari',
+    'hero_to' => 'Ke',
+    'hero_destination_placeholder' => 'Pilih negara tujuan',
+    'hero_purpose' => 'Tujuan perjalanan',
+    'hero_purpose_tourism' => 'Wisata / Liburan',
+    'hero_purpose_business' => 'Bisnis',
+    'hero_purpose_family' => 'Keluarga',
+    'hero_purpose_student' => 'Pelajar',
+    'hero_search_btn' => 'Cari Visa',
+
+    'services_view_all' => 'Lihat Semua Visa',
+    'services_filter' => 'Filter',
+    'services_departure' => 'Keberangkatan',
+    'services_popular' => 'Populer',
+    'services_no_products' => 'Belum ada produk visa tersedia. Silakan tambahkan dari admin panel.',
+    'services_processing_prefix' => 'Selesai dalam',
+    'services_from_price' => 'Dari',
+    'services_cat_trending' => 'Trending Visas',
+    'services_cat_online' => '100% Online',
+    'services_cat_schengen' => 'Schengen',
+    'services_cat_asia' => 'Asia',
+    'services_cat_americas' => 'Amerika',
+    'services_cat_middle_east' => 'Timur Tengah',
+
+    'process_title' => 'Proses mudah dalam 3 langkah',
+    'process_step1_title' => 'Isi formulir',
+    'process_step1_desc' => 'Lengkapi data dan kebutuhan visa Anda.',
+    'process_step2_title' => 'Bayar & serahkan dokumen',
+    'process_step2_desc' => 'Pembayaran aman, dokumen diterima dalam hitungan menit.',
+    'process_step3_title' => 'Terima visa Anda',
+    'process_step3_desc' => 'Kami urus semua, Anda tinggal tunggu hasilnya.',
+
+    'cta_title' => 'Siap mulai perjalanan Anda?',
+    'cta_subtitle' => 'Bergabunglah dengan ribuan traveler yang sudah mempercayakan visa mereka kepada Alliago.',
+    'cta_btn' => 'Mulai Sekarang',
+
+    'faq_title' => 'Pertanyaan yang Sering Diajukan',
+    'faq_subtitle' => 'Semua yang perlu Anda ketahui tentang layanan kami.',
+
+    'features_title' => 'Mengapa memilih Alliago?',
+    'detail_title' => 'Kenapa Alliago?',
+    'testimonials_title' => 'Apa kata mereka?',
+
+    'footer_visa_japan' => 'Visa Jepang',
+    'footer_visa_korea' => 'Visa Korea',
+    'footer_visa_australia' => 'Visa Australia',
+    'footer_visa_schengen' => 'Visa Schengen',
+    'footer_contact_label' => 'WhatsApp: +62 813-3445-5616',
+    'footer_email_label' => 'Email: support@Alliago.id',
+];

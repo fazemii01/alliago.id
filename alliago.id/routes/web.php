@@ -10,6 +10,14 @@ use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\VisaCatalogController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/lang/{locale}', function (string $locale) {
+    $supported = ['id', 'en'];
+    if (in_array($locale, $supported)) {
+        session(['locale' => $locale]);
+    }
+    return redirect()->back()->withHeaders(['Vary' => 'Accept-Language']);
+})->name('lang.switch');
+
 Route::get('/', LandingPageController::class);
 
 Route::get('/admin-dashboard', AdminDashboardController::class)->middleware('auth')->name('admin.dashboard.view');
@@ -22,6 +30,8 @@ Route::get('/visa/{slug}', [VisaCatalogController::class, 'show'])->name('visa.s
 Route::get('/detail', [\App\Http\Controllers\PageController::class, 'detail'])->name('pages.detail');
 Route::get('/proses', [\App\Http\Controllers\PageController::class, 'process'])->name('pages.process');
 Route::get('/faq', [\App\Http\Controllers\PageController::class, 'faq'])->name('pages.faq');
+Route::get('/refund-policy', [\App\Http\Controllers\PageController::class, 'refundPolicy'])->name('pages.refund_policy');
+Route::get('/privacy-policy', [\App\Http\Controllers\PageController::class, 'privacyPolicy'])->name('pages.privacy_policy');
 
 Route::middleware('guest')->group(function () {
     Route::get('/client/login', [ClientAuthController::class, 'showLogin'])->name('client.login');

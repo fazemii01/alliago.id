@@ -49,7 +49,8 @@ class PaymentMethodResource extends Resource
                             ->image()
                             ->directory('payment-methods')
                             ->columnSpanFull(),
-                        Forms\Components\RichEditor::make('description')
+                        Forms\Components\Textarea::make('description')
+                            ->rows(3)
                             ->columnSpanFull(),
                     ])->columns(2),
                     
@@ -94,7 +95,7 @@ class PaymentMethodResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('provider')
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
+                    ->color(fn (?string $state): string => match ($state) {
                         'manual' => 'warning',
                         'xendit' => 'success',
                         default => 'gray',

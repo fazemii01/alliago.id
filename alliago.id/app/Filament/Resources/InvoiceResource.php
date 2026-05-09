@@ -55,8 +55,8 @@ class InvoiceResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
-                    ->formatStateUsing(fn (string $state) => $state === 'pending_payment' ? 'Unpaid' : 'Paid')
-                    ->color(fn (string $state) => $state === 'pending_payment' ? 'warning' : 'success'),
+                    ->formatStateUsing(fn (?string $state) => $state === 'pending_payment' ? 'Unpaid' : 'Paid')
+                    ->color(fn (?string $state) => $state === 'pending_payment' ? 'warning' : 'success'),
             ])
             ->filters([
                 Tables\Filters\Filter::make('created_at')

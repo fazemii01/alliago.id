@@ -41,6 +41,7 @@ class UserResource extends Resource
                     ->label('Assigned role')
                     ->options([
                         'admin' => 'Admin',
+                        'staff' => 'Staff',
                         'user' => 'User',
                     ])
                     ->required()
@@ -85,6 +86,7 @@ class UserResource extends Resource
                     ->label('Role')
                     ->options([
                         'admin' => 'Admin',
+                        'staff' => 'Staff',
                         'user' => 'User',
                     ]),
             ])

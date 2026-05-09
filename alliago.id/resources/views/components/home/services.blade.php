@@ -21,12 +21,12 @@ $defaultImage = 'https://images.unsplash.com/photo-1488085061387-422e29b40080?au
 
 // Collect unique categories / regions from products
 $categories = [
-    ['label' => 'Trending Visas', 'icon' => '🔥', 'filter' => 'trending'],
-    ['label' => '100% Online', 'icon' => '🌐', 'filter' => 'online'],
-    ['label' => 'Schengen', 'icon' => '🇪🇺', 'filter' => 'schengen'],
-    ['label' => 'Asia', 'icon' => '🌏', 'filter' => 'asia'],
-    ['label' => 'Amerika', 'icon' => '🦅', 'filter' => 'amerika'],
-    ['label' => 'Timur Tengah', 'icon' => '🕌', 'filter' => 'timteng'],
+    ['label' => __('home.services_cat_trending'), 'icon' => '🔥', 'filter' => 'trending'],
+    ['label' => __('home.services_cat_online'), 'icon' => '🌐', 'filter' => 'online'],
+    ['label' => __('home.services_cat_schengen'), 'icon' => '🇪🇺', 'filter' => 'schengen'],
+    ['label' => __('home.services_cat_asia'), 'icon' => '🌏', 'filter' => 'asia'],
+    ['label' => __('home.services_cat_americas'), 'icon' => '🦅', 'filter' => 'amerika'],
+    ['label' => __('home.services_cat_middle_east'), 'icon' => '🕌', 'filter' => 'timteng'],
 ];
 @endphp
 
@@ -53,15 +53,15 @@ $categories = [
     <div class="flex flex-wrap items-center gap-3 mb-8">
       <button type="button" class="filter-btn flex items-center gap-2 px-4 py-2.5 rounded-full border border-slate-200 bg-white text-sm font-semibold text-slate-600 hover:border-blue-200 hover:text-brand transition-all">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
-        Filter
+        {{ __('home.services_filter') }}
       </button>
       <button type="button" class="filter-btn flex items-center gap-2 px-4 py-2.5 rounded-full border border-slate-200 bg-white text-sm font-semibold text-slate-600 hover:border-blue-200 hover:text-brand transition-all">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-        Keberangkatan
+        {{ __('home.services_departure') }}
       </button>
       <button type="button" class="filter-btn flex items-center gap-2 px-4 py-2.5 rounded-full border border-slate-200 bg-white text-sm font-semibold text-slate-600 hover:border-blue-200 hover:text-brand transition-all">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-        Populer
+        {{ __('home.services_popular') }}
         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
       </button>
     </div>
@@ -86,7 +86,7 @@ $categories = [
             </h3>
             <p class="text-sm text-slate-500 font-medium mb-4">
               @if($product->processing_time)
-                Selesai dalam {{ $product->processing_time }}
+                {{ __('home.services_processing_prefix') }} {{ $product->processing_time }}
               @else
                 {{ $product->short_description }}
               @endif
@@ -107,19 +107,19 @@ $categories = [
         {{-- Price row --}}
         <div class="flex items-center gap-2 mt-1">
           @if($hasDiscount)
-          <span class="text-sm font-bold text-brand">Dari IDR {{ number_format($product->discount_price, 0, ',', '.') }}</span>
+          <span class="text-sm font-bold text-brand">{{ __('home.services_from_price') }} IDR {{ number_format($product->discount_price, 0, ',', '.') }}</span>
           <span class="text-xs text-slate-400 line-through font-medium">IDR {{ number_format($product->base_price, 0, ',', '.') }}</span>
           <span class="inline-flex items-center px-2 py-0.5 rounded-md bg-red-50 text-[11px] font-bold text-red-500 border border-red-100">
             {{ $discountPercent }}% OFF
           </span>
           @else
-          <span class="text-sm font-bold text-brand">Dari IDR {{ number_format($product->base_price, 0, ',', '.') }}</span>
+          <span class="text-sm font-bold text-brand">{{ __('home.services_from_price') }} IDR {{ number_format($product->base_price, 0, ',', '.') }}</span>
           @endif
         </div>
       </a>
       @empty
       <div class="col-span-full text-center py-12 text-slate-500 font-medium">
-        <p>Belum ada produk visa tersedia. Silakan tambahkan dari admin panel.</p>
+        <p>{{ __('home.services_no_products') }}</p>
       </div>
       @endforelse
     </div>
@@ -128,7 +128,7 @@ $categories = [
     @if($featuredProducts->count() > 0)
     <div class="flex justify-center mt-10">
       <a href="{{ route('visa.index') }}" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-brand text-white font-bold text-sm hover:brightness-110 transition-all shadow-md shadow-blue-500/20">
-        Lihat Semua Visa
+        {{ __('home.services_view_all') }}
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
         </svg>

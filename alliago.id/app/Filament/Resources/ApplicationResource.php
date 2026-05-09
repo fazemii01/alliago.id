@@ -104,6 +104,12 @@ class ApplicationResource extends Resource
                     ->icon('heroicon-o-cog-8-tooth')
                     ->color('primary')
                     ->button(),
+                Tables\Actions\DeleteAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
             ]);
     }
 

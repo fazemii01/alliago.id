@@ -13,7 +13,7 @@ class EnsurePanelUserHasAdminRole
     {
         $user = Filament::auth()->user();
 
-        abort_unless($user && $user->hasRole('admin'), 403);
+        abort_unless($user && ($user->hasRole('admin') || $user->hasRole('staff')), 403);
 
         return $next($request);
     }
