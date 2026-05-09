@@ -13,7 +13,8 @@ class InvoicePolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasPermissionTo('view_any_invoice');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('invoices.view_any');
     }
 
     /**
@@ -21,7 +22,8 @@ class InvoicePolicy
      */
     public function view(User $user, Invoice $invoice): bool
     {
-        return $user->hasPermissionTo('view_invoice');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('invoices.view');
     }
 
     /**
@@ -29,7 +31,8 @@ class InvoicePolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasPermissionTo('create_invoice');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('invoices.create');
     }
 
     /**
@@ -37,7 +40,8 @@ class InvoicePolicy
      */
     public function update(User $user, Invoice $invoice): bool
     {
-        return $user->hasPermissionTo('update_invoice');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('invoices.update');
     }
 
     /**
@@ -45,7 +49,8 @@ class InvoicePolicy
      */
     public function delete(User $user, Invoice $invoice): bool
     {
-        return $user->hasPermissionTo('delete_invoice');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('invoices.delete');
     }
 
     /**
@@ -53,7 +58,8 @@ class InvoicePolicy
      */
     public function restore(User $user, Invoice $invoice): bool
     {
-        return $user->hasPermissionTo('delete_invoice');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('invoices.delete');
     }
 
     /**
@@ -61,6 +67,7 @@ class InvoicePolicy
      */
     public function forceDelete(User $user, Invoice $invoice): bool
     {
-        return $user->hasPermissionTo('delete_invoice');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('invoices.delete');
     }
 }

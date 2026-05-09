@@ -13,7 +13,8 @@ class CountryPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasPermissionTo('view_any_country');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('countries.view_any');
     }
 
     /**
@@ -21,7 +22,8 @@ class CountryPolicy
      */
     public function view(User $user, Country $country): bool
     {
-        return $user->hasPermissionTo('view_country');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('countries.view');
     }
 
     /**
@@ -29,7 +31,8 @@ class CountryPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasPermissionTo('create_country');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('countries.create');
     }
 
     /**
@@ -37,7 +40,8 @@ class CountryPolicy
      */
     public function update(User $user, Country $country): bool
     {
-        return $user->hasPermissionTo('update_country');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('countries.update');
     }
 
     /**
@@ -45,7 +49,8 @@ class CountryPolicy
      */
     public function delete(User $user, Country $country): bool
     {
-        return $user->hasPermissionTo('delete_country');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('countries.delete');
     }
 
     /**
@@ -53,7 +58,8 @@ class CountryPolicy
      */
     public function restore(User $user, Country $country): bool
     {
-        return $user->hasPermissionTo('delete_country');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('countries.delete');
     }
 
     /**
@@ -61,6 +67,7 @@ class CountryPolicy
      */
     public function forceDelete(User $user, Country $country): bool
     {
-        return $user->hasPermissionTo('delete_country');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('countries.delete');
     }
 }

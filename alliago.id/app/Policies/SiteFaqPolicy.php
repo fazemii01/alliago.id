@@ -13,7 +13,8 @@ class SiteFaqPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasPermissionTo('view_any_sitefaq');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('site_faqs.view_any');
     }
 
     /**
@@ -21,7 +22,8 @@ class SiteFaqPolicy
      */
     public function view(User $user, SiteFaq $siteFaq): bool
     {
-        return $user->hasPermissionTo('view_sitefaq');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('site_faqs.view');
     }
 
     /**
@@ -29,7 +31,8 @@ class SiteFaqPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasPermissionTo('create_sitefaq');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('site_faqs.create');
     }
 
     /**
@@ -37,7 +40,8 @@ class SiteFaqPolicy
      */
     public function update(User $user, SiteFaq $siteFaq): bool
     {
-        return $user->hasPermissionTo('update_sitefaq');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('site_faqs.update');
     }
 
     /**
@@ -45,7 +49,8 @@ class SiteFaqPolicy
      */
     public function delete(User $user, SiteFaq $siteFaq): bool
     {
-        return $user->hasPermissionTo('delete_sitefaq');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('site_faqs.delete');
     }
 
     /**
@@ -53,7 +58,8 @@ class SiteFaqPolicy
      */
     public function restore(User $user, SiteFaq $siteFaq): bool
     {
-        return $user->hasPermissionTo('delete_sitefaq');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('site_faqs.delete');
     }
 
     /**
@@ -61,6 +67,7 @@ class SiteFaqPolicy
      */
     public function forceDelete(User $user, SiteFaq $siteFaq): bool
     {
-        return $user->hasPermissionTo('delete_sitefaq');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('site_faqs.delete');
     }
 }

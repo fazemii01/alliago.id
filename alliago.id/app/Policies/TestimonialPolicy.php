@@ -13,7 +13,8 @@ class TestimonialPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasPermissionTo('view_any_testimonial');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('testimonials.view_any');
     }
 
     /**
@@ -21,7 +22,8 @@ class TestimonialPolicy
      */
     public function view(User $user, Testimonial $testimonial): bool
     {
-        return $user->hasPermissionTo('view_testimonial');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('testimonials.view');
     }
 
     /**
@@ -29,7 +31,8 @@ class TestimonialPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasPermissionTo('create_testimonial');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('testimonials.create');
     }
 
     /**
@@ -37,7 +40,8 @@ class TestimonialPolicy
      */
     public function update(User $user, Testimonial $testimonial): bool
     {
-        return $user->hasPermissionTo('update_testimonial');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('testimonials.update');
     }
 
     /**
@@ -45,7 +49,8 @@ class TestimonialPolicy
      */
     public function delete(User $user, Testimonial $testimonial): bool
     {
-        return $user->hasPermissionTo('delete_testimonial');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('testimonials.delete');
     }
 
     /**
@@ -53,7 +58,8 @@ class TestimonialPolicy
      */
     public function restore(User $user, Testimonial $testimonial): bool
     {
-        return $user->hasPermissionTo('delete_testimonial');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('testimonials.delete');
     }
 
     /**
@@ -61,6 +67,7 @@ class TestimonialPolicy
      */
     public function forceDelete(User $user, Testimonial $testimonial): bool
     {
-        return $user->hasPermissionTo('delete_testimonial');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('testimonials.delete');
     }
 }

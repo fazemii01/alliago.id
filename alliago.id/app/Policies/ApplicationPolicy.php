@@ -13,7 +13,8 @@ class ApplicationPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasPermissionTo('view_any_application');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('applications.view_any');
     }
 
     /**
@@ -21,7 +22,8 @@ class ApplicationPolicy
      */
     public function view(User $user, Application $application): bool
     {
-        return $user->hasPermissionTo('view_application');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('applications.view');
     }
 
     /**
@@ -29,7 +31,8 @@ class ApplicationPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasPermissionTo('create_application');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('applications.create');
     }
 
     /**
@@ -37,7 +40,8 @@ class ApplicationPolicy
      */
     public function update(User $user, Application $application): bool
     {
-        return $user->hasPermissionTo('update_application');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('applications.update');
     }
 
     /**
@@ -45,7 +49,8 @@ class ApplicationPolicy
      */
     public function delete(User $user, Application $application): bool
     {
-        return $user->hasPermissionTo('delete_application');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('applications.delete');
     }
 
     /**
@@ -53,7 +58,8 @@ class ApplicationPolicy
      */
     public function restore(User $user, Application $application): bool
     {
-        return $user->hasPermissionTo('delete_application');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('applications.delete');
     }
 
     /**
@@ -61,6 +67,7 @@ class ApplicationPolicy
      */
     public function forceDelete(User $user, Application $application): bool
     {
-        return $user->hasPermissionTo('delete_application');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('applications.delete');
     }
 }

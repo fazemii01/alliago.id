@@ -13,7 +13,8 @@ class VisaProductPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasPermissionTo('view_any_visaproduct');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('visa_products.view_any');
     }
 
     /**
@@ -21,7 +22,8 @@ class VisaProductPolicy
      */
     public function view(User $user, VisaProduct $visaProduct): bool
     {
-        return $user->hasPermissionTo('view_visaproduct');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('visa_products.view');
     }
 
     /**
@@ -29,7 +31,8 @@ class VisaProductPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasPermissionTo('create_visaproduct');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('visa_products.create');
     }
 
     /**
@@ -37,7 +40,8 @@ class VisaProductPolicy
      */
     public function update(User $user, VisaProduct $visaProduct): bool
     {
-        return $user->hasPermissionTo('update_visaproduct');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('visa_products.update');
     }
 
     /**
@@ -45,7 +49,8 @@ class VisaProductPolicy
      */
     public function delete(User $user, VisaProduct $visaProduct): bool
     {
-        return $user->hasPermissionTo('delete_visaproduct');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('visa_products.delete');
     }
 
     /**
@@ -53,7 +58,8 @@ class VisaProductPolicy
      */
     public function restore(User $user, VisaProduct $visaProduct): bool
     {
-        return $user->hasPermissionTo('delete_visaproduct');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('visa_products.delete');
     }
 
     /**
@@ -61,6 +67,7 @@ class VisaProductPolicy
      */
     public function forceDelete(User $user, VisaProduct $visaProduct): bool
     {
-        return $user->hasPermissionTo('delete_visaproduct');
+        if ($user->hasRole('admin')) return true;
+        return $user->hasPermissionTo('visa_products.delete');
     }
 }
