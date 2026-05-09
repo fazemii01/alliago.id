@@ -28,7 +28,7 @@ class RoleResource extends Resource
     public static function form(Form $form): Form
     {
         $groups = RolesAndPermissionsSeeder::$groups;
-        $allPermissions = Permission::all()->pluck('name', 'name')->toArray();
+        $allPermissions = Permission::all()->pluck('id', 'name')->toArray();
 
         // Build grouped sections inside a Tabs component
         $tabs = [];
@@ -41,12 +41,13 @@ class RoleResource extends Resource
                 default      => 'heroicon-o-squares-2x2',
             };
 
-            // Only include permissions that actually exist in DB
-            $tabOptions = array_filter(
-                array_combine(array_keys($permissions), array_values($permissions)),
-                fn ($key) => isset($allPermissions[$key]),
-                ARRAY_FILTER_USE_KEY,
-            );
+            // Map the permission IDs to their human-readable labels
+            $tabOptions = [];
+            foreach ($permissions as $name => $label) {
+                if (isset($allPermissions[$name])) {
+                    $tabOptions[$allPermissions[$name]] = $label;
+                }
+            }
 
             $tabs[] = Forms\Components\Tabs\Tab::make($groupName)
                 ->icon($icon)
