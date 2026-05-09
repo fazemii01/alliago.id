@@ -31,7 +31,7 @@ class ClientAuthController extends Controller
 
         $request->session()->regenerate();
 
-        if (! Auth::user()->hasAnyRole(['user', 'admin'])) {
+        if (! Auth::user()->hasAnyRole(['user', 'admin', 'staff'])) {
             Auth::logout();
 
             return back()->withErrors([
@@ -39,7 +39,7 @@ class ClientAuthController extends Controller
             ])->onlyInput('email');
         }
 
-        if (Auth::user()->hasRole('admin')) {
+        if (Auth::user()->hasAnyRole(['admin', 'staff'])) {
             return redirect()->intended(url('/admin'));
         }
 
