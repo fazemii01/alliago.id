@@ -20,8 +20,8 @@
                     <div class="flex min-h-[260px] flex-col justify-end">
                         <div class="max-w-3xl">
                             <p class="text-sm font-bold uppercase tracking-[0.32em] text-white/70">Tiket pesawat</p>
-                            <h1 class="mt-4 text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">Cek estimasi harga tiket dengan tampilan lebih rapi dan cepat dipakai.</h1>
-                            <p class="mt-4 max-w-2xl text-sm font-medium leading-7 text-white/80 sm:text-base">Pilih rute, tanggal, dan jumlah penumpang untuk melihat harga final yang akan kami tawarkan tanpa lanjut ke booking atau payment.</p>
+                            <h1 class="mt-4 text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">Alliago.id</h1>
+                            <p class="mt-4 max-w-2xl text-sm font-medium leading-7 text-white/80 sm:text-base">Pilih rute, tanggal, dan jumlah penumpang.</p>
                         </div>
                     </div>
                     <div class="hidden rounded-[28px] border border-white/15 bg-white/10 p-5 backdrop-blur md:block">
@@ -31,9 +31,9 @@
                                 <p class="mt-2 text-2xl font-bold">Cari tiket lebih cepat</p>
                             </div>
                             <div class="grid gap-3 text-sm text-white/80">
-                                <div class="rounded-2xl bg-white/10 px-4 py-3">Route, tanggal, trip, dan penumpang dalam satu flow.</div>
-                                <div class="rounded-2xl bg-white/10 px-4 py-3">Tanggal pergi dan pulang lebih jelas dibaca.</div>
-                                <div class="rounded-2xl bg-white/10 px-4 py-3">Passenger picker lebih ringan dan mobile-friendly.</div>
+                                <div class="rounded-2xl bg-white/10 px-4 py-3">Simple.</div>
+                                <div class="rounded-2xl bg-white/10 px-4 py-3">Mudah.</div>
+                                <div class="rounded-2xl bg-white/10 px-4 py-3">Cepat.</div>
                             </div>
                         </div>
                     </div>
@@ -193,9 +193,9 @@
                     <div class="rounded-[28px] bg-white p-6 shadow-sm ring-1 ring-slate-200/80">
                         <h2 class="text-lg font-bold text-slate-900">Catatan</h2>
                         <ul class="mt-4 space-y-3 text-sm leading-6 text-slate-500">
-                            <li>Harga tampil setelah cek jadwal dan price H2H.</li>
-                            <li>Halaman ini hanya untuk estimasi dan penawaran harga tiket.</li>
-                            <li>Tidak lanjut ke booking, issued, atau payment.</li>
+                            <li>Harga yang ditampilkan adalah estimasi dan dapat berubah sewaktu-waktu.</li>
+                            <!-- <li>Halaman ini hanya untuk estimasi dan penawaran harga tiket.</li>
+                            <li>Tidak lanjut ke booking, issued, atau payment.</li> -->
                         </ul>
                     </div>
                 </aside>
