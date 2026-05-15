@@ -6,6 +6,7 @@ use App\Http\Controllers\ClientApplicationController;
 use App\Http\Controllers\ClientDocumentController;
 use App\Http\Controllers\ClientDashboardController;
 use App\Http\Controllers\ClientMessageController;
+use App\Http\Controllers\FlightTicketController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\VisaCatalogController;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +27,7 @@ Route::redirect('/login', '/client/login')->name('login');
 
 Route::get('/visa', [VisaCatalogController::class, 'index'])->name('visa.index');
 Route::get('/visa/{slug}', [VisaCatalogController::class, 'show'])->name('visa.show');
+Route::match(['get', 'post'], '/tiket-pesawat', [FlightTicketController::class, 'index'])->name('flights.index');
 
 Route::get('/detail', [\App\Http\Controllers\PageController::class, 'detail'])->name('pages.detail');
 Route::get('/proses', [\App\Http\Controllers\PageController::class, 'process'])->name('pages.process');

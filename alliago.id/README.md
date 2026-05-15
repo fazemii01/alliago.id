@@ -1,59 +1,119 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Alliago.id
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Alliago.id is a Laravel-based visa services platform for managing visa products, collecting client applications, reviewing documents, handling payments, and operating an internal admin panel.
 
-## About Laravel
+## Project Overview
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+The application currently contains three main product surfaces:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- Public website for marketing pages, visa discovery, and policy content
+- Client area for registration, login, application submission, document upload, checkout, invoices, and profile management
+- Admin panel built with Filament for internal operations and content management
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Current Stack
 
-## Learning Laravel
+- Backend: Laravel 12
+- PHP: 8.2
+- Admin panel: Filament 3.3
+- Permissions: Spatie Laravel Permission
+- Frontend: Blade, Vite, Tailwind CSS v4, TypeScript
+- Client-side enhancement: AOS and small DOM interactions
+- Database: relational schema managed through Laravel migrations
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Main Capabilities
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Visa catalog with country-specific visa products
+- Product requirements, required documents, process steps, FAQs, and add-ons
+- Client registration and login flow
+- Visa application submission with price breakdown metadata
+- Document upload workflow per application
+- Application messaging between client and admin
+- Checkout and invoice pages
+- Payment method configuration and Xendit webhook endpoint
+- Filament resources for applications, visa products, countries, FAQs, testimonials, payment methods, users, roles, and invoices
 
-## Laravel Sponsors
+## Route Areas
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Public
 
-### Premium Partners
+- `/`
+- `/visa`
+- `/visa/{slug}`
+- `/detail`
+- `/proses`
+- `/faq`
+- `/refund-policy`
+- `/privacy-policy`
+- `/lang/{locale}`
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### Client
 
-## Contributing
+- `/client/login`
+- `/client/register`
+- `/client/dashboard`
+- `/client/applications/*`
+- `/client/profile`
+- `/client/password`
+- `/client/logout`
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Admin
 
-## Code of Conduct
+- `/admin`
+- `/admin-dashboard`
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Integrations
 
-## Security Vulnerabilities
+- `/webhooks/xendit`
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Documentation Index
 
-## License
+- `docs/PRD.md`: product requirements based on the current implementation and near-term platform scope
+- `docs/ARCHITECTURE.md`: system architecture, app surfaces, domain model, and technical boundaries
+- `docs/PROJECT_STRUCTURE.md`: repo layout and the role of each major directory
+- `docs/SETUP.md`: local setup, development commands, and verification workflow
+- `docs/FEATURES.md`: feature inventory by product area
+- `docs/CLIENT_FLOW.md`: end-to-end client journey and application lifecycle
+- `docs/ADMIN_GUIDE.md`: admin panel scope and operating model
+- `docs/DATA_MODEL.md`: current database entities and relationships
+- `docs/REFERENCE_WORKFLOWS.md`: Markdown reference converted from `references/development_workflows.md`
+- `docs/REFERENCE_ARCHITECTURE.md`: Markdown reference converted from `references/architecture_patterns.md`
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Local Setup
+
+### Backend
+
+```bash
+composer install
+copy .env.example .env
+php artisan key:generate
+php artisan migrate
+```
+
+### Frontend
+
+```bash
+npm install
+npm run dev
+```
+
+### Combined Workflow
+
+```bash
+composer run dev
+composer run test
+```
+
+## Useful Commands
+
+```bash
+php artisan route:list
+php artisan about
+php artisan test
+npm run build
+```
+
+## Notes On Current State
+
+- The public site and visa platform are implemented in the same Laravel monolith.
+- The project still contains planning and reference material that documents the intended long-term platform direction.
+- The documentation in this repository is now project-specific and should be updated whenever new route areas, integrations, or workflow-critical features are added.

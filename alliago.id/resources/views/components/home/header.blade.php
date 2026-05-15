@@ -12,6 +12,7 @@
 
     <nav class="hidden items-center gap-7 text-sm font-semibold text-slate-600 md:flex">
       <a href="{{ route('visa.index') }}" class="transition hover:text-[#0361fc] {{ request()->routeIs('visa.index') ? 'text-[#0361fc]' : '' }}">{{ __('common.nav_visa') }}</a>
+      <a href="{{ route('flights.index') }}" class="transition hover:text-[#0361fc] {{ request()->routeIs('flights.index') ? 'text-[#0361fc]' : '' }}">Tiket pesawat</a>
       <a href="{{ route('pages.detail') }}" class="transition hover:text-[#0361fc] {{ request()->routeIs('pages.detail') ? 'text-[#0361fc]' : '' }}">{{ __('common.nav_detail') }}</a>
       <a href="{{ route('pages.process') }}" class="transition hover:text-[#0361fc] {{ request()->routeIs('pages.process') ? 'text-[#0361fc]' : '' }}">{{ __('common.nav_process') }}</a>
       <a href="{{ route('pages.faq') }}" class="transition hover:text-[#0361fc] {{ request()->routeIs('pages.faq') ? 'text-[#0361fc]' : '' }}">{{ __('common.nav_faq') }}</a>
@@ -156,6 +157,9 @@
             </button>
           </form>
         @else
+          <a href="{{ route('flights.index') }}" class="mobile-nav-link rounded-full border border-slate-200 px-4 py-3 text-center text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-[#0361fc]">
+            Tiket pesawat
+          </a>
           <a href="/login" class="mobile-nav-link rounded-full border border-slate-200 px-4 py-3 text-center text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-[#0361fc]">
             {{ __('common.nav_login') }}
           </a>

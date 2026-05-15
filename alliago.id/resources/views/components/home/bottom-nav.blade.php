@@ -14,11 +14,11 @@
             <span class="text-[10px] font-semibold">Visa</span>
         </a>
 
-        <a href="{{ route('pages.detail') }}" class="flex flex-col items-center justify-center gap-1 w-full h-full transition {{ request()->routeIs('pages.detail') ? 'text-[#0361fc]' : 'text-slate-500 hover:text-[#0361fc]' }}">
+        <a href="{{ route('flights.index') }}" class="flex flex-col items-center justify-center gap-1 w-full h-full transition {{ request()->routeIs('flights.index') ? 'text-[#0361fc]' : 'text-slate-500 hover:text-[#0361fc]' }}">
             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span class="text-[10px] font-semibold">Detail</span>
+            <span class="text-[10px] font-semibold">Tiket</span>
         </a>
 
         <a href="{{ route('pages.process') }}" class="flex flex-col items-center justify-center gap-1 w-full h-full transition {{ request()->routeIs('pages.process') ? 'text-[#0361fc]' : 'text-slate-500 hover:text-[#0361fc]' }}">
