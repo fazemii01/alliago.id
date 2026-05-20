@@ -143,12 +143,12 @@
         </div>
         
         <!-- Search Button -->
-        <button type="button" class="w-full md:w-auto px-8 py-3.5 rounded-xl md:rounded-full bg-brand text-white font-bold transition-all hover:brightness-110 flex items-center justify-center gap-2 shrink-0 shadow-md shadow-blue-500/20">
-          {{ __('home.hero_search_btn') }}
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-          </svg>
-        </button>
+         <button type="button" onclick="window.location.href='{{ route('visa.index') }}'" class="w-full md:w-auto px-8 py-3.5 rounded-xl md:rounded-full bg-brand text-white font-bold transition-all hover:brightness-110 flex items-center justify-center gap-2 shrink-0 shadow-md shadow-blue-500/20">
+           {{ __('home.hero_search_btn') }}
+           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+           </svg>
+         </button>
       </div>
 
       <!-- Quick category pills -->
