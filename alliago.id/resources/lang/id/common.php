@@ -2,6 +2,7 @@
 
 return [
     'nav_visa' => 'Visa',
+    'nav_flights' => 'Tiket pesawat',
     'nav_detail' => 'Detail',
     'nav_process' => 'Proses',
     'nav_faq' => 'FAQ',
