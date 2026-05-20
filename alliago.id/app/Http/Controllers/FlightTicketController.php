@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Services\H2hFlightService;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Validation\Rule;
 use Throwable;
 
@@ -20,6 +22,7 @@ class FlightTicketController extends Controller
         $tripTypes = $this->h2hFlightService->tripTypes();
         $cities = [];
         $results = [];
+        $paginatedResults = null;
         $error = null;
 
         try {
@@ -39,7 +42,7 @@ class FlightTicketController extends Controller
             'infant' => (int) $request->input('infant', 0),
         ];
 
-        if ($request->isMethod('post')) {
+        if ($request->isMethod('post') || $request->query('search') === '1') {
             $validated = $request->validate([
                 'origin' => ['required', 'string'],
                 'destination' => ['required', 'string', 'different:origin'],
@@ -70,6 +73,8 @@ class FlightTicketController extends Controller
                 if ($results === []) {
                     $error = 'Jadwal belum tersedia untuk rute atau tanggal ini. Silakan coba tanggal lain.';
                 }
+
+                $paginatedResults = $this->paginateResults(collect($results), $request);
             } catch (Throwable $throwable) {
                 $error = 'Pencarian tiket sedang sibuk. Silakan coba lagi dalam beberapa saat.';
             }
@@ -80,7 +85,36 @@ class FlightTicketController extends Controller
             'tripTypes' => $tripTypes,
             'filters' => $filters,
             'results' => $results,
+            'paginatedResults' => $paginatedResults,
             'error' => $error,
         ]);
+    }
+
+    protected function paginateResults(Collection $results, Request $request): LengthAwarePaginator
+    {
+        $perPage = 6;
+        $currentPage = max((int) $request->query('page', 1), 1);
+        $items = $results->forPage($currentPage, $perPage)->values();
+
+        return new LengthAwarePaginator(
+            $items,
+            $results->count(),
+            $perPage,
+            $currentPage,
+            [
+                'path' => $request->url(),
+                'query' => array_merge($request->query(), [
+                    'search' => '1',
+                    'origin' => $request->input('origin'),
+                    'destination' => $request->input('destination'),
+                    'depart_date' => $request->input('depart_date'),
+                    'return_date' => $request->input('return_date'),
+                    'trip_type' => $request->input('trip_type'),
+                    'adult' => $request->input('adult'),
+                    'child' => $request->input('child'),
+                    'infant' => $request->input('infant'),
+                ]),
+            ],
+        );
     }
 }

@@ -43,6 +43,7 @@
             <div class="relative -mt-8 sm:-mt-12 lg:px-8">
                 <form method="POST" action="{{ route('flights.index') }}" class="rounded-[32px] bg-white p-4 shadow-[0_30px_60px_rgba(15,23,42,0.08)] ring-1 ring-slate-200/80 sm:p-5 lg:p-6" x-data="flightSearchForm()">
                     @csrf
+                    <input type="hidden" name="search" value="1">
                     <div class="flex flex-col gap-5">
                         <div class="flex flex-col gap-1">
                             <p class="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">Form pencarian</p>
@@ -213,7 +214,11 @@
                     </div>
 
                     <div class="space-y-6">
-                        @forelse ($results as $flight)
+                        @php
+                            $displayResults = $paginatedResults ?? collect($results);
+                        @endphp
+
+                        @forelse ($displayResults as $flight)
                             <article class="rounded-[32px] bg-white p-6 shadow-sm ring-1 ring-slate-200/80 transition hover:-translate-y-0.5 hover:shadow-md lg:p-8">
                                 <div class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
                                     <div class="space-y-1">
@@ -293,6 +298,12 @@
                             </div>
                         @endforelse
                     </div>
+
+                    @if ($paginatedResults && $paginatedResults->hasPages())
+                        <div class="mt-8 flex items-center justify-center">
+                            {{ $paginatedResults->onEachSide(1)->links() }}
+                        </div>
+                    @endif
                 </section>
             </div>
         </div>
