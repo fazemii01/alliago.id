@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\H2hFlightService;
+use App\Services\DuffelFlightService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
@@ -13,27 +14,22 @@ use Throwable;
 class FlightTicketController extends Controller
 {
     public function __construct(
-        protected H2hFlightService $h2hFlightService,
+        protected DuffelFlightService $duffelFlightService,
     ) {
     }
 
     public function index(Request $request)
     {
-        $tripTypes = $this->h2hFlightService->tripTypes();
-        $cities = [];
+        $tripTypes = $this->duffelFlightService->tripTypes();
         $results = [];
         $paginatedResults = null;
         $error = null;
 
-        try {
-            $cities = $this->h2hFlightService->getCities();
-        } catch (Throwable $throwable) {
-            $error = $throwable->getMessage();
-        }
-
         $filters = [
             'origin' => (string) $request->input('origin', ''),
             'destination' => (string) $request->input('destination', ''),
+            'origin_label' => (string) $request->input('origin_label', ''),
+            'destination_label' => (string) $request->input('destination_label', ''),
             'depart_date' => (string) $request->input('depart_date', now()->addWeek()->toDateString()),
             'return_date' => (string) $request->input('return_date', ''),
             'trip_type' => (string) $request->input('trip_type', 'O'),
@@ -67,7 +63,7 @@ class FlightTicketController extends Controller
             }
 
             try {
-                $search = $this->h2hFlightService->search($filters);
+                $search = $this->duffelFlightService->search($filters);
                 $results = Arr::get($search, 'results', []);
 
                 if ($results === []) {
@@ -81,13 +77,27 @@ class FlightTicketController extends Controller
         }
 
         return view('landing.flights.index', [
-            'cities' => $cities,
             'tripTypes' => $tripTypes,
             'filters' => $filters,
             'results' => $results,
             'paginatedResults' => $paginatedResults,
             'error' => $error,
         ]);
+    }
+
+    public function searchAirports(Request $request): JsonResponse
+    {
+        $query = trim((string) $request->input('query', ''));
+
+        if (strlen($query) < 2) {
+            return response()->json([]);
+        }
+
+        try {
+            return response()->json($this->duffelFlightService->searchAirports($query));
+        } catch (Throwable) {
+            return response()->json([]);
+        }
     }
 
     protected function paginateResults(Collection $results, Request $request): LengthAwarePaginator
@@ -107,6 +117,8 @@ class FlightTicketController extends Controller
                     'search' => '1',
                     'origin' => $request->input('origin'),
                     'destination' => $request->input('destination'),
+                    'origin_label' => $request->input('origin_label'),
+                    'destination_label' => $request->input('destination_label'),
                     'depart_date' => $request->input('depart_date'),
                     'return_date' => $request->input('return_date'),
                     'trip_type' => $request->input('trip_type'),

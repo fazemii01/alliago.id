@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'duffel' => [
+        'secret' => env('DUFFEL_SECRET'),
+    ],
+
 ];
