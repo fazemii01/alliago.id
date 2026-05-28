@@ -86,7 +86,7 @@
 
                         {{-- (canonical hidden inputs are declared above in the form, outside the card) --}}
 
-                        <div class="block lg:hidden" x-data="{ mobilePassengerOpen: false }">
+                        <div class="block lg:hidden">
 
                             {{-- ─── Row 1: Trip-type tabs ─────────────────────────── --}}
                             <div class="flex border-b border-slate-100">
@@ -779,6 +779,7 @@
                     returnPicker: null,
                     mobileDepartPicker: null,
                     mobileReturnPicker: null,
+                    mobilePassengerOpen: false,
                     get totalPassenger() {
                         return Number(this.adult) + Number(this.child) + Number(this.infant);
                     },
