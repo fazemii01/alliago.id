@@ -100,14 +100,14 @@ class DuffelFlightService
 
         $offersResponse = $this->get('/air/offers', [
             'offer_request_id' => $offerRequestId,
-            'sort' => 'total_amount',
+            'sort' => '-total_amount',
             'limit' => 50,
         ]);
 
         $results = collect(Arr::get($offersResponse, 'data', []))
             ->map(fn ($offer) => $this->mapOffer($offer))
             ->filter()
-            ->sortBy('price_value')
+            ->sortByDesc('price_value')
             ->values()
             ->all();
 
