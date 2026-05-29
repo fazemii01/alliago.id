@@ -48,6 +48,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'countries.delete'       => 'Delete Country',
         ],
         'Settings' => [
+            'flight_pricing_config.view_any' => 'View Flight Pricing Config',
+            'flight_pricing_config.update'   => 'Edit Flight Pricing Config',
             'site_faqs.view_any'     => 'View FAQ List',
             'site_faqs.create'       => 'Create FAQ',
             'site_faqs.update'       => 'Edit FAQ',

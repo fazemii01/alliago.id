@@ -22,6 +22,18 @@ class FlightPricingConfigResource extends Resource
 
     protected static ?string $modelLabel = 'Flight Pricing Config';
 
+    public static function canAccess(): bool
+    {
+        $user = auth()->user();
+        return $user && ($user->hasRole('admin') || $user->hasPermissionTo('flight_pricing_config.view_any'));
+    }
+
+    public static function canEdit(\Illuminate\Database\Eloquent\Model $record): bool
+    {
+        $user = auth()->user();
+        return $user && ($user->hasRole('admin') || $user->hasPermissionTo('flight_pricing_config.update'));
+    }
+
     public static function form(Form $form): Form
     {
         return $form->schema([
