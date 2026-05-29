@@ -709,7 +709,7 @@
                                         <p class="text-lg font-extrabold text-slate-900 sm:text-xl">{{ $flight['price'] }}</p>
                                         <p class="text-[10px] text-slate-400">/ penumpang</p>
                                     </div>
-                                    @if ($flight['airline'] === 'ZZ')
+                                    @if (trim(strtoupper($flight['airline'] ?? '')) === 'ZZ')
                                         <a href="https://wa.me/6281334455616"
                                            target="_blank" rel="noopener noreferrer"
                                            class="shrink-0 rounded-xl bg-[#0361fc] px-5 py-2.5 text-sm font-bold text-white transition hover:bg-blue-700 active:scale-95 sm:w-full sm:text-center">
@@ -741,7 +741,8 @@
                                 @endif
                                 @foreach ($flight['fare_breakdown'] as $fare)
                                     <span class="text-[11px] text-slate-500">
-                                        <span class="font-semibold capitalize text-slate-700">{{ $fare['pax_type'] }}:</span> {{ $fare['total_fare'] }}
+                                        <span class="font-semibold capitalize text-slate-700">{{ $fare['pax_type'] }}:</span>
+                                        {{ (trim(strtoupper($flight['airline'] ?? '')) === 'ZZ') ? $flight['price'] : $fare['total_fare'] }}
                                     </span>
                                 @endforeach
                             </div>

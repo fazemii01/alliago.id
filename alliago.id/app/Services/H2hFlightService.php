@@ -178,8 +178,9 @@ class H2hFlightService
             ->filter()
             ->implode(' | ');
         $markup = (float) $config->markupFor($airlineIataEarly);
+        $isZz = strtoupper(trim($airlineIataEarly)) === 'ZZ';
         $fareBreakdown = $priceDetails
-            ->map(function ($detail) use ($numericFare, $markup) {
+            ->map(function ($detail) use ($numericFare, $markup, $totalPrice, $isZz) {
                 $totalFare = (float) Arr::get($detail, 'totalFare', 0);
                 $baseFare = (float) Arr::get($detail, 'baseFare', 0);
                 $tax = (float) Arr::get($detail, 'tax', 0);
@@ -190,9 +191,9 @@ class H2hFlightService
 
                 return [
                     'pax_type' => Arr::get($detail, 'paxType'),
-                    'base_fare' => $this->formatCurrency($baseFare + $detailMarkup),
-                    'tax' => $this->formatCurrency($tax),
-                    'total_fare' => $this->formatCurrency($totalFare + $detailMarkup),
+                    'base_fare' => $isZz ? $this->formatCurrency($totalPrice) : $this->formatCurrency($baseFare + $detailMarkup),
+                    'tax' => $isZz ? $this->formatCurrency(0) : $this->formatCurrency($tax),
+                    'total_fare' => $isZz ? $this->formatCurrency($totalPrice) : $this->formatCurrency($totalFare + $detailMarkup),
                 ];
             })
             ->all();

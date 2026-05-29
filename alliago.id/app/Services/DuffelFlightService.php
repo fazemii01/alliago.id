@@ -246,13 +246,13 @@ class DuffelFlightService
             'class' => $cabinClass,
             'info' => $info,
             'segments' => $segments,
-            'fare_breakdown' => $this->buildFareBreakdown($offer, $idrRate, (float) $config->markupFor($airlineIata)),
+            'fare_breakdown' => $this->buildFareBreakdown($offer, $idrRate, (float) $config->markupFor($airlineIata), $airlineIata),
             'journey_reference' => (string) Arr::get($offer, 'id'),
             'passport_required' => (bool) Arr::get($offer, 'passenger_identity_documents_required', false),
         ];
      }
  
-     protected function buildFareBreakdown(array $offer, float $idrRate = 1.0, float $markup = 0.0): array
+     protected function buildFareBreakdown(array $offer, float $idrRate = 1.0, float $markup = 0.0, string $airline = ''): array
      {
          $passengers = Arr::get($offer, 'passengers', []);
          $totalAmount = (float) Arr::get($offer, 'total_amount', 0) * $idrRate;
@@ -266,13 +266,15 @@ class DuffelFlightService
          $perBase = ($baseAmount + $markup) / $count;
          $perTax = $taxAmount / $count;
  
+         $isZz = strtoupper(trim($airline)) === 'ZZ';
+ 
          return collect($passengers)
              ->groupBy(fn ($p) => Arr::get($p, 'type', 'adult'))
              ->map(fn ($group, $type) => [
                  'pax_type' => $type,
-                 'base_fare' => $this->formatIdr(round($perBase * count($group))),
-                 'tax' => $this->formatIdr(round($perTax * count($group))),
-                 'total_fare' => $this->formatIdr(round($perPassenger * count($group))),
+                 'base_fare' => $isZz ? $this->formatIdr($totalAmountWithMarkup) : $this->formatIdr(round($perBase * count($group))),
+                 'tax' => $isZz ? $this->formatIdr(0) : $this->formatIdr(round($perTax * count($group))),
+                 'total_fare' => $isZz ? $this->formatIdr($totalAmountWithMarkup) : $this->formatIdr(round($perPassenger * count($group))),
              ])
              ->values()
              ->all();
