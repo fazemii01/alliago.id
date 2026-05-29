@@ -246,35 +246,37 @@ class DuffelFlightService
             'class' => $cabinClass,
             'info' => $info,
             'segments' => $segments,
-            'fare_breakdown' => $this->buildFareBreakdown($offer, $idrRate),
+            'fare_breakdown' => $this->buildFareBreakdown($offer, $idrRate, (float) $config->markupFor($airlineIata)),
             'journey_reference' => (string) Arr::get($offer, 'id'),
             'passport_required' => (bool) Arr::get($offer, 'passenger_identity_documents_required', false),
         ];
-    }
-
-    protected function buildFareBreakdown(array $offer, float $idrRate = 1.0): array
-    {
-        $passengers = Arr::get($offer, 'passengers', []);
-        $totalAmount = (float) Arr::get($offer, 'total_amount', 0) * $idrRate;
-        $baseAmount = (float) Arr::get($offer, 'base_amount', 0) * $idrRate;
-        $taxAmount = (float) Arr::get($offer, 'tax_amount', 0) * $idrRate;
-        $count = max(count($passengers), 1);
-
-        $perPassenger = $totalAmount / $count;
-        $perBase = $baseAmount / $count;
-        $perTax = $taxAmount / $count;
-
-        return collect($passengers)
-            ->groupBy(fn ($p) => Arr::get($p, 'type', 'adult'))
-            ->map(fn ($group, $type) => [
-                'pax_type' => $type,
-                'base_fare' => $this->formatIdr(round($perBase * count($group))),
-                'tax' => $this->formatIdr(round($perTax * count($group))),
-                'total_fare' => $this->formatIdr(round($perPassenger * count($group))),
-            ])
-            ->values()
-            ->all();
-    }
+     }
+ 
+     protected function buildFareBreakdown(array $offer, float $idrRate = 1.0, float $markup = 0.0): array
+     {
+         $passengers = Arr::get($offer, 'passengers', []);
+         $totalAmount = (float) Arr::get($offer, 'total_amount', 0) * $idrRate;
+         $baseAmount = (float) Arr::get($offer, 'base_amount', 0) * $idrRate;
+         $taxAmount = (float) Arr::get($offer, 'tax_amount', 0) * $idrRate;
+         $count = max(count($passengers), 1);
+ 
+         // Include markup in total amount and distribute it per passenger
+         $totalAmountWithMarkup = $totalAmount + $markup;
+         $perPassenger = $totalAmountWithMarkup / $count;
+         $perBase = ($baseAmount + $markup) / $count;
+         $perTax = $taxAmount / $count;
+ 
+         return collect($passengers)
+             ->groupBy(fn ($p) => Arr::get($p, 'type', 'adult'))
+             ->map(fn ($group, $type) => [
+                 'pax_type' => $type,
+                 'base_fare' => $this->formatIdr(round($perBase * count($group))),
+                 'tax' => $this->formatIdr(round($perTax * count($group))),
+                 'total_fare' => $this->formatIdr(round($perPassenger * count($group))),
+             ])
+             ->values()
+             ->all();
+     }
 
     protected function get(string $path, array $query = []): array
     {

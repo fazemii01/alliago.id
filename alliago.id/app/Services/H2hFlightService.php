@@ -177,13 +177,24 @@ class H2hFlightService
             ->flatMap(fn ($detail) => Arr::wrap(Arr::get($detail, 'bagInfo', [])))
             ->filter()
             ->implode(' | ');
+        $markup = (float) $config->markupFor($airlineIataEarly);
         $fareBreakdown = $priceDetails
-            ->map(fn ($detail) => [
-                'pax_type' => Arr::get($detail, 'paxType'),
-                'base_fare' => $this->formatCurrency(Arr::get($detail, 'baseFare')),
-                'tax' => $this->formatCurrency(Arr::get($detail, 'tax')),
-                'total_fare' => $this->formatCurrency(Arr::get($detail, 'totalFare')),
-            ])
+            ->map(function ($detail) use ($numericFare, $markup) {
+                $totalFare = (float) Arr::get($detail, 'totalFare', 0);
+                $baseFare = (float) Arr::get($detail, 'baseFare', 0);
+                $tax = (float) Arr::get($detail, 'tax', 0);
+                
+                // Distribute markup proportionally across passenger fares to ensure consistent totals
+                $ratio = $numericFare > 0 ? $totalFare / $numericFare : 0;
+                $detailMarkup = $markup * $ratio;
+
+                return [
+                    'pax_type' => Arr::get($detail, 'paxType'),
+                    'base_fare' => $this->formatCurrency($baseFare + $detailMarkup),
+                    'tax' => $this->formatCurrency($tax),
+                    'total_fare' => $this->formatCurrency($totalFare + $detailMarkup),
+                ];
+            })
             ->all();
 
         $airlineIata = (string) Arr::get($journey, 'airlineID', Arr::get($firstFlight, 'airlineCode', ''));
