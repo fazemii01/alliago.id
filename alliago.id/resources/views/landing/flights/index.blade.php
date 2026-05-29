@@ -480,7 +480,7 @@
                             </label>
 
                             {{-- ⑤ Penumpang --}}
-                            <div class="relative min-w-0 lg:min-w-[150px]" x-data="{ passengerOpen: false }">
+                            <div class="relative min-w-0 lg:min-w-[150px]" x-data="{ passengerOpen: false }" @click.outside="passengerOpen = false">
                                 <button type="button"
                                         @click="passengerOpen = !passengerOpen"
                                         class="w-full px-5 py-4 text-left transition hover:bg-slate-50/60">
@@ -491,7 +491,6 @@
                                     </div>
                                 </button>
                                 <div x-show="passengerOpen"
-                                     @click.outside="passengerOpen = false"
                                      x-transition:enter="transition ease-out duration-100"
                                      x-transition:enter-start="opacity-0 -translate-y-1"
                                      x-transition:enter-end="opacity-100 translate-y-0"
@@ -710,10 +709,13 @@
                                         <p class="text-lg font-extrabold text-slate-900 sm:text-xl">{{ $flight['price'] }}</p>
                                         <p class="text-[10px] text-slate-400">/ penumpang</p>
                                     </div>
-                                    <!-- <button type="button"
-                                            class="shrink-0 rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-[#0361fc] active:scale-95 sm:w-full sm:text-center">
-                                        Pilih
-                                    </button> -->
+                                    @if ($flight['airline'] === 'ZZ')
+                                        <a href="https://wa.me/6281334455616"
+                                           target="_blank" rel="noopener noreferrer"
+                                           class="shrink-0 rounded-xl bg-[#0361fc] px-5 py-2.5 text-sm font-bold text-white transition hover:bg-blue-700 active:scale-95 sm:w-full sm:text-center">
+                                            Pilih
+                                        </a>
+                                    @endif
                                 </div>
                             </div>
 
