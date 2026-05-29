@@ -66,6 +66,12 @@ class FlightTicketController extends Controller
                 $search = $this->duffelFlightService->search($filters);
                 $results = Arr::get($search, 'results', []);
 
+                // Automatically hide any ticket priced under Rp 2.000.000 in the background system
+                $results = collect($results)
+                    ->filter(fn ($flight) => ($flight['price_value'] ?? 0) >= 2000000)
+                    ->values()
+                    ->all();
+
                 if ($results === []) {
                     $error = 'Jadwal belum tersedia untuk rute atau tanggal ini. Silakan coba tanggal lain.';
                 }
@@ -76,12 +82,20 @@ class FlightTicketController extends Controller
             }
         }
 
+        $airlines = collect($results)
+            ->map(fn ($f) => ['code' => $f['airline'], 'name' => $f['airline_name'] ?? $f['airline']])
+            ->unique('code')
+            ->sortBy('name')
+            ->values()
+            ->all();
+
         return view('landing.flights.index', [
             'tripTypes' => $tripTypes,
             'filters' => $filters,
             'results' => $results,
             'paginatedResults' => $paginatedResults,
             'error' => $error,
+            'airlines' => $airlines,
         ]);
     }
 

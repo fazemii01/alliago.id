@@ -23,8 +23,7 @@ class DatabaseSeeder extends Seeder
         }
 
         $this->call([
-            
-            
+            FlightPricingConfigSeeder::class,
         ]);
     }
 }

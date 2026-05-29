@@ -535,7 +535,8 @@
     {{-- ═══════════════════════════════════════════════════════════════════════
          RESULTS
     ═══════════════════════════════════════════════════════════════════════════ --}}
-    <div class="bg-[#F8F9FB] pb-16 pt-12 text-slate-900">
+    <div class="bg-[#F8F9FB] pb-16 pt-12 text-slate-900"
+         x-data="airlineFilter({{ json_encode(array_column($airlines ?? [], 'code')) }})">
         <div class="page-wrapper grid gap-6 lg:grid-cols-4">
 
             {{-- Sidebar --}}
@@ -575,6 +576,7 @@
                         </div>
                     </dl>
                 </div>
+
                 <div class="rounded-[28px] bg-white p-5 shadow-sm ring-1 ring-slate-200/80">
                     <h3 class="text-xs font-bold uppercase tracking-[0.24em] text-slate-400">Catatan</h3>
                     <p class="mt-3 flex items-start gap-2 text-sm leading-relaxed text-slate-500">
@@ -582,6 +584,31 @@
                         Harga estimasi dalam Rupiah. Kurs diperbarui tiap jam.
                     </p>
                 </div>
+
+                @if (!empty($airlines))
+                <div class="rounded-[28px] bg-white p-5 shadow-sm ring-1 ring-slate-200/80">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xs font-bold uppercase tracking-[0.24em] text-slate-400">Maskapai</h3>
+                        <button type="button" @click="selectedAirlines = []"
+                                x-show="selectedAirlines.length > 0"
+                                class="text-[11px] font-semibold text-[#0361fc] hover:underline">
+                            Reset
+                        </button>
+                    </div>
+                    <div class="mt-3 space-y-2.5">
+                        @foreach ($airlines as $airline)
+                        <label class="flex cursor-pointer items-center gap-3">
+                            <input type="checkbox"
+                                   value="{{ $airline['code'] }}"
+                                   @change="toggleAirline('{{ $airline['code'] }}')"
+                                   :checked="selectedAirlines.includes('{{ $airline['code'] }}')"
+                                   class="h-4 w-4 rounded border-slate-300 text-[#0361fc] focus:ring-[#0361fc]">
+                            <span class="text-sm font-medium text-slate-700">{{ $airline['name'] }}</span>
+                        </label>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
             </aside>
 
             {{-- Results --}}
@@ -609,17 +636,28 @@
                     @php $displayResults = $paginatedResults ?? collect($results); @endphp
 
                     @forelse ($displayResults as $flight)
-                        <article class="overflow-hidden rounded-[28px] bg-white shadow-sm ring-1 ring-slate-200/80 transition hover:-translate-y-0.5 hover:shadow-md">
+                        <article x-show="isVisible('{{ $flight['airline'] }}')"
+                                 class="overflow-hidden rounded-[28px] bg-white shadow-sm ring-1 ring-slate-200/80 transition hover:-translate-y-0.5 hover:shadow-md">
                             <div class="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:gap-0">
 
                                 {{-- Airline --}}
                                 <div class="flex shrink-0 items-center gap-3 sm:w-32">
-                                    <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-[#EDF4FF] text-xs font-bold text-[#0361fc]">
-                                        {{ strtoupper(substr($flight['airline'], 0, 2)) }}
-                                    </div>
+                                    @if (!empty($flight['logo_url']))
+                                        <img src="{{ $flight['logo_url'] }}"
+                                             alt="{{ $flight['airline'] }}"
+                                             class="h-10 w-10 rounded-xl object-contain p-1 bg-[#EDF4FF]"
+                                             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                                        <div class="hidden h-10 w-10 items-center justify-center rounded-xl bg-[#EDF4FF] text-xs font-bold text-[#0361fc]">
+                                            {{ strtoupper(substr($flight['airline'], 0, 2)) }}
+                                        </div>
+                                    @else
+                                        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-[#EDF4FF] text-xs font-bold text-[#0361fc]">
+                                            {{ strtoupper(substr($flight['airline'], 0, 2)) }}
+                                        </div>
+                                    @endif
                                     <div class="min-w-0">
-                                        <p class="text-sm font-bold text-slate-900">{{ $flight['airline'] }}</p>
-                                        <p class="truncate text-[11px] font-medium text-slate-400">{{ $flight['flight_numbers'] ?: '-' }}</p>
+                                        <p class="truncate text-sm font-bold text-slate-900">{{ $flight['airline_name'] ?? $flight['airline'] }}</p>
+                                        <p class="truncate text-[11px] font-medium text-slate-400">{{ $flight['airline'] }} · {{ $flight['flight_numbers'] ?: '-' }}</p>
                                     </div>
                                 </div>
 
@@ -748,6 +786,18 @@
 
         <script>
             document.addEventListener('alpine:init', () => {
+
+                Alpine.data('airlineFilter', (allCodes) => ({
+                    selectedAirlines: [],
+                    toggleAirline(code) {
+                        const idx = this.selectedAirlines.indexOf(code);
+                        if (idx === -1) this.selectedAirlines.push(code);
+                        else this.selectedAirlines.splice(idx, 1);
+                    },
+                    isVisible(code) {
+                        return this.selectedAirlines.length === 0 || this.selectedAirlines.includes(code);
+                    },
+                }));
 
                 Alpine.data('airportSearch', (fieldName, initialValue, initialLabel) => ({
                     query: initialLabel || '', value: initialValue || '',

@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Models\FlightPricingConfig;
+use App\Support\AirlineNames;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
@@ -155,6 +157,9 @@ class H2hFlightService
             return null;
         }
 
+        $markup = FlightPricingConfig::current()->totalMarkup();
+        $totalPrice = $numericFare + $markup;
+
         $flightNumbers = $flightDetails
             ->map(fn ($detail) => trim(collect([
                 Arr::get($detail, 'airlineCode'),
@@ -180,13 +185,18 @@ class H2hFlightService
             ])
             ->all();
 
+        $airlineIata = (string) Arr::get($journey, 'airlineID', Arr::get($firstFlight, 'airlineCode', ''));
+
         return [
-            'airline' => Arr::get($journey, 'airlineID', Arr::get($firstFlight, 'airlineCode', 'Flight Option')),
+            'airline' => $airlineIata ?: 'Flight Option',
+            'airline_name' => $airlineIata ? AirlineNames::get($airlineIata) : 'Flight Option',
+            'logo_url' => $airlineIata ? "https://airlabs.co/img/airline/s/{$airlineIata}.png" : null,
             'flight_numbers' => $flightNumbers,
             'duration' => $this->formatDuration(Arr::get($journey, 'jiDepartTime'), Arr::get($journey, 'jiArrivalTime')),
             'stops' => $flightDetails->count() > 1 ? ($flightDetails->count() - 1) . ' stop' . ($flightDetails->count() > 2 ? 's' : '') : 'Direct',
-            'price' => $this->formatCurrency($sumFare),
-            'price_value' => $numericFare,
+            'net_price' => $numericFare,
+            'price' => $this->formatCurrency($totalPrice),
+            'price_value' => $totalPrice,
             'start_time' => $this->formatTime(Arr::get($journey, 'jiDepartTime', Arr::get($firstFlight, 'fdDepartTime'))),
             'start_location' => Arr::get($journey, 'jiOrigin', Arr::get($firstFlight, 'fdOrigin')),
             'end_time' => $this->formatTime(Arr::get($journey, 'jiArrivalTime', Arr::get($lastFlight, 'fdArrivalTime'))),

@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Models\FlightPricingConfig;
+use App\Support\AirlineNames;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
@@ -100,14 +102,14 @@ class DuffelFlightService
 
         $offersResponse = $this->get('/air/offers', [
             'offer_request_id' => $offerRequestId,
-            'sort' => '-total_amount',
+            'sort' => 'total_amount',
             'limit' => 50,
         ]);
 
         $results = collect(Arr::get($offersResponse, 'data', []))
             ->map(fn ($offer) => $this->mapOffer($offer))
             ->filter()
-            ->sortByDesc('price_value')
+            ->sortBy('price_value')
             ->values()
             ->all();
 
@@ -220,15 +222,22 @@ class DuffelFlightService
         $info = collect([$fareBrandName, $baggageInfo])->filter()->implode(' | ');
 
         $totalAmountIdr = round($totalAmount * $idrRate);
+        $markup = FlightPricingConfig::current()->totalMarkup();
+        $totalWithMarkup = $totalAmountIdr + $markup;
+
+        $airlineIata = (string) Arr::get($firstSegment, 'marketing_carrier.iata_code', Arr::get($firstSegment, 'operating_carrier.iata_code', ''));
 
         return [
             'offer_id' => (string) Arr::get($offer, 'id'),
-            'airline' => (string) Arr::get($firstSegment, 'marketing_carrier.iata_code', Arr::get($firstSegment, 'operating_carrier.iata_code', 'Unknown')),
+            'airline' => $airlineIata ?: 'Unknown',
+            'airline_name' => $airlineIata ? AirlineNames::get($airlineIata) : 'Unknown',
+            'logo_url' => $airlineIata ? "https://airlabs.co/img/airline/s/{$airlineIata}.png" : null,
             'flight_numbers' => $flightNumbers,
             'duration' => $this->formatDuration($departingAt, $arrivingAt),
             'stops' => $stopCount > 0 ? $stopCount . ' stop' . ($stopCount > 1 ? 's' : '') : 'Direct',
-            'price' => $this->formatIdr($totalAmountIdr),
-            'price_value' => $totalAmountIdr,
+            'net_price' => $totalAmountIdr,
+            'price' => $this->formatIdr($totalWithMarkup),
+            'price_value' => $totalWithMarkup,
             'start_date' => $this->formatDate($departingAt),
             'start_time' => $this->formatTime($departingAt),
             'start_location' => (string) Arr::get($firstSegment, 'origin.iata_code', ''),
