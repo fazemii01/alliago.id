@@ -66,9 +66,11 @@ class FlightTicketController extends Controller
                 $search = $this->duffelFlightService->search($filters);
                 $results = Arr::get($search, 'results', []);
 
-                // Automatically hide any ticket priced under Rp 2.000.000 in the background system
+                // Automatically hide any ticket priced under Rp 2.000.000 (ZZ airline bypasses this filter)
                 $results = collect($results)
-                    ->filter(fn ($flight) => ($flight['price_value'] ?? 0) >= 2000000)
+                    ->filter(fn ($flight) => ($flight['price_value'] ?? 0) >= 2000000 || strtoupper($flight['airline']) === 'ZZ')
+                    ->sortBy('price_value') // Sort other flights by lowest price
+                    ->sortBy(fn ($flight) => strtoupper($flight['airline']) === 'ZZ' ? 0 : 1) // Prioritize ZZ to be at the absolute top (top 1 display) regardless of price
                     ->values()
                     ->all();
 
