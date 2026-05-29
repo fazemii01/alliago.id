@@ -73,10 +73,9 @@ class FlightPricingConfigResource extends Resource
                         ->placeholder('e.g. Best Price'),
                     Forms\Components\TextInput::make('zz_logo_url')
                         ->label('ZZ Logo URL')
-                        ->url()
                         ->maxLength(500)
                         ->columnSpanFull()
-                        ->placeholder('https://...'),
+                        ->placeholder('http:// or https://'),
                 ])
                 ->columns(2),
         ]);
