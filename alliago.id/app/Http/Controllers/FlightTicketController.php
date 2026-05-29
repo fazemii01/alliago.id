@@ -114,6 +114,27 @@ class FlightTicketController extends Controller
         }
     }
 
+    public function airlineLogo(string $iata)
+    {
+        $config = \App\Models\FlightPricingConfig::current();
+        $logoUrl = $config->zz_logo_url;
+
+        if (strtoupper($iata) === 'ZZ' && $logoUrl) {
+            try {
+                // Fetch the image from the remote URL using Laravel's secure HTTP client
+                $response = \Illuminate\Support\Facades\Http::timeout(10)->get($logoUrl);
+                if ($response->successful()) {
+                    $contentType = $response->header('Content-Type') ?: 'image/jpeg';
+                    return response($response->body(), 200)->header('Content-Type', $contentType);
+                }
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::error("Failed to proxy ZZ airline logo from {$logoUrl}: " . $e->getMessage());
+            }
+        }
+
+        return response('', 404);
+    }
+
     protected function paginateResults(Collection $results, Request $request): LengthAwarePaginator
     {
         $perPage = 6;

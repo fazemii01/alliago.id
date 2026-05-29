@@ -56,6 +56,18 @@ class FlightPricingConfig extends Model
     public function logoFor(string $iata): ?string
     {
         if (strtoupper($iata) === 'ZZ' && $this->zz_logo_url) {
+            // If the URL is HTTP and we are in a secure request or production environment,
+            // we proxy the logo to avoid browser mixed content blocking.
+            $isSecure = false;
+            try {
+                $isSecure = !app()->runningInConsole() && request()->secure();
+            } catch (\Throwable) {
+                // Fallback in case container/request is not bound
+            }
+
+            if (str_starts_with($this->zz_logo_url, 'http://') && ($isSecure || app()->environment('production'))) {
+                return route('flights.airline_logo', ['iata' => $iata]);
+            }
             return $this->zz_logo_url;
         }
         return null;

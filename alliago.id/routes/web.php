@@ -29,6 +29,7 @@ Route::get('/visa', [VisaCatalogController::class, 'index'])->name('visa.index')
 Route::get('/visa/{slug}', [VisaCatalogController::class, 'show'])->name('visa.show');
 Route::match(['get', 'post'], '/flights', [FlightTicketController::class, 'index'])->name('flights.index');
 Route::get('/api/flights/airports', [FlightTicketController::class, 'searchAirports'])->name('flights.airports.search');
+Route::get('/flights/airline-logo/{iata}', [FlightTicketController::class, 'airlineLogo'])->name('flights.airline_logo');
 
 Route::get('/detail', [\App\Http\Controllers\PageController::class, 'detail'])->name('pages.detail');
 Route::get('/proses', [\App\Http\Controllers\PageController::class, 'process'])->name('pages.process');
