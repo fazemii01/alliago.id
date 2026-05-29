@@ -356,6 +356,21 @@
                         {{-- ══════════════════════════════════════════════
                              DESKTOP ROW  (lg+)  — original layout preserved
                         ══════════════════════════════════════════════ --}}
+
+                        {{-- Trip-type switcher — desktop only --}}
+                        <div class="hidden lg:flex items-center gap-1 border-b border-slate-100 px-5">
+                            @foreach ($tripTypes as $val => $lbl)
+                                <button type="button"
+                                        @click="tripType = '{{ $val }}'"
+                                        :class="tripType === '{{ $val }}'
+                                            ? 'border-b-2 border-[#0361fc] text-[#0361fc] font-bold'
+                                            : 'text-slate-400 hover:text-slate-600 font-semibold'"
+                                        class="pb-3 pt-4 px-4 text-sm transition">
+                                    {{ $lbl }}
+                                </button>
+                            @endforeach
+                        </div>
+
                         <div class="hidden lg:flex lg:flex-row lg:divide-x lg:divide-slate-100">
 
                             {{-- ① Origin --}}
