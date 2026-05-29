@@ -59,6 +59,26 @@ class FlightPricingConfigResource extends Resource
                         ->columnSpanFull(),
                 ])
                 ->columns(2),
+            Forms\Components\Section::make('ZZ Airline Override')
+                ->description('Leave blank to use global defaults for ZZ airline.')
+                ->schema([
+                    Forms\Components\TextInput::make('zz_markup')
+                        ->label('ZZ Markup (IDR)')
+                        ->numeric()
+                        ->prefix('IDR')
+                        ->helperText('Overrides global service fee + addon for ZZ. Leave blank to use global.'),
+                    Forms\Components\TextInput::make('zz_name')
+                        ->label('ZZ Display Name')
+                        ->maxLength(255)
+                        ->placeholder('e.g. Best Price'),
+                    Forms\Components\TextInput::make('zz_logo_url')
+                        ->label('ZZ Logo URL')
+                        ->url()
+                        ->maxLength(500)
+                        ->columnSpanFull()
+                        ->placeholder('https://...'),
+                ])
+                ->columns(2),
         ]);
     }
 

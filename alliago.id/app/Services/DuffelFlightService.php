@@ -222,16 +222,15 @@ class DuffelFlightService
         $info = collect([$fareBrandName, $baggageInfo])->filter()->implode(' | ');
 
         $totalAmountIdr = round($totalAmount * $idrRate);
-        $markup = FlightPricingConfig::current()->totalMarkup();
-        $totalWithMarkup = $totalAmountIdr + $markup;
-
         $airlineIata = (string) Arr::get($firstSegment, 'marketing_carrier.iata_code', Arr::get($firstSegment, 'operating_carrier.iata_code', ''));
+        $config = FlightPricingConfig::current();
+        $totalWithMarkup = $totalAmountIdr + $config->markupFor($airlineIata);
 
         return [
             'offer_id' => (string) Arr::get($offer, 'id'),
             'airline' => $airlineIata ?: 'Unknown',
-            'airline_name' => $airlineIata ? AirlineNames::get($airlineIata) : 'Unknown',
-            'logo_url' => $airlineIata ? "https://airlabs.co/img/airline/s/{$airlineIata}.png" : null,
+            'airline_name' => $config->nameFor($airlineIata) ?? ($airlineIata ? AirlineNames::get($airlineIata) : 'Unknown'),
+            'logo_url' => $config->logoFor($airlineIata) ?? ($airlineIata ? "https://airlabs.co/img/airline/s/{$airlineIata}.png" : null),
             'flight_numbers' => $flightNumbers,
             'duration' => $this->formatDuration($departingAt, $arrivingAt),
             'stops' => $stopCount > 0 ? $stopCount . ' stop' . ($stopCount > 1 ? 's' : '') : 'Direct',

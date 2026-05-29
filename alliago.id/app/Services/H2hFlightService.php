@@ -157,8 +157,9 @@ class H2hFlightService
             return null;
         }
 
-        $markup = FlightPricingConfig::current()->totalMarkup();
-        $totalPrice = $numericFare + $markup;
+        $airlineIataEarly = (string) Arr::get($journey, 'airlineID', Arr::get($segments->first() ?? [], 'flightDetail.0.airlineCode', ''));
+        $config = FlightPricingConfig::current();
+        $totalPrice = $numericFare + $config->markupFor($airlineIataEarly);
 
         $flightNumbers = $flightDetails
             ->map(fn ($detail) => trim(collect([
@@ -189,8 +190,8 @@ class H2hFlightService
 
         return [
             'airline' => $airlineIata ?: 'Flight Option',
-            'airline_name' => $airlineIata ? AirlineNames::get($airlineIata) : 'Flight Option',
-            'logo_url' => $airlineIata ? "https://airlabs.co/img/airline/s/{$airlineIata}.png" : null,
+            'airline_name' => $config->nameFor($airlineIata) ?? ($airlineIata ? AirlineNames::get($airlineIata) : 'Flight Option'),
+            'logo_url' => $config->logoFor($airlineIata) ?? ($airlineIata ? "https://airlabs.co/img/airline/s/{$airlineIata}.png" : null),
             'flight_numbers' => $flightNumbers,
             'duration' => $this->formatDuration(Arr::get($journey, 'jiDepartTime'), Arr::get($journey, 'jiArrivalTime')),
             'stops' => $flightDetails->count() > 1 ? ($flightDetails->count() - 1) . ' stop' . ($flightDetails->count() > 2 ? 's' : '') : 'Direct',
