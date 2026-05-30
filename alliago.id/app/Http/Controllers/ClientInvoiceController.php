@@ -9,11 +9,6 @@ class ClientInvoiceController extends Controller
 {
     public function show(Application $application)
     {
-        // Ensure user is authorized to view this invoice
-        if ($application->user_id !== auth()->id() && !auth()->user()->hasRole('admin')) {
-            abort(403);
-        }
-
         // invoice_amount is locked at checkout time. If missing (legacy records),
         // use price_breakdown total. NEVER fall back to current product price,
         // as that price may have changed since the user paid.

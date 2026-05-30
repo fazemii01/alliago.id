@@ -39,7 +39,15 @@
             </div>
             <div class="flex flex-col items-start text-left">
                 <span class="text-sm font-semibold leading-none text-slate-900">{{ Auth::user()->name }}</span>
-                <span class="text-[10px] text-slate-500">{{ Auth::user()->hasRole('admin') ? __('common.administrator') : __('common.personal_account') }}</span>
+                <span class="text-[10px] text-slate-500">
+                  @if(Auth::user()->hasRole('admin'))
+                    {{ __('common.administrator') }}
+                  @elseif(Auth::user()->hasRole('staff'))
+                    {{ __('common.staff') }}
+                  @else
+                    {{ __('common.personal_account') }}
+                  @endif
+                </span>
             </div>
             <svg class="ml-1 h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -53,7 +61,15 @@
                   </div>
                   <div class="flex min-w-0 flex-col">
                       <span class="truncate text-sm font-bold text-slate-900">{{ Auth::user()->name }}</span>
-                      <span class="text-[11px] font-medium text-slate-500">{{ Auth::user()->hasRole('admin') ? __('common.administrator') : __('common.personal_account_full') }}</span>
+                      <span class="text-[11px] font-medium text-slate-500">
+                        @if(Auth::user()->hasRole('admin'))
+                          {{ __('common.administrator') }}
+                        @elseif(Auth::user()->hasRole('staff'))
+                          {{ __('common.staff') }}
+                        @else
+                          {{ __('common.personal_account_full') }}
+                        @endif
+                      </span>
                   </div>
               </div>
               <div class="py-1.5">
@@ -61,7 +77,7 @@
                       <svg class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
                       {{ __('common.nav_dashboard') }}
                   </a>
-                  @if(Auth::user()->hasRole('admin'))
+                  @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('staff'))
                   <a href="/admin" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 hover:text-[#0361fc]">
                       <svg class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                       {{ __('common.nav_admin_dashboard') }}
@@ -116,7 +132,15 @@
           </div>
           <div class="flex min-w-0 flex-col">
             <span class="truncate text-sm font-semibold text-slate-900">{{ Auth::user()->name }}</span>
-            <span class="text-xs text-slate-500">{{ Auth::user()->hasRole('admin') ? __('common.administrator') : __('common.personal_account') }}</span>
+            <span class="text-xs text-slate-500">
+              @if(Auth::user()->hasRole('admin'))
+                {{ __('common.administrator') }}
+              @elseif(Auth::user()->hasRole('staff'))
+                {{ __('common.staff') }}
+              @else
+                {{ __('common.personal_account') }}
+              @endif
+            </span>
           </div>
         </div>
       @endauth
@@ -138,7 +162,7 @@
           <a href="{{ route('client.dashboard') }}" class="mobile-nav-link rounded-full border border-slate-200 px-4 py-3 text-center text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-[#0361fc]">
             {{ __('common.nav_dashboard') }}
           </a>
-          @if(Auth::user()->hasRole('admin'))
+          @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('staff'))
           <a href="/admin" class="mobile-nav-link rounded-full border border-slate-200 px-4 py-3 text-center text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-[#0361fc]">
             {{ __('common.nav_admin_dashboard') }}
           </a>

@@ -44,4 +44,5 @@ return [
     'personal_account' => 'Personal',
     'administrator' => 'Administrator',
     'personal_account_full' => 'Personal Account',
+    'staff' => 'Staff',
 ];
