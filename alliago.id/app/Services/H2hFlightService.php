@@ -216,7 +216,6 @@ class H2hFlightService
             'end_location' => Arr::get($journey, 'jiDestination', Arr::get($lastFlight, 'fdDestination')),
             'class' => Arr::get($firstPriceSegment, 'classId', Arr::get($availableDetails->first() ?? [], 'flightClass')),
             'info' => collect([$priceInfo, $baggageInfo])->filter()->implode(' | '),
-            'segments' => $segments->all(),
             'fare_breakdown' => $fareBreakdown,
             'journey_reference' => Arr::get($journey, 'journeyReference', ''),
             'passport_required' => (bool) (Arr::get($firstPriceSegment, 'passportRequired') ?? Arr::get($firstFlight, 'passportRequired', false)),

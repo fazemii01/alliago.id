@@ -80,6 +80,7 @@ class FlightTicketController extends Controller
 
                 $paginatedResults = $this->paginateResults(collect($results), $request);
             } catch (Throwable $throwable) {
+                \Illuminate\Support\Facades\Log::error($throwable);
                 $error = 'Pencarian tiket sedang sibuk. Silakan coba lagi dalam beberapa saat.';
             }
         }

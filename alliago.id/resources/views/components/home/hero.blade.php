@@ -87,7 +87,7 @@
       </p>
 
       <!-- Functional Search UI - Pill Search Bar -->
-      <div class="max-w-3xl mx-auto bg-white p-2 rounded-2xl md:rounded-full shadow-2xl shadow-blue-900/10 border border-slate-100 flex flex-col md:flex-row items-center gap-2">
+      <form action="{{ route('visa.index') }}" method="GET" class="max-w-3xl mx-auto bg-white p-2 rounded-2xl md:rounded-full shadow-2xl shadow-blue-900/10 border border-slate-100 flex flex-col md:flex-row items-center gap-2">
         
         <!-- From field -->
         <div class="flex-1 w-full flex items-center px-5 gap-3">
@@ -96,9 +96,9 @@
           </svg>
           <label class="w-full block">
             <span class="block text-[10px] font-bold tracking-wide text-slate-400 text-left">{{ __('home.hero_from') }}</span>
-            <select class="w-full py-1.5 text-slate-700 outline-none font-semibold bg-transparent text-sm">
+            <select name="from" class="w-full py-1.5 text-slate-700 outline-none font-semibold bg-transparent text-sm">
               @foreach($countries->whereIn('code', ['ID', 'MY', 'SG']) as $c)
-              <option>{{ $c->name }}</option>
+              <option value="{{ $c->name }}">{{ $c->name }}</option>
               @endforeach
             </select>
           </label>
@@ -114,7 +114,7 @@
           </svg>
           <label class="w-full block">
             <span class="block text-[10px] font-bold tracking-wide text-slate-400 text-left">{{ __('home.hero_to') }}</span>
-            <input list="hero-countries" placeholder="{{ __('home.hero_destination_placeholder') }}" class="w-full py-1.5 text-slate-700 outline-none font-semibold placeholder:text-slate-300 bg-transparent text-sm" />
+            <input type="text" name="query" list="hero-countries" placeholder="{{ __('home.hero_destination_placeholder') }}" class="w-full py-1.5 text-slate-700 outline-none font-semibold placeholder:text-slate-300 bg-transparent text-sm" required />
             <datalist id="hero-countries">
               @foreach($countries as $c)
               <option value="{{ $c->name }}"></option>
@@ -133,23 +133,23 @@
           </svg>
           <label class="w-full block">
             <span class="block text-[10px] font-bold tracking-wide text-slate-400 text-left">{{ __('home.hero_purpose') }}</span>
-            <select class="w-full py-1.5 text-slate-700 outline-none font-semibold bg-transparent text-sm whitespace-nowrap">
-              <option>{{ __('home.hero_purpose_tourism') }}</option>
-              <option>{{ __('home.hero_purpose_business') }}</option>
-              <option>{{ __('home.hero_purpose_family') }}</option>
-              <option>{{ __('home.hero_purpose_student') }}</option>
+            <select name="purpose" class="w-full py-1.5 text-slate-700 outline-none font-semibold bg-transparent text-sm whitespace-nowrap">
+              <option value="tourism">{{ __('home.hero_purpose_tourism') }}</option>
+              <option value="business">{{ __('home.hero_purpose_business') }}</option>
+              <option value="family">{{ __('home.hero_purpose_family') }}</option>
+              <option value="student">{{ __('home.hero_purpose_student') }}</option>
             </select>
           </label>
         </div>
         
         <!-- Search Button -->
-        <button type="button" class="w-full md:w-auto px-8 py-3.5 rounded-xl md:rounded-full bg-brand text-white font-bold transition-all hover:brightness-110 flex items-center justify-center gap-2 shrink-0 shadow-md shadow-blue-500/20">
+        <button type="submit" class="w-full md:w-auto px-8 py-3.5 rounded-xl md:rounded-full bg-brand text-white font-bold transition-all hover:brightness-110 flex items-center justify-center gap-2 shrink-0 shadow-md shadow-blue-500/20">
           {{ __('home.hero_search_btn') }}
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
           </svg>
         </button>
-      </div>
+      </form>
 
       <!-- Quick category pills -->
       <!-- <div class="flex flex-wrap justify-center gap-3 mt-10">

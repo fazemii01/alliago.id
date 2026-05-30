@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Http;
 
 class DuffelFlightService
 {
+    protected array $exchangeRates = [];
+
     protected const BASE_URL = 'https://api.duffel.com';
     protected const VERSION = 'v2';
     protected const AIRPORTS_CACHE_TTL_HOURS = 24;
@@ -90,7 +92,7 @@ class DuffelFlightService
         $slices = $this->buildSlices($input);
         $passengers = $this->buildPassengers($input);
 
-        $offerRequest = $this->post('/air/offer_requests?return_offers=true', [
+        $response = $this->client()->post('/air/offer_requests', [
             'data' => [
                 'slices' => $slices,
                 'passengers' => $passengers,
@@ -98,7 +100,19 @@ class DuffelFlightService
             ],
         ]);
 
-        $offerRequestId = Arr::get($offerRequest, 'data.id', '');
+        $response->throw();
+        $body = $response->body();
+        $offerRequestId = '';
+        if (preg_match('/"id"\s*:\s*"(orq_[A-Za-z0-9_]+)"/', $body, $matches)) {
+            $offerRequestId = $matches[1];
+        } else {
+            $decoded = json_decode($body, true);
+            $offerRequestId = Arr::get($decoded, 'data.id', '');
+        }
+
+        unset($body);
+        unset($response);
+        gc_collect_cycles();
 
         $offersResponse = $this->get('/air/offers', [
             'offer_request_id' => $offerRequestId,
@@ -106,7 +120,11 @@ class DuffelFlightService
             'limit' => 50,
         ]);
 
-        $results = collect(Arr::get($offersResponse, 'data', []))
+        $offers = Arr::get($offersResponse, 'data', []);
+        unset($offersResponse);
+        gc_collect_cycles();
+
+        $results = collect($offers)
             ->map(fn ($offer) => $this->mapOffer($offer))
             ->filter()
             ->sortBy('price_value')
@@ -162,7 +180,12 @@ class DuffelFlightService
             return 1.0;
         }
 
-        return Cache::remember(
+        $cacheKey = "{$from}_{$to}";
+        if (isset($this->exchangeRates[$cacheKey])) {
+            return $this->exchangeRates[$cacheKey];
+        }
+
+        $rate = Cache::remember(
             "exchange_rate_{$from}_{$to}",
             Carbon::now()->addMinutes(self::EXCHANGE_RATE_CACHE_TTL_MINUTES),
             function () use ($from, $to) {
@@ -170,14 +193,25 @@ class DuffelFlightService
                     $response = Http::timeout(10)->connectTimeout(5)
                         ->get('https://api.frankfurter.app/latest', ['from' => $from, 'to' => $to]);
 
-                    $rate = (float) Arr::get($response->json(), "rates.{$to}", 0);
+                    if ($response && $response->successful()) {
+                        $data = $response->json();
+                        if (is_array($data)) {
+                            $rate = (float) Arr::get($data, "rates.{$to}", 0);
+                            if ($rate > 0) {
+                                return $rate;
+                            }
+                        }
+                    }
 
-                    return $rate > 0 ? $rate : 1.0;
+                    return 1.0;
                 } catch (\Throwable) {
                     return 1.0;
                 }
             }
         );
+
+        $this->exchangeRates[$cacheKey] = $rate;
+        return $rate;
     }
 
     protected function mapOffer(array $offer): ?array
@@ -245,7 +279,6 @@ class DuffelFlightService
             'end_location' => (string) Arr::get($lastSegment, 'destination.iata_code', ''),
             'class' => $cabinClass,
             'info' => $info,
-            'segments' => $segments,
             'fare_breakdown' => $this->buildFareBreakdown($offer, $idrRate, (float) $config->markupFor($airlineIata), $airlineIata),
             'journey_reference' => (string) Arr::get($offer, 'id'),
             'passport_required' => (bool) Arr::get($offer, 'passenger_identity_documents_required', false),
