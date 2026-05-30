@@ -7,7 +7,7 @@
 @push('meta')
 <script type="application/ld+json">
 {
-    "@context": "https://schema.org",
+    "@@context": "https://schema.org",
     "@type": "Product",
     "name": "{{ $visaProduct->name }}",
     "description": "{{ $visaProduct->short_description ?: 'Layanan pengajuan visa ' . $visaProduct->name . ' bersama Alliago.id.' }}",
@@ -26,7 +26,7 @@
 </script>
 <script type="application/ld+json">
 {
-    "@context": "https://schema.org",
+    "@@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
         {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.alliago.id"},
