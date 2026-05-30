@@ -1,4 +1,4 @@
-<div class="fixed bottom-0 inset-x-0 z-[100] border-t border-slate-200 bg-white pb-safe md:hidden shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+<div class="print:hidden fixed bottom-0 inset-x-0 z-[100] border-t border-slate-200 bg-white pb-safe md:hidden shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
     <div class="flex h-16 items-center justify-around px-2">
         <a href="/" class="flex flex-col items-center justify-center gap-1 w-full h-full transition {{ request()->is('/') ? 'text-[#0361fc]' : 'text-slate-500 hover:text-[#0361fc]' }}">
             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
