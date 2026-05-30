@@ -1,6 +1,6 @@
 <x-filament-widgets::widget>
     <x-filament::section>
-        <div class="flex items-center justify-between"
+        <div class="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between"
              x-data="{
                  key: 'alliago_help_v3_{{ auth()->id() }}',
                  init() {
@@ -14,18 +14,18 @@
              }">
              
             <div class="flex items-center gap-4">
-                <div class="flex h-12 w-12 items-center justify-center rounded-full bg-amber-100 text-amber-600">
+                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-600 dark:bg-amber-900/20 dark:text-amber-500">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
                     </svg>
                 </div>
                 <div>
-                    <h2 class="text-lg font-bold text-gray-900 dark:text-white">Bantuan & Panduan Admin</h2>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Baru di sini? Cek dokumentasi untuk memulai.</p>
+                    <h2 class="text-base font-bold leading-tight text-gray-900 dark:text-white sm:text-lg">Bantuan & Panduan Admin</h2>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 sm:text-sm mt-0.5">Baru di sini? Cek dokumentasi untuk memulai.</p>
                 </div>
             </div>
             
-            <div class="flex items-center gap-3">
+            <div class="grid grid-cols-2 gap-3 sm:flex sm:items-center sm:justify-end">
                 <x-filament::button @click="$dispatch('open-modal', { id: 'help-modal' })" color="warning" icon="heroicon-m-book-open">
                     Buka Panduan
                 </x-filament::button>
