@@ -28,6 +28,9 @@
             <x-filament::button @click="$dispatch('open-modal', { id: 'help-modal' })" color="warning">
                 Buka Panduan
             </x-filament::button>
+            <x-filament::button @click="$dispatch('open-modal', { id: 'landing-modal' })" color="warning">
+                Buka Landing Page
+            </x-filament::button>
 
         </div>
 
