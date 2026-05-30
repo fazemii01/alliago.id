@@ -1,4 +1,7 @@
-<x-layouts.app title="Proses Pengajuan | Alliago.id">
+<x-layouts.app
+    title="Proses Pengajuan Visa | Alliago.id — Mudah & Transparan"
+    description="Pelajari tahapan proses pengajuan visa bersama Alliago.id: konsultasi, persiapan dokumen, pengiriman, hingga visa jadi. Proses mudah, transparan, dan terpercaya."
+>
     <div class="pt-[73px] md:pt-[81px]">
         <x-home.header />
         <div class="page-wrapper">

@@ -1,4 +1,7 @@
-<x-layouts.app title="Tiket pesawat | Alliago.id">
+<x-layouts.app
+    title="Tiket Pesawat Murah | Alliago.id — Cari & Pesan Penerbangan"
+    description="Cari dan pesan tiket pesawat murah dengan Alliago.id. Bandingkan harga dari berbagai maskapai untuk penerbangan domestik dan internasional. Booking mudah, cepat, dan terpercaya."
+>
     <x-home.header />
 
     @php

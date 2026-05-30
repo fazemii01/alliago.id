@@ -1,4 +1,7 @@
-<x-layouts.app title="Detail Layanan | Alliago.id">
+<x-layouts.app
+    title="Detail Layanan | Alliago.id — Layanan Visa Profesional"
+    description="Kenali layanan lengkap Alliago.id: konsultasi visa, persiapan dokumen, pengajuan, hingga selesai. Tim profesional siap membantu semua kebutuhan visa perjalanan internasional Anda."
+>
     <div class="pt-[73px] md:pt-[81px]">
         <x-home.header />
         <div class="page-wrapper">

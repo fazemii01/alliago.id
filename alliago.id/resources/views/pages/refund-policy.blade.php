@@ -1,4 +1,11 @@
-<x-layouts.app title="{{ __('policy.refund_title') }} | Alliago.id">
+<x-layouts.app
+    title="{{ __('policy.refund_title') }} | Alliago.id"
+    description="Pelajari kebijakan refund dan pembatalan layanan visa Alliago.id. Ketentuan pengembalian dana, syarat pembatalan, dan prosedur klaim refund."
+>
+
+@push('meta')
+<meta name="robots" content="noindex, follow" />
+@endpush
     <div class="pt-[73px] md:pt-[81px]">
         <x-home.header />
         

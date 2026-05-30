@@ -1,4 +1,7 @@
-<x-layouts.app title="Visa Catalog | Alliago.id">
+<x-layouts.app
+    title="Visa Catalog | Alliago.id — Temukan Visa yang Tepat untuk Anda"
+    description="Temukan berbagai produk visa untuk Japan, Korea, Australia, Schengen, dan 50+ negara lainnya. Bandingkan harga, persyaratan, dan waktu proses. Ajukan sekarang bersama Alliago.id."
+>
     <x-home.header />
 
     <div class="min-h-screen bg-white text-slate-900 pt-24 pb-16" x-data="visaFilter()">

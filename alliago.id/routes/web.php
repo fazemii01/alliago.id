@@ -8,6 +8,7 @@ use App\Http\Controllers\ClientDashboardController;
 use App\Http\Controllers\ClientMessageController;
 use App\Http\Controllers\FlightTicketController;
 use App\Http\Controllers\LandingPageController;
+use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\VisaCatalogController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,6 +19,8 @@ Route::get('/lang/{locale}', function (string $locale) {
     }
     return redirect()->back()->withHeaders(['Vary' => 'Accept-Language']);
 })->name('lang.switch');
+
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 Route::get('/', LandingPageController::class);
 

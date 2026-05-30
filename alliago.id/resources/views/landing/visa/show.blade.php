@@ -1,4 +1,41 @@
-<x-layouts.app :title="$visaProduct->name . ' | Alliago.id'">
+<x-layouts.app
+    :title="$visaProduct->name . ' | Alliago.id'"
+    :description="$visaProduct->short_description ?: 'Ajukan ' . $visaProduct->name . ' dengan mudah bersama Alliago.id. Proses cepat, terpercaya, dan didukung tim profesional.'"
+    ogType="product"
+>
+
+@push('meta')
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "{{ $visaProduct->name }}",
+    "description": "{{ $visaProduct->short_description ?: 'Layanan pengajuan visa ' . $visaProduct->name . ' bersama Alliago.id.' }}",
+    "brand": {
+        "@type": "Brand",
+        "name": "Alliago.id"
+    },
+    "offers": {
+        "@type": "Offer",
+        "priceCurrency": "IDR",
+        "price": "{{ $visaProduct->discount_price ?? $visaProduct->base_price }}",
+        "availability": "https://schema.org/InStock",
+        "url": "{{ url()->current() }}"
+    }
+}
+</script>
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.alliago.id"},
+        {"@type": "ListItem", "position": 2, "name": "Visa Catalog", "item": "https://www.alliago.id/visa"},
+        {"@type": "ListItem", "position": 3, "name": "{{ $visaProduct->name }}", "item": "{{ url()->current() }}"}
+    ]
+}
+</script>
+@endpush
     <x-home.header />
     
     <div class="min-h-screen bg-white text-slate-900 pt-24 pb-16">

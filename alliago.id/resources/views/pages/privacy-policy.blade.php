@@ -1,4 +1,11 @@
-<x-layouts.app title="{{ __('policy.privacy_title') }} | Alliago.id">
+<x-layouts.app
+    title="{{ __('policy.privacy_title') }} | Alliago.id"
+    description="Baca kebijakan privasi Alliago.id mengenai pengumpulan, penggunaan, dan perlindungan data pribadi pengguna layanan visa dan tiket pesawat kami."
+>
+
+@push('meta')
+<meta name="robots" content="noindex, follow" />
+@endpush
     <div class="pt-[73px] md:pt-[81px]">
         <x-home.header />
         
