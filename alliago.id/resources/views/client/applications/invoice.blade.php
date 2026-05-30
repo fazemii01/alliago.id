@@ -1,7 +1,21 @@
 <x-layouts.app title="Invoice {{ $application->reference_number }}">
-    <div class="min-h-screen bg-slate-50 text-slate-900 py-12 font-sans">
+
+@push('meta')
+<style>
+@media print {
+    body { background: white !important; padding: 0 !important; margin: 0 !important; }
+    .no-print, nav, footer { display: none !important; }
+    .invoice-card { box-shadow: none !important; border: none !important; border-radius: 0 !important; }
+    .invoice-wrap { background: white !important; padding: 0 !important; min-height: auto !important; }
+    .invoice-footer { background: #1e293b !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    @page { margin: 1cm; size: A4; }
+}
+</style>
+@endpush
+
+    <div class="invoice-wrap min-h-screen bg-slate-50 text-slate-900 py-12 font-sans">
         <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-            <div class="mb-6 flex justify-between items-center">
+            <div class="no-print mb-6 flex justify-between items-center">
                 <a href="{{ route('client.applications.show', $application) }}" class="inline-flex items-center text-sm font-medium text-slate-600 hover:text-slate-900">
                     <svg class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
                     Kembali ke Detail Aplikasi
@@ -12,7 +26,7 @@
                 </button>
             </div>
 
-            <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden print:shadow-none print:border-none print:rounded-none">
+            <div class="invoice-card bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
                 <div class="p-8 sm:p-12">
                     <!-- Header -->
                     <div class="flex flex-col sm:flex-row justify-between items-start gap-8">
@@ -117,7 +131,7 @@
                 </div>
                 
                 <!-- Footer -->
-                <div class="bg-slate-900 px-8 py-6 text-center">
+                <div class="invoice-footer bg-slate-900 px-8 py-6 text-center">
                     <p class="text-xs text-slate-400">Terima kasih telah menggunakan layanan Alliago.id. Untuk pertanyaan terkait tagihan ini, silakan hubungi support@alliago.id.</p>
                 </div>
             </div>
