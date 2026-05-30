@@ -25,12 +25,14 @@
                 </div>
             </div>
             
-            <x-filament::button @click="$dispatch('open-modal', { id: 'help-modal' })" color="warning">
-                Buka Panduan
-            </x-filament::button>
-            <x-filament::button @click="$dispatch('open-modal', { id: 'landing-modal' })" color="warning">
-                Buka Landing Page
-            </x-filament::button>
+            <div class="flex items-center gap-3">
+                <x-filament::button @click="$dispatch('open-modal', { id: 'help-modal' })" color="warning" icon="heroicon-m-book-open">
+                    Buka Panduan
+                </x-filament::button>
+                <x-filament::button href="/" tag="a" target="_blank" color="gray" icon="heroicon-m-arrow-top-right-on-square">
+                    Buka Landing Page
+                </x-filament::button>
+            </div>
 
         </div>
 
