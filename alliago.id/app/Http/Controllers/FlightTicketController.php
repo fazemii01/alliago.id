@@ -94,7 +94,7 @@ class FlightTicketController extends Controller
 
         $users = [];
         $paymentMethods = [];
-        if (auth()->check() && auth()->user()->hasRole('admin')) {
+        if (auth()->check() && (auth()->user()->hasRole('admin') || auth()->user()->hasRole('staff'))) {
             $users = \App\Models\User::orderBy('name')->get(['id', 'name', 'email', 'phone'])->all();
             $paymentMethods = \App\Models\PaymentMethod::where('is_active', true)->get(['id', 'name', 'provider', 'code'])->all();
         }
@@ -197,11 +197,12 @@ class FlightTicketController extends Controller
             'flight.cabin_class' => ['required', 'string'],
             'flight.price_value' => ['required', 'numeric', 'min:0'],
             'flight.tax' => ['required', 'numeric', 'min:0'],
+            'flight.total' => ['nullable', 'numeric', 'min:0'],
         ]);
 
         $subtotal = (float) $request->input('flight.price_value');
         $tax = (float) $request->input('flight.tax', 0);
-        $total = $subtotal + $tax;
+        $total = $request->input('flight.total') !== null ? (float) $request->input('flight.total') : ($subtotal + $tax);
 
         // Generate custom invoice metadata
         $metadata = [

@@ -757,7 +757,7 @@
                                         <p class="text-[10px] text-slate-400">/ penumpang</p>
                                     </div>
                                     @if (trim(strtoupper($flight['airline'] ?? '')) === 'ZZ')
-                                        @if (auth()->check() && auth()->user()->hasRole('admin'))
+                                        @if (auth()->check() && (auth()->user()->hasRole('admin') || auth()->user()->hasRole('staff')))
                                             <button type="button"
                                                     @click="$dispatch('open-invoice-wizard', { flight: {{ json_encode($flight) }}, filters: {{ json_encode($filters) }} })"
                                                     class="shrink-0 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-emerald-700 active:scale-95 sm:w-full sm:text-center">
@@ -823,7 +823,7 @@
         </div>
     </div>
 
-    @if (auth()->check() && auth()->user()->hasRole('admin'))
+    @if (auth()->check() && (auth()->user()->hasRole('admin') || auth()->user()->hasRole('staff')))
         <!-- Invoice Generation Wizard Modal -->
         <div x-data="invoiceWizard()"
              @open-invoice-wizard.window="initWizard($event.detail.flight, $event.detail.filters)"
@@ -945,9 +945,15 @@
                             </div>
                         </div>
 
-                        <div class="mt-4 p-4 bg-slate-50 rounded-2xl flex justify-between items-center">
-                            <span class="text-sm font-bold text-slate-600">Total Harga</span>
-                            <span class="text-lg font-black text-[#0361fc]" x-text="'Rp ' + Number(flight.total).toLocaleString('id-ID')"></span>
+                        <div class="mt-4 p-4 bg-slate-50 rounded-2xl flex flex-col gap-2">
+                            <div class="flex justify-between items-center">
+                                <label class="text-xs font-bold text-slate-500 uppercase">Total Harga (IDR)</label>
+                                <span class="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-full">Dapat diedit manual</span>
+                            </div>
+                            <div class="relative mt-1">
+                                <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-sm font-extrabold text-slate-400">Rp</span>
+                                <input type="number" x-model="flight.total" class="block w-full rounded-xl border border-slate-300 pl-10 pr-4 py-2.5 text-sm font-black text-[#0361fc] focus:border-[#0361fc] focus:outline-none" required>
+                            </div>
                         </div>
                     </div>
 
