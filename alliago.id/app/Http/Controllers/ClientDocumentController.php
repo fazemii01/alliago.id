@@ -19,7 +19,7 @@ class ClientDocumentController extends Controller
 
     public function store(Request $request, Application $application, ApplicationDocument $document): RedirectResponse
     {
-        abort_unless($application->user_id === $request->user()->id || $request->user()->hasRole('admin'), 403);
+        abort_unless($application->user_id === $request->user()->id || $request->user()->hasRole('admin') || $request->user()->hasRole('staff'), 403);
         abort_unless($document->application_id === $application->id, 404);
 
         $data = $request->validate([

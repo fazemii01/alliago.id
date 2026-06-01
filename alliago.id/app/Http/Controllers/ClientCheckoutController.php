@@ -18,7 +18,7 @@ class ClientCheckoutController extends Controller
     }
     public function show(Application $application)
     {
-        abort_unless($application->user_id === auth()->id() || auth()->user()->hasRole('admin'), 403);
+        abort_unless($application->user_id === auth()->id() || auth()->user()->hasRole('admin') || auth()->user()->hasRole('staff'), 403);
 
         // Only allow checkout if status is pending_payment or payment_failed
         if (!in_array($application->status, ['pending_payment', 'payment_failed'])) {
@@ -42,7 +42,7 @@ class ClientCheckoutController extends Controller
 
     public function store(Request $request, Application $application)
     {
-        abort_unless($application->user_id === auth()->id() || auth()->user()->hasRole('admin'), 403);
+        abort_unless($application->user_id === auth()->id() || auth()->user()->hasRole('admin') || auth()->user()->hasRole('staff'), 403);
 
         if (!in_array($application->status, ['pending_payment', 'payment_failed'])) {
             return back()->with('error', 'Checkout tidak tersedia untuk aplikasi ini.');

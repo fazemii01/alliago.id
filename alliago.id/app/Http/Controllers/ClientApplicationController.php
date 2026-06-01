@@ -21,7 +21,7 @@ class ClientApplicationController extends Controller
     }
     public function show(Application $application): View
     {
-        abort_unless($application->user_id === auth()->id() || auth()->user()->hasRole('admin'), 403);
+        abort_unless($application->user_id === auth()->id() || auth()->user()->hasRole('admin') || auth()->user()->hasRole('staff'), 403);
 
         if ($application->status === 'pending_payment') {
             return redirect()->route('client.applications.checkout', $application);
