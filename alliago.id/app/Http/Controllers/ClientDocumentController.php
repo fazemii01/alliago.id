@@ -2,17 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Contracts\FileStorage;
 use App\Models\Application;
 use App\Models\ApplicationDocument;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class ClientDocumentController extends Controller
 {
+    protected FileStorage $fileStorage;
+
+    public function __construct(FileStorage $fileStorage)
+    {
+        $this->fileStorage = $fileStorage;
+    }
+
     public function store(Request $request, Application $application, ApplicationDocument $document): RedirectResponse
     {
-        abort_unless($application->user_id === $request->user()->id, 403);
+        abort_unless($application->user_id === $request->user()->id || $request->user()->hasRole('admin'), 403);
         abort_unless($document->application_id === $application->id, 404);
 
         $data = $request->validate([
@@ -20,11 +27,11 @@ class ClientDocumentController extends Controller
         ]);
 
         if ($document->file_path) {
-            Storage::disk('public')->delete($document->file_path);
+            $this->fileStorage->delete($document->file_path);
         }
 
         $previousStatus = $application->status;
-        $filePath = $data['document']->store('application-documents', 'public');
+        $filePath = $this->fileStorage->store($data['document'], 'application-documents');
 
         $document->update([
             'file_path' => $filePath,

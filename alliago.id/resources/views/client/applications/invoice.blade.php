@@ -71,10 +71,17 @@
                             </div>
                             <div class="flex justify-between md:justify-end items-center gap-8 pt-2">
                                 <span class="text-sm text-slate-500">Status:</span>
-                                @if($application->status === 'pending_payment')
-                                    <span class="inline-flex items-center rounded-md bg-amber-50 px-3 py-1 text-xs font-bold text-amber-700 ring-1 ring-inset ring-amber-600/20 uppercase tracking-wider">Unpaid</span>
-                                @else
+                                @php
+                                    $paymentStatus = $application->metadata['payment_status'] ?? 'unpaid';
+                                @endphp
+                                @if($paymentStatus === 'paid')
                                     <span class="inline-flex items-center rounded-md bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700 ring-1 ring-inset ring-emerald-600/20 uppercase tracking-wider">Paid</span>
+                                @elseif($paymentStatus === 'pending_verification')
+                                    <span class="inline-flex items-center rounded-md bg-amber-50 px-3 py-1 text-xs font-bold text-amber-700 ring-1 ring-inset ring-amber-600/20 uppercase tracking-wider">Pending Verification</span>
+                                @elseif($paymentStatus === 'declined')
+                                    <span class="inline-flex items-center rounded-md bg-rose-50 px-3 py-1 text-xs font-bold text-rose-700 ring-1 ring-inset ring-rose-600/20 uppercase tracking-wider">Declined / Failed</span>
+                                @else
+                                    <span class="inline-flex items-center rounded-md bg-amber-50 px-3 py-1 text-xs font-bold text-amber-700 ring-1 ring-inset ring-amber-600/20 uppercase tracking-wider">Unpaid</span>
                                 @endif
                             </div>
                         </div>
@@ -92,8 +99,22 @@
                             <tbody>
                                 <tr class="border-b border-slate-100">
                                     <td class="py-6 text-sm font-medium text-slate-800">
-                                        Layanan Pembuatan Visa {{ $application->visaProduct->country->name }}<br>
-                                        <span class="text-slate-500 font-normal">{{ $application->visaProduct->name }}</span>
+                                        @if ($application->visaProduct)
+                                            Layanan Pembuatan Visa {{ $application->visaProduct->country->name }}<br>
+                                            <span class="text-slate-500 font-normal">{{ $application->visaProduct->name }}</span>
+                                        @else
+                                            Tiket Pesawat: {{ $application->metadata['flight_details']['airline_name'] ?? 'Penerbangan' }} ({{ $application->metadata['flight_details']['flight_numbers'] ?? '' }})<br>
+                                            <span class="text-slate-500 font-normal">
+                                                Rute: {{ $application->metadata['flight_details']['origin'] ?? '' }} &rarr; {{ $application->metadata['flight_details']['destination'] ?? '' }}
+                                                | Kelas: {{ $application->metadata['flight_details']['cabin_class'] ?? '' }}
+                                                @if (!empty($application->metadata['flight_details']['depart_date']))
+                                                    | Pergi: {{ $application->metadata['flight_details']['depart_date'] }} {{ $application->metadata['flight_details']['depart_time'] ?? '' }}
+                                                @endif
+                                                @if (!empty($application->metadata['flight_details']['return_date']))
+                                                    | Pulang: {{ $application->metadata['flight_details']['return_date'] }} {{ $application->metadata['flight_details']['return_time'] ?? '' }}
+                                                @endif
+                                            </span>
+                                        @endif
                                     </td>
                                      <td class="py-6 text-sm font-bold text-slate-900 text-right whitespace-nowrap">
                                         @if($invoiceAmount)

@@ -92,6 +92,13 @@ class FlightTicketController extends Controller
             ->values()
             ->all();
 
+        $users = [];
+        $paymentMethods = [];
+        if (auth()->check() && auth()->user()->hasRole('admin')) {
+            $users = \App\Models\User::orderBy('name')->get(['id', 'name', 'email', 'phone'])->all();
+            $paymentMethods = \App\Models\PaymentMethod::where('is_active', true)->get(['id', 'name', 'provider', 'code'])->all();
+        }
+
         return view('landing.flights.index', [
             'tripTypes' => $tripTypes,
             'filters' => $filters,
@@ -99,6 +106,8 @@ class FlightTicketController extends Controller
             'paginatedResults' => $paginatedResults,
             'error' => $error,
             'airlines' => $airlines,
+            'users' => $users,
+            'paymentMethods' => $paymentMethods,
         ]);
     }
 
@@ -166,5 +175,129 @@ class FlightTicketController extends Controller
                 ]),
             ],
         );
+    }
+
+    public function generateInvoice(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'client_id' => ['required', 'exists:users,id'],
+            'traveler_name' => ['required', 'string', 'max:255'],
+            'traveler_email' => ['required', 'email', 'max:255'],
+            'traveler_phone' => ['nullable', 'string', 'max:50'],
+            'payment_method_id' => ['required', 'exists:payment_methods,id'],
+            'flight.airline' => ['required', 'string'],
+            'flight.airline_name' => ['required', 'string'],
+            'flight.flight_numbers' => ['nullable', 'string'],
+            'flight.origin' => ['required', 'string'],
+            'flight.destination' => ['required', 'string'],
+            'flight.depart_date' => ['required', 'date'],
+            'flight.depart_time' => ['nullable', 'string'],
+            'flight.return_date' => ['nullable', 'date'],
+            'flight.return_time' => ['nullable', 'string'],
+            'flight.cabin_class' => ['required', 'string'],
+            'flight.price_value' => ['required', 'numeric', 'min:0'],
+            'flight.tax' => ['required', 'numeric', 'min:0'],
+        ]);
+
+        $subtotal = (float) $request->input('flight.price_value');
+        $tax = (float) $request->input('flight.tax', 0);
+        $total = $subtotal + $tax;
+
+        // Generate custom invoice metadata
+        $metadata = [
+            'type' => 'flight',
+            'payment_method_id' => $request->input('payment_method_id'),
+            'payment_status' => 'unpaid',
+            'flight_details' => [
+                'airline' => $request->input('flight.airline'),
+                'airline_name' => $request->input('flight.airline_name'),
+                'flight_numbers' => $request->input('flight.flight_numbers'),
+                'origin' => $request->input('flight.origin'),
+                'destination' => $request->input('flight.destination'),
+                'depart_date' => $request->input('flight.depart_date'),
+                'depart_time' => $request->input('flight.depart_time'),
+                'return_date' => $request->input('flight.return_date'),
+                'return_time' => $request->input('flight.return_time'),
+                'cabin_class' => $request->input('flight.cabin_class'),
+                'price_value' => $subtotal,
+                'tax' => $tax,
+                'total' => $total,
+            ],
+            'price_breakdown' => [
+                'subtotal' => $subtotal,
+                'tax' => $tax,
+                'total' => $total,
+            ],
+            'invoice_amount' => $total,
+        ];
+
+        // Create application
+        $application = \App\Models\Application::create([
+            'user_id' => $request->input('client_id'),
+            'visa_product_id' => null,
+            'reference_number' => 'FLT-' . strtoupper(\Illuminate\Support\Str::random(10)),
+            'status' => 'pending_payment',
+            'traveler_name' => $request->input('traveler_name'),
+            'traveler_email' => $request->input('traveler_email'),
+            'traveler_phone' => $request->input('traveler_phone'),
+            'metadata' => $metadata,
+        ]);
+
+        // Status log
+        \App\Models\ApplicationStatusLog::create([
+            'application_id' => $application->id,
+            'admin_id' => auth()->id(),
+            'to_status' => 'pending_payment',
+            'message' => 'Invoice pemesanan tiket pesawat dibuat oleh admin.',
+        ]);
+
+        // Generate Xendit Payment URL if needed
+        $paymentMethod = \App\Models\PaymentMethod::find($request->input('payment_method_id'));
+        $xenditUrl = null;
+
+        if ($paymentMethod && $paymentMethod->provider === 'xendit') {
+            $secretKey = $paymentMethod->configuration['secret_key'] ?? null;
+            if (!$secretKey) {
+                return response()->json(['message' => 'Konfigurasi Xendit tidak valid.'], 422);
+            }
+
+            try {
+                $response = \Illuminate\Support\Facades\Http::withBasicAuth($secretKey, '')
+                    ->post('https://api.xendit.co/v2/invoices', [
+                        'external_id' => $application->reference_number,
+                        'amount' => $total,
+                        'payer_email' => $application->traveler_email,
+                        'description' => 'Pembayaran Tiket Pesawat: ' . ($metadata['flight_details']['airline_name'] ?? 'Penerbangan'),
+                        'success_redirect_url' => route('client.dashboard'),
+                        'failure_redirect_url' => route('client.applications.checkout', $application),
+                        'currency' => 'IDR',
+                    ]);
+
+                if ($response->successful()) {
+                    $invoice = $response->json();
+                    
+                    $updatedMetadata = $application->metadata ?? [];
+                    $updatedMetadata['xendit_invoice_url'] = $invoice['invoice_url'];
+                    $updatedMetadata['xendit_invoice_id'] = $invoice['id'];
+                    $application->metadata = $updatedMetadata;
+                    $application->save();
+
+                    $xenditUrl = $invoice['invoice_url'];
+                } else {
+                    \Illuminate\Support\Facades\Log::error('Xendit Invoice Creation Failed: ' . $response->body());
+                    return response()->json(['message' => 'Gagal membuat invoice Xendit.'], 500);
+                }
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::error('Xendit API Exception: ' . $e->getMessage());
+                return response()->json(['message' => 'Terjadi kesalahan sistem saat menghubungi Xendit.'], 500);
+            }
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'reference_number' => $application->reference_number,
+            'invoice_url' => route('client.applications.invoice', $application),
+            'xendit_url' => $xenditUrl,
+        ]);
     }
 }

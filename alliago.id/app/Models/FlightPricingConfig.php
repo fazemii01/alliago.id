@@ -7,12 +7,13 @@ use Illuminate\Support\Facades\Cache;
 
 class FlightPricingConfig extends Model
 {
-    protected $fillable = ['label', 'addon_cost', 'service_fee', 'notes', 'zz_markup', 'zz_name', 'zz_logo_url'];
+    protected $fillable = ['label', 'addon_cost', 'service_fee', 'notes', 'zz_markup', 'zz_name', 'zz_logo_url', 'banner_path', 'banner_link', 'is_banner_active', 'banner_image_url'];
 
     protected $casts = [
         'addon_cost' => 'decimal:2',
         'service_fee' => 'decimal:2',
         'zz_markup'  => 'decimal:2',
+        'is_banner_active' => 'boolean',
     ];
 
     protected static function booted(): void

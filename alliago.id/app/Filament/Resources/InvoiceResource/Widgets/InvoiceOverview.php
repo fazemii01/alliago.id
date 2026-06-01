@@ -20,7 +20,7 @@ class InvoiceOverview extends BaseWidget
             ->get();
 
         $thisMonthTotal = $thisMonthInvoices->sum(function($app) {
-            return $app->metadata['invoice_amount'] ?? ($app->visaProduct->discount_price ?? $app->visaProduct->base_price);
+            return $app->metadata['invoice_amount'] ?? $app->metadata['price_breakdown']['total'] ?? ($app->visaProduct?->discount_price ?? $app->visaProduct?->base_price ?? 0);
         });
 
         // Calculate last month's paid invoices
@@ -29,7 +29,7 @@ class InvoiceOverview extends BaseWidget
             ->get();
 
         $lastMonthTotal = $lastMonthInvoices->sum(function($app) {
-            return $app->metadata['invoice_amount'] ?? ($app->visaProduct->discount_price ?? $app->visaProduct->base_price);
+            return $app->metadata['invoice_amount'] ?? $app->metadata['price_breakdown']['total'] ?? ($app->visaProduct?->discount_price ?? $app->visaProduct?->base_price ?? 0);
         });
 
         // Calculate trend

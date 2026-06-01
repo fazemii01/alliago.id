@@ -32,6 +32,9 @@ Route::get('/visa', [VisaCatalogController::class, 'index'])->name('visa.index')
 Route::get('/visa/{slug}', [VisaCatalogController::class, 'show'])->name('visa.show');
 Route::match(['get', 'post'], '/flights', [FlightTicketController::class, 'index'])->name('flights.index');
 Route::get('/api/flights/airports', [FlightTicketController::class, 'searchAirports'])->name('flights.airports.search');
+Route::post('/admin/flights/generate-invoice', [FlightTicketController::class, 'generateInvoice'])
+    ->middleware(['auth', \App\Http\Middleware\EnsurePanelUserHasAdminRole::class])
+    ->name('admin.flights.generate_invoice');
 Route::get('/flights/airline-logo/{iata}', [FlightTicketController::class, 'airlineLogo'])->name('flights.airline_logo');
 
 Route::get('/detail', [\App\Http\Controllers\PageController::class, 'detail'])->name('pages.detail');

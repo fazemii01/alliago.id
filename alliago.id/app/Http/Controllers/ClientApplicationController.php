@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Contracts\FileStorage;
 use App\Models\Application;
 use App\Models\ApplicationStatusLog;
 use App\Models\VisaProduct;
@@ -12,9 +13,15 @@ use Illuminate\View\View;
 
 class ClientApplicationController extends Controller
 {
+    protected FileStorage $fileStorage;
+
+    public function __construct(FileStorage $fileStorage)
+    {
+        $this->fileStorage = $fileStorage;
+    }
     public function show(Application $application): View
     {
-        abort_unless($application->user_id === auth()->id(), 403);
+        abort_unless($application->user_id === auth()->id() || auth()->user()->hasRole('admin'), 403);
 
         if ($application->status === 'pending_payment') {
             return redirect()->route('client.applications.checkout', $application);
@@ -93,6 +100,7 @@ class ClientApplicationController extends Controller
                     'tax' => $data['tax'],
                     'total' => $data['total'],
                 ],
+                'payment_status' => 'unpaid',
             ]
         ]);
 
@@ -107,7 +115,7 @@ class ClientApplicationController extends Controller
             $status = $document->is_required ? 'pending_upload' : 'optional';
 
             if ($request->hasFile("documents.{$document->id}")) {
-                $filePath = $request->file("documents.{$document->id}")->store("applications/{$application->id}", 'public');
+                $filePath = $this->fileStorage->store($request->file("documents.{$document->id}"), "applications/{$application->id}");
                 $status = 'uploaded';
             }
 

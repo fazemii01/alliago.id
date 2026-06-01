@@ -630,6 +630,50 @@
 
             {{-- Results --}}
             <section class="lg:col-span-3">
+                @php
+                    $flightConfig = \App\Models\FlightPricingConfig::current();
+                @endphp
+
+                @if ($flightConfig->is_banner_active && !$hasSearch)
+                    @php
+                        $bannerSrc = $flightConfig->banner_path 
+                            ? Storage::disk('s3')->url($flightConfig->banner_path) 
+                            : $flightConfig->banner_image_url;
+                    @endphp
+
+                    @if ($bannerSrc)
+                        <div class="mb-6 rounded-[28px] overflow-hidden shadow-sm ring-1 ring-slate-200/80 max-w-[810px] w-full bg-slate-100 transition hover:shadow-md hover:-translate-y-0.5">
+                            @if ($flightConfig->banner_link)
+                                <a href="{{ $flightConfig->banner_link }}" target="_blank" rel="noopener noreferrer" class="w-full block">
+                                    <img src="{{ $bannerSrc }}" alt="Promo Banner" class="w-full h-auto block">
+                                </a>
+                            @else
+                                <img src="{{ $bannerSrc }}" alt="Promo Banner" class="w-full h-auto block">
+                            @endif
+                        </div>
+                    @elseif ($flightConfig->banner_link)
+                        <a href="{{ $flightConfig->banner_link }}" target="_blank" rel="noopener noreferrer" 
+                           class="mb-6 rounded-[28px] overflow-hidden shadow-sm ring-1 ring-slate-200/80 max-w-[810px] w-full bg-gradient-to-r from-blue-600 via-[#0361fc] to-[#00d2ff] flex flex-col justify-center px-8 md:px-12 py-6 text-white md:h-[195.5px] transition hover:shadow-lg hover:-translate-y-0.5 group relative" 
+                           style="aspect-ratio: 810 / 195.5;">
+                            {{-- Glassmorphic overlays and decorations --}}
+                            <div class="absolute right-0 top-0 h-full w-1/3 bg-white/5 skew-x-12 translate-x-10 transition group-hover:translate-x-4"></div>
+                            <div class="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/10 blur-xl"></div>
+                            
+                            <div class="relative z-10 space-y-1 md:space-y-2">
+                                <span class="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-3 py-1 text-[10px] md:text-xs font-bold uppercase tracking-wider text-white backdrop-blur-sm">
+                                    Promo Spesial ✨
+                                </span>
+                                <h3 class="text-lg md:text-2xl font-black tracking-tight leading-tight drop-shadow-sm">
+                                    Temukan Penawaran Terbaik Hari Ini
+                                </h3>
+                                <p class="text-xs md:text-sm font-medium text-white/95 max-w-lg leading-relaxed">
+                                    Nikmati promo eksklusif penerbangan domestik dan internasional. Klik di sini untuk melihat info selengkapnya.
+                                </p>
+                            </div>
+                        </a>
+                    @endif
+                @endif
+
                 <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <p class="text-xs font-bold uppercase tracking-[0.28em] text-slate-400">Hasil Pencarian</p>
@@ -713,11 +757,19 @@
                                         <p class="text-[10px] text-slate-400">/ penumpang</p>
                                     </div>
                                     @if (trim(strtoupper($flight['airline'] ?? '')) === 'ZZ')
-                                        <a href="https://wa.me/6281334455616"
-                                           target="_blank" rel="noopener noreferrer"
-                                           class="shrink-0 rounded-xl bg-[#0361fc] px-5 py-2.5 text-sm font-bold text-white transition hover:bg-blue-700 active:scale-95 sm:w-full sm:text-center">
-                                            Pilih
-                                        </a>
+                                        @if (auth()->check() && auth()->user()->hasRole('admin'))
+                                            <button type="button"
+                                                    @click="$dispatch('open-invoice-wizard', { flight: {{ json_encode($flight) }}, filters: {{ json_encode($filters) }} })"
+                                                    class="shrink-0 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-emerald-700 active:scale-95 sm:w-full sm:text-center">
+                                                Buat Invoice
+                                            </button>
+                                        @else
+                                            <a href="https://wa.me/6281334455616"
+                                               target="_blank" rel="noopener noreferrer"
+                                               class="shrink-0 rounded-xl bg-[#0361fc] px-5 py-2.5 text-sm font-bold text-white transition hover:bg-blue-700 active:scale-95 sm:w-full sm:text-center">
+                                                Pilih
+                                            </a>
+                                        @endif
                                     @endif
                                 </div>
                             </div>
@@ -770,6 +822,294 @@
 
         </div>
     </div>
+
+    @if (auth()->check() && auth()->user()->hasRole('admin'))
+        <!-- Invoice Generation Wizard Modal -->
+        <div x-data="invoiceWizard()"
+             @open-invoice-wizard.window="initWizard($event.detail.flight, $event.detail.filters)"
+             x-show="open"
+             style="display: none;"
+             class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4"
+             @keydown.escape.window="open = false">
+             
+            <div class="relative bg-white rounded-[32px] border border-slate-200 shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto flex flex-col"
+                 @click.away="open = false">
+                 
+                <!-- Header -->
+                <div class="px-8 pt-8 pb-4 flex justify-between items-center border-b border-slate-100">
+                    <div>
+                        <h3 class="text-xl font-black text-slate-900">Buat Invoice Penerbangan</h3>
+                        <p class="text-xs text-slate-500 font-medium">Buat tagihan manual untuk airline virtual ZZ</p>
+                    </div>
+                    <button @click="open = false" type="button" class="text-slate-400 hover:text-slate-600 bg-slate-50 hover:bg-slate-100 rounded-full p-2 transition">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+
+                <!-- Stepper Progress Bar -->
+                <div class="px-8 py-4 bg-slate-50/50 flex justify-between items-center gap-2 border-b border-slate-100 text-xs font-bold text-slate-400">
+                    <div class="flex items-center gap-1.5" :class="step >= 1 ? 'text-[#0361fc]' : ''">
+                        <span class="h-5 w-5 rounded-full flex items-center justify-center text-[10px] border" :class="step >= 1 ? 'border-[#0361fc] bg-blue-50' : 'border-slate-300'">1</span>
+                        <span>Penerbangan</span>
+                    </div>
+                    <div class="h-px bg-slate-200 grow"></div>
+                    <div class="flex items-center gap-1.5" :class="step >= 2 ? 'text-[#0361fc]' : ''">
+                        <span class="h-5 w-5 rounded-full flex items-center justify-center text-[10px] border" :class="step >= 2 ? 'border-[#0361fc] bg-blue-50' : 'border-slate-300'">2</span>
+                        <span>Client</span>
+                    </div>
+                    <div class="h-px bg-slate-200 grow"></div>
+                    <div class="flex items-center gap-1.5" :class="step >= 3 ? 'text-[#0361fc]' : ''">
+                        <span class="h-5 w-5 rounded-full flex items-center justify-center text-[10px] border" :class="step >= 3 ? 'border-[#0361fc] bg-blue-50' : 'border-slate-300'">3</span>
+                        <span>Ringkasan</span>
+                    </div>
+                    <div class="h-px bg-slate-200 grow"></div>
+                    <div class="flex items-center gap-1.5" :class="step >= 4 ? 'text-emerald-600' : ''">
+                        <span class="h-5 w-5 rounded-full flex items-center justify-center text-[10px] border" :class="step >= 4 ? 'border-emerald-600 bg-emerald-50' : 'border-slate-300'">4</span>
+                        <span>Selesai</span>
+                    </div>
+                </div>
+
+                <!-- Step Contents -->
+                <div class="p-8 grow overflow-y-auto">
+                    
+                    <!-- Error Notification -->
+                    <template x-if="errorMessage">
+                        <div class="mb-6 p-4 bg-rose-50 border border-rose-100 rounded-2xl text-sm font-semibold text-rose-700">
+                            <span x-text="errorMessage"></span>
+                        </div>
+                    </template>
+
+                    <!-- STEP 1: Flight details -->
+                    <div x-show="step === 1" class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase">Airline Name</label>
+                                <input type="text" x-model="flight.airline_name" class="mt-1 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm focus:border-[#0361fc] focus:outline-none" required>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase">Flight Number</label>
+                                <input type="text" x-model="flight.flight_numbers" placeholder="Contoh: ZZ 123" class="mt-1 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm focus:border-[#0361fc] focus:outline-none">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase">Rute Asal (IATA)</label>
+                                <input type="text" x-model="flight.origin" maxlength="3" class="mt-1 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm focus:border-[#0361fc] focus:outline-none uppercase" required>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase">Rute Tujuan (IATA)</label>
+                                <input type="text" x-model="flight.destination" maxlength="3" class="mt-1 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm focus:border-[#0361fc] focus:outline-none uppercase" required>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase">Tanggal Pergi</label>
+                                <input type="date" x-model="flight.depart_date" class="mt-1 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm focus:border-[#0361fc] focus:outline-none" required>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase">Waktu Pergi</label>
+                                <input type="time" x-model="flight.depart_time" class="mt-1 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm focus:border-[#0361fc] focus:outline-none">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4" x-show="flight.trip_type === 'R'">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase">Tanggal Pulang</label>
+                                <input type="date" x-model="flight.return_date" :required="flight.trip_type === 'R'" class="mt-1 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm focus:border-[#0361fc] focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase">Waktu Pulang</label>
+                                <input type="time" x-model="flight.return_time" class="mt-1 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm focus:border-[#0361fc] focus:outline-none">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase">Kelas Kabin</label>
+                                <select x-model="flight.cabin_class" class="mt-1 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm focus:border-[#0361fc] focus:outline-none">
+                                    <option value="economy">Economy</option>
+                                    <option value="premium_economy">Premium Economy</option>
+                                    <option value="business">Business</option>
+                                    <option value="first">First</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase">Harga Pokok (IDR)</label>
+                                <input type="number" x-model="flight.price_value" @input="calculateTotal()" class="mt-1 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm focus:border-[#0361fc] focus:outline-none" required>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase">Pajak/Biaya (IDR)</label>
+                                <input type="number" x-model="flight.tax" @input="calculateTotal()" class="mt-1 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm focus:border-[#0361fc] focus:outline-none">
+                            </div>
+                        </div>
+
+                        <div class="mt-4 p-4 bg-slate-50 rounded-2xl flex justify-between items-center">
+                            <span class="text-sm font-bold text-slate-600">Total Harga</span>
+                            <span class="text-lg font-black text-[#0361fc]" x-text="'Rp ' + Number(flight.total).toLocaleString('id-ID')"></span>
+                        </div>
+                    </div>
+
+                    <!-- STEP 2: Client & Passenger Details -->
+                    <div x-show="step === 2" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase">Pilih Akun Client (User ID)</label>
+                            <select x-model="clientId" class="mt-1 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm focus:border-[#0361fc] focus:outline-none" required>
+                                <option value="">-- Pilih Akun --</option>
+                                @foreach($users as $user)
+                                    <option value="{{ $user['id'] }}">{{ $user['name'] }} ({{ $user['email'] }})</option>
+                                @endforeach
+                            </select>
+                            <p class="mt-1 text-[10px] text-slate-400 font-medium">Akun client ini yang akan menerima invoice di dashboard mereka.</p>
+                        </div>
+
+                        <div class="border-t border-slate-100 pt-4">
+                            <h4 class="text-xs font-bold text-[#0361fc] uppercase tracking-wider mb-3">Informasi Traveler / Penumpang</h4>
+                            
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase">Nama Traveler</label>
+                                    <input type="text" x-model="travelerName" placeholder="Contoh: John Doe" class="mt-1 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm focus:border-[#0361fc] focus:outline-none" required>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-500 uppercase">Email Traveler</label>
+                                        <input type="email" x-model="travelerEmail" placeholder="client@example.com" class="mt-1 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm focus:border-[#0361fc] focus:outline-none" required>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-500 uppercase">Telepon Traveler</label>
+                                        <input type="text" x-model="travelerPhone" placeholder="+62..." class="mt-1 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm focus:border-[#0361fc] focus:outline-none">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border-t border-slate-100 pt-4">
+                            <label class="block text-xs font-bold text-slate-500 uppercase">Metode Pembayaran</label>
+                            <select x-model="paymentMethodId" class="mt-1 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm focus:border-[#0361fc] focus:outline-none" required>
+                                <option value="">-- Pilih Metode --</option>
+                                @foreach($paymentMethods as $pm)
+                                    <option value="{{ $pm['id'] }}">{{ $pm['name'] }} ({{ $pm['provider'] === 'xendit' ? 'Online/Direct' : 'Manual Transfer' }})</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- STEP 3: Summary -->
+                    <div x-show="step === 3" class="space-y-6">
+                        <div class="p-5 bg-slate-50 rounded-2xl space-y-4">
+                            <h4 class="text-sm font-extrabold text-slate-900 border-b border-slate-200 pb-2">Rincian Penerbangan</h4>
+                            <div class="grid grid-cols-2 gap-y-3 text-xs">
+                                <div><span class="text-slate-500 font-semibold">Airline:</span> <span class="font-bold text-slate-950" x-text="flight.airline_name"></span></div>
+                                <div><span class="text-slate-500 font-semibold">Flight No:</span> <span class="font-bold text-[#0361fc]" x-text="flight.flight_numbers || '-'"></span></div>
+                                <div><span class="text-slate-500 font-semibold">Rute:</span> <span class="font-bold text-slate-950" x-text="flight.origin.toUpperCase() + ' ➔ ' + flight.destination.toUpperCase()"></span></div>
+                                <div><span class="text-slate-500 font-semibold">Kelas:</span> <span class="font-bold text-slate-950 capitalize" x-text="flight.cabin_class"></span></div>
+                                <div><span class="text-slate-500 font-semibold">Keberangkatan:</span> <span class="font-bold text-slate-950" x-text="flight.depart_date + ' ' + (flight.depart_time || '')"></span></div>
+                                <div x-show="flight.trip_type === 'R'"><span class="text-slate-500 font-semibold">Kepulangan:</span> <span class="font-bold text-slate-950" x-text="flight.return_date + ' ' + (flight.return_time || '')"></span></div>
+                            </div>
+                        </div>
+
+                        <div class="p-5 bg-slate-50 rounded-2xl space-y-4">
+                            <h4 class="text-sm font-extrabold text-slate-900 border-b border-slate-200 pb-2">Detail Traveler & Pembayaran</h4>
+                            <div class="grid grid-cols-2 gap-y-3 text-xs">
+                                <div><span class="text-slate-500 font-semibold">Nama Penumpang:</span> <span class="font-bold text-slate-950" x-text="travelerName"></span></div>
+                                <div><span class="text-slate-500 font-semibold">Email:</span> <span class="font-bold text-slate-950" x-text="travelerEmail"></span></div>
+                                <div><span class="text-slate-500 font-semibold">Telepon:</span> <span class="font-bold text-slate-950" x-text="travelerPhone || '-'"></span></div>
+                                <div>
+                                    <span class="text-slate-500 font-semibold">Metode Bayar:</span> 
+                                    <span class="font-bold text-slate-950">
+                                        @foreach($paymentMethods as $pm)
+                                            <span x-show="paymentMethodId == '{{ $pm['id'] }}'">{{ $pm['name'] }}</span>
+                                        @endforeach
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-5 bg-[#edf4ff]/40 rounded-2xl space-y-3 border border-[#edf4ff]">
+                            <div class="flex justify-between text-xs font-semibold text-slate-600"><span>Harga Pokok</span><span class="font-bold text-slate-900" x-text="'Rp ' + Number(flight.price_value).toLocaleString('id-ID')"></span></div>
+                            <div class="flex justify-between text-xs font-semibold text-slate-600 border-b border-slate-200 pb-2"><span>Pajak & Biaya</span><span class="font-bold text-slate-900" x-text="'Rp ' + Number(flight.tax).toLocaleString('id-ID')"></span></div>
+                            <div class="flex justify-between text-sm font-extrabold text-slate-900"><span>Total Tagihan</span><span class="text-lg font-black text-[#0361fc]" x-text="'Rp ' + Number(flight.total).toLocaleString('id-ID')"></span></div>
+                        </div>
+                    </div>
+
+                    <!-- STEP 4: Success & Links -->
+                    <div x-show="step === 4" class="space-y-6 text-center">
+                        <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 border border-emerald-100 shadow-sm">
+                            <svg class="h-8 w-8 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" /></svg>
+                        </div>
+                        
+                        <div>
+                            <h4 class="text-2xl font-black text-slate-900">Invoice Berhasil Dibuat!</h4>
+                            <p class="mt-2 text-sm text-slate-500 font-semibold">Kode Booking / Invoice: <span class="text-slate-900 font-bold" x-text="referenceNumber"></span></p>
+                        </div>
+
+                        <div class="space-y-3 pt-4 text-left">
+                            <div class="p-4 bg-slate-50 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-3">
+                                <div>
+                                    <p class="text-xs font-bold text-slate-400 uppercase">Link Invoice Client</p>
+                                    <p class="text-xs font-bold text-slate-600 truncate max-w-sm mt-0.5" x-text="invoiceUrl"></p>
+                                </div>
+                                <div class="flex gap-2 shrink-0">
+                                    <button @click="copyToClipboard(invoiceUrl)" class="rounded-full bg-white border border-slate-200 px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50">Salin Link</button>
+                                    <a :href="invoiceUrl" target="_blank" class="rounded-full bg-[#0361fc] px-4 py-1.5 text-xs font-bold text-white hover:bg-blue-700">Buka</a>
+                                </div>
+                            </div>
+
+                            <div class="p-4 bg-slate-50 rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-3" x-show="xenditUrl">
+                                <div>
+                                    <p class="text-xs font-bold text-[#0361fc] uppercase">Direct Payment Link (Xendit)</p>
+                                    <p class="text-xs font-bold text-slate-600 truncate max-w-sm mt-0.5" x-text="xenditUrl"></p>
+                                </div>
+                                <div class="flex gap-2 shrink-0">
+                                    <button @click="copyToClipboard(xenditUrl)" class="rounded-full bg-white border border-slate-200 px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50">Salin Link</button>
+                                    <a :href="xenditUrl" target="_blank" class="rounded-full bg-[#0361fc] px-4 py-1.5 text-xs font-bold text-white hover:bg-blue-700">Bayar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer Buttons -->
+                <div class="px-8 py-6 border-t border-slate-100 flex justify-between bg-slate-50 rounded-b-[32px]">
+                    <button type="button" 
+                            x-show="step > 1 && step < 4" 
+                            @click="prevStep()" 
+                            class="rounded-full border border-slate-200 bg-white px-6 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-50 transition">
+                        Sebelumnya
+                    </button>
+                    
+                    <div class="grow"></div>
+                    
+                    <button type="button" 
+                            x-show="step < 3" 
+                            @click="nextStep()" 
+                            class="rounded-full bg-[#0361fc] px-6 py-2.5 text-sm font-bold text-white hover:bg-blue-700 transition">
+                        Lanjutkan
+                    </button>
+
+                    <button type="button" 
+                            x-show="step === 3" 
+                            @click="generateInvoice()" 
+                            :disabled="loading"
+                            class="rounded-full bg-emerald-600 px-6 py-2.5 text-sm font-bold text-white hover:bg-emerald-700 transition disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-2">
+                        <template x-if="loading">
+                            <span class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
+                        </template>
+                        Generate Invoice
+                    </button>
+
+                    <button type="button" 
+                            x-show="step === 4" 
+                            @click="open = false" 
+                            class="rounded-full bg-slate-900 px-6 py-2.5 text-sm font-bold text-white hover:bg-slate-800 transition">
+                        Tutup
+                    </button>
+                </div>
+            </div>
+        </div>
+    @endif
 
     <x-home.footer />
 
@@ -946,6 +1286,136 @@
                             destComp.label = tmpLbl;
                         }
                     },
+                }));
+
+                Alpine.data('invoiceWizard', () => ({
+                    open: false,
+                    step: 1,
+                    flight: {
+                        airline: '',
+                        airline_name: '',
+                        flight_numbers: '',
+                        origin: '',
+                        destination: '',
+                        depart_date: '',
+                        depart_time: '',
+                        return_date: '',
+                        return_time: '',
+                        cabin_class: 'economy',
+                        trip_type: 'O',
+                        price_value: 0,
+                        tax: 0,
+                        total: 0
+                    },
+                    clientId: '',
+                    travelerName: '',
+                    travelerEmail: '',
+                    travelerPhone: '',
+                    paymentMethodId: '',
+                    invoiceUrl: '',
+                    xenditUrl: '',
+                    referenceNumber: '',
+                    loading: false,
+                    errorMessage: '',
+                    initWizard(flightData, filters) {
+                        this.flight.airline = flightData.airline || 'ZZ';
+                        this.flight.airline_name = flightData.airline_name || 'Virtual Airline';
+                        this.flight.flight_numbers = flightData.flight_numbers || '';
+                        this.flight.origin = filters.origin || flightData.start_location || '';
+                        this.flight.destination = filters.destination || flightData.end_location || '';
+                        this.flight.depart_date = filters.depart_date || '';
+                        this.flight.depart_time = flightData.start_time || '';
+                        this.flight.return_date = filters.return_date || '';
+                        this.flight.return_time = flightData.end_time || '';
+                        this.flight.cabin_class = flightData.class || 'economy';
+                        this.flight.trip_type = filters.trip_type || 'O';
+                        this.flight.price_value = flightData.price_value || 0;
+                        this.flight.tax = 0;
+                        this.calculateTotal();
+
+                        this.clientId = '';
+                        this.travelerName = '';
+                        this.travelerEmail = '';
+                        this.travelerPhone = '';
+                        this.paymentMethodId = '';
+                        this.invoiceUrl = '';
+                        this.xenditUrl = '';
+                        this.referenceNumber = '';
+                        this.step = 1;
+                        this.errorMessage = '';
+                        this.open = true;
+                    },
+                    calculateTotal() {
+                        this.flight.total = Number(this.flight.price_value) + Number(this.flight.tax);
+                    },
+                    nextStep() {
+                        if (this.step === 1) {
+                            if (!this.flight.origin || !this.flight.destination || !this.flight.depart_date) {
+                                alert('Silakan isi rute asal, tujuan, dan tanggal keberangkatan.');
+                                return;
+                            }
+                            this.step = 2;
+                        } else if (this.step === 2) {
+                            if (!this.clientId) {
+                                alert('Silakan pilih client user.');
+                                return;
+                            }
+                            if (!this.travelerName || !this.travelerEmail) {
+                                alert('Silakan isi nama dan email traveler.');
+                                return;
+                            }
+                            if (!this.paymentMethodId) {
+                                alert('Silakan pilih metode pembayaran.');
+                                return;
+                            }
+                            this.step = 3;
+                        }
+                    },
+                    prevStep() {
+                        if (this.step > 1 && this.step < 4) {
+                            this.step--;
+                        }
+                    },
+                    async generateInvoice() {
+                        this.loading = true;
+                        this.errorMessage = '';
+                        try {
+                            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+                            const response = await fetch('/admin/flights/generate-invoice', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': csrfToken,
+                                    'Accept': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    client_id: this.clientId,
+                                    traveler_name: this.travelerName,
+                                    traveler_email: this.travelerEmail,
+                                    traveler_phone: this.travelerPhone,
+                                    payment_method_id: this.paymentMethodId,
+                                    flight: this.flight
+                                })
+                            });
+                            const data = await response.json();
+                            if (response.ok) {
+                                this.invoiceUrl = data.invoice_url;
+                                this.xenditUrl = data.xendit_url;
+                                this.referenceNumber = data.reference_number;
+                                this.step = 4;
+                            } else {
+                                this.errorMessage = data.message || 'Gagal membuat invoice.';
+                            }
+                        } catch (e) {
+                            this.errorMessage = 'Terjadi kesalahan jaringan atau server.';
+                        } finally {
+                            this.loading = false;
+                        }
+                    },
+                    copyToClipboard(text) {
+                        navigator.clipboard.writeText(text);
+                        alert('Link disalin ke clipboard!');
+                    }
                 }));
             });
         </script>

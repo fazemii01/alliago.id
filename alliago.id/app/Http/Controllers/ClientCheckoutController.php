@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Contracts\FileStorage;
 use App\Models\Application;
 use App\Models\ApplicationStatusLog;
 use App\Models\PaymentMethod;
@@ -9,8 +10,16 @@ use Illuminate\Http\Request;
 
 class ClientCheckoutController extends Controller
 {
+    protected FileStorage $fileStorage;
+
+    public function __construct(FileStorage $fileStorage)
+    {
+        $this->fileStorage = $fileStorage;
+    }
     public function show(Application $application)
     {
+        abort_unless($application->user_id === auth()->id() || auth()->user()->hasRole('admin'), 403);
+
         // Only allow checkout if status is pending_payment or payment_failed
         if (!in_array($application->status, ['pending_payment', 'payment_failed'])) {
             return redirect()->route('client.applications.show', $application)
@@ -33,6 +42,8 @@ class ClientCheckoutController extends Controller
 
     public function store(Request $request, Application $application)
     {
+        abort_unless($application->user_id === auth()->id() || auth()->user()->hasRole('admin'), 403);
+
         if (!in_array($application->status, ['pending_payment', 'payment_failed'])) {
             return back()->with('error', 'Checkout tidak tersedia untuk aplikasi ini.');
         }
@@ -49,13 +60,14 @@ class ClientCheckoutController extends Controller
                 'payment_proof' => 'required|file|mimes:jpg,jpeg,png,pdf|max:5120',
             ]);
 
-            $path = $request->file('payment_proof')->store("payments/{$application->id}", 'public');
+            $path = $this->fileStorage->store($request->file('payment_proof'), "payments/{$application->id}");
 
             // Update metadata with proof path and lock amount
             $metadata = $application->metadata ?? [];
-            $amount = $metadata['price_breakdown']['total'] ?? ($application->visaProduct->discount_price ?? $application->visaProduct->base_price);
+            $amount = $metadata['price_breakdown']['total'] ?? ($application->visaProduct ? ($application->visaProduct->discount_price ?? $application->visaProduct->base_price) : 0);
             $metadata['payment_proof_path'] = $path;
             $metadata['invoice_amount'] = $amount;
+            $metadata['payment_status'] = 'pending_verification';
             $application->metadata = $metadata;
             
             // Advance status to draft (or we could have a 'pending_verification' status for manual payments)
@@ -76,7 +88,7 @@ class ClientCheckoutController extends Controller
         if ($paymentMethod->provider === 'xendit') {
             $metadata = $application->metadata ?? [];
             // Use the calculated total from price_breakdown to include all fees, addons, and taxes
-            $amount = $metadata['price_breakdown']['total'] ?? ($application->visaProduct->discount_price ?? $application->visaProduct->base_price);
+            $amount = $metadata['price_breakdown']['total'] ?? ($application->visaProduct ? ($application->visaProduct->discount_price ?? $application->visaProduct->base_price) : 0);
             
             // Reuse existing invoice if it exists
             if (isset($metadata['xendit_invoice_url'])) {
@@ -99,7 +111,7 @@ class ClientCheckoutController extends Controller
                     'external_id' => $application->reference_number,
                     'amount' => $amount,
                     'payer_email' => $application->traveler_email,
-                    'description' => 'Pembayaran Visa: ' . $application->visaProduct->name,
+                    'description' => 'Pembayaran ' . ($application->visaProduct ? 'Visa: ' . $application->visaProduct->name : 'Tiket Pesawat: ' . ($metadata['flight_details']['airline_name'] ?? 'Penerbangan')),
                     'success_redirect_url' => route('client.dashboard'),
                     'failure_redirect_url' => route('client.applications.checkout', $application),
                     'currency' => 'IDR',

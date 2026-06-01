@@ -33,6 +33,26 @@ class EditApplication extends EditRecord
     {
         $originalStatus = $this->record->status;
 
+        if (isset($data['metadata']) && is_array($data['metadata'])) {
+            $data['metadata'] = array_merge($this->record->metadata ?? [], $data['metadata']);
+            
+            $paymentStatus = $data['metadata']['payment_status'] ?? null;
+            $originalPaymentStatus = $this->record->metadata['payment_status'] ?? null;
+
+            // Auto-synchronize main application status based on payment status changes (only for flight tickets)
+            if (empty($this->record->visa_product_id) && $paymentStatus !== $originalPaymentStatus) {
+                if ($paymentStatus === 'paid') {
+                    $data['status'] = 'completed';
+                } elseif ($paymentStatus === 'pending_verification') {
+                    $data['status'] = 'pending_verification';
+                } elseif ($paymentStatus === 'declined') {
+                    $data['status'] = 'payment_failed';
+                } elseif ($paymentStatus === 'unpaid') {
+                    $data['status'] = 'pending_payment';
+                }
+            }
+        }
+
         $data['documents'] = $this->syncDocumentReviewTimestamps($data['documents'] ?? []);
         $this->sendRevisionPrompts($data['documents'] ?? []);
         $data['status'] = $this->resolveApplicationStatus($data['documents'], $data['status'] ?? $originalStatus);

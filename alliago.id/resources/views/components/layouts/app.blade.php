@@ -10,6 +10,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title ?? 'Alliago.id | Visa Assistance' }}</title>
     <meta name="description" content="{{ $description ?? 'Alliago.id — layanan visa dan tiket pesawat terpercaya untuk traveler, keluarga, pelajar, dan perjalanan bisnis internasional.' }}" />
     <meta name="keywords" content="alliago, alliago.id, visa assistance, jasa visa indonesia, japan visa, korea visa, australia visa, schengen visa" />

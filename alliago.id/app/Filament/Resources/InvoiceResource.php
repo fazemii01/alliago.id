@@ -44,10 +44,14 @@ class InvoiceResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('visaProduct.name')
                     ->label('Description')
-                    ->searchable(),
+                    ->searchable()
+                    ->default(fn ($record) => $record->metadata && ($record->metadata['type'] ?? null) === 'flight' 
+                        ? 'Flight: ' . ($record->metadata['flight_details']['airline_name'] ?? 'Penerbangan')
+                        : '-'
+                    ),
                 Tables\Columns\TextColumn::make('amount')
                     ->label('Amount')
-                    ->getStateUsing(fn (Application $record) => 'Rp ' . number_format($record->metadata['invoice_amount'] ?? ($record->visaProduct->discount_price ?? $record->visaProduct->base_price), 0, ',', '.'))
+                    ->getStateUsing(fn (Application $record) => 'Rp ' . number_format($record->metadata['invoice_amount'] ?? $record->metadata['price_breakdown']['total'] ?? ($record->visaProduct?->discount_price ?? $record->visaProduct?->base_price ?? 0), 0, ',', '.'))
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Date')

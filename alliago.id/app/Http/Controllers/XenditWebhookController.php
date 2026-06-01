@@ -44,7 +44,7 @@ class XenditWebhookController extends Controller
 
             if (in_array($application->status, ['pending_payment', 'payment_failed'])) {
                 $metadata = $application->metadata ?? [];
-                $expectedAmount = $metadata['price_breakdown']['total'] ?? ($application->visaProduct->discount_price ?? $application->visaProduct->base_price);
+                $expectedAmount = $metadata['price_breakdown']['total'] ?? ($application->visaProduct ? ($application->visaProduct->discount_price ?? $application->visaProduct->base_price) : 0);
                 
                 if ($paidAmount < $expectedAmount) {
                     $application->status = 'payment_failed';
@@ -61,8 +61,9 @@ class XenditWebhookController extends Controller
                     if ($paidAmount) {
                         // Force the actual paid amount to ensure accuracy
                         $metadata['invoice_amount'] = $paidAmount;
-                        $application->metadata = $metadata;
                     }
+                    $metadata['payment_status'] = 'paid';
+                    $application->metadata = $metadata;
 
                     $application->save();
 
