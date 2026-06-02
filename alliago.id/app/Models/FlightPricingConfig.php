@@ -5,8 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
+use App\Traits\LogsActivity;
+
 class FlightPricingConfig extends Model
 {
+    use LogsActivity;
+
     protected $fillable = ['label', 'addon_cost', 'service_fee', 'notes', 'zz_markup', 'zz_name', 'zz_logo_url', 'banner_path', 'banner_link', 'is_banner_active', 'banner_image_url'];
 
     protected $casts = [
