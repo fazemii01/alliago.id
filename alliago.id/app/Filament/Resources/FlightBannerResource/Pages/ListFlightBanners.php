@@ -9,8 +9,18 @@ class ListFlightBanners extends ListRecords
 {
     protected static string $resource = FlightBannerResource::class;
 
+    public function mount(): void
+    {
+        // Ensure at least one default record exists before rendering
+        \App\Models\FlightPricingConfig::current();
+
+        parent::mount();
+    }
+
     protected function getHeaderActions(): array
     {
-        return [];
+        return [
+            \Filament\Actions\CreateAction::make(),
+        ];
     }
 }

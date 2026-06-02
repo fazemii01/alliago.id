@@ -632,30 +632,32 @@
             <section class="lg:col-span-3">
                 @php
                     $flightConfig = \App\Models\FlightPricingConfig::current();
+                    $activeConfigs = \App\Models\FlightPricingConfig::where('is_banner_active', true)->orderBy('updated_at', 'desc')->get();
+                    $firstBanner = $activeConfigs->first();
+                    $secondBanner = $activeConfigs->skip(1)->first();
                 @endphp
 
-                @if ($flightConfig->is_banner_active && !$hasSearch)
+                @if ($firstBanner && !$hasSearch)
                     @php
-                        $bannerSrc = $flightConfig->banner_path 
-                            ? Storage::disk('s3')->url($flightConfig->banner_path) 
-                            : $flightConfig->banner_image_url;
+                        $bannerSrc = $firstBanner->banner_path 
+                            ? Storage::disk('s3')->url($firstBanner->banner_path) 
+                            : $firstBanner->banner_image_url;
                     @endphp
 
                     @if ($bannerSrc)
                         <div class="mb-6 rounded-[28px] overflow-hidden shadow-sm ring-1 ring-slate-200/80 max-w-[810px] w-full bg-slate-100 transition hover:shadow-md hover:-translate-y-0.5">
-                            @if ($flightConfig->banner_link)
-                                <a href="{{ $flightConfig->banner_link }}" target="_blank" rel="noopener noreferrer" class="w-full block">
+                            @if ($firstBanner->banner_link)
+                                <a href="{{ $firstBanner->banner_link }}" target="_blank" rel="noopener noreferrer" class="w-full block">
                                     <img src="{{ $bannerSrc }}" alt="Promo Banner" class="w-full h-auto block">
                                 </a>
                             @else
                                 <img src="{{ $bannerSrc }}" alt="Promo Banner" class="w-full h-auto block">
                             @endif
                         </div>
-                    @elseif ($flightConfig->banner_link)
-                        <a href="{{ $flightConfig->banner_link }}" target="_blank" rel="noopener noreferrer" 
+                    @elseif ($firstBanner->banner_link)
+                        <a href="{{ $firstBanner->banner_link }}" target="_blank" rel="noopener noreferrer" 
                            class="mb-6 rounded-[28px] overflow-hidden shadow-sm ring-1 ring-slate-200/80 max-w-[810px] w-full bg-gradient-to-r from-blue-600 via-[#0361fc] to-[#00d2ff] flex flex-col justify-center px-8 md:px-12 py-6 text-white md:h-[195.5px] transition hover:shadow-lg hover:-translate-y-0.5 group relative" 
                            style="aspect-ratio: 810 / 195.5;">
-                            {{-- Glassmorphic overlays and decorations --}}
                             <div class="absolute right-0 top-0 h-full w-1/3 bg-white/5 skew-x-12 translate-x-10 transition group-hover:translate-x-4"></div>
                             <div class="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/10 blur-xl"></div>
                             
@@ -692,6 +694,45 @@
                         </span>
                     @endif
                 </div>
+
+                @if ($firstBanner && $hasSearch)
+                    @php
+                        $bannerSrc = $firstBanner->banner_path 
+                            ? Storage::disk('s3')->url($firstBanner->banner_path) 
+                            : $firstBanner->banner_image_url;
+                    @endphp
+
+                    @if ($bannerSrc)
+                        <div class="mb-6 rounded-[28px] overflow-hidden shadow-sm ring-1 ring-slate-200/80 max-w-[810px] w-full bg-slate-100 transition hover:shadow-md hover:-translate-y-0.5">
+                            @if ($firstBanner->banner_link)
+                                <a href="{{ $firstBanner->banner_link }}" target="_blank" rel="noopener noreferrer" class="w-full block">
+                                    <img src="{{ $bannerSrc }}" alt="Promo Banner" class="w-full h-auto block">
+                                </a>
+                            @else
+                                <img src="{{ $bannerSrc }}" alt="Promo Banner" class="w-full h-auto block">
+                            @endif
+                        </div>
+                    @elseif ($firstBanner->banner_link)
+                        <a href="{{ $firstBanner->banner_link }}" target="_blank" rel="noopener noreferrer" 
+                           class="mb-6 rounded-[28px] overflow-hidden shadow-sm ring-1 ring-slate-200/80 max-w-[810px] w-full bg-gradient-to-r from-blue-600 via-[#0361fc] to-[#00d2ff] flex flex-col justify-center px-8 md:px-12 py-6 text-white md:h-[195.5px] transition hover:shadow-lg hover:-translate-y-0.5 group relative" 
+                           style="aspect-ratio: 810 / 195.5;">
+                            <div class="absolute right-0 top-0 h-full w-1/3 bg-white/5 skew-x-12 translate-x-10 transition group-hover:translate-x-4"></div>
+                            <div class="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/10 blur-xl"></div>
+                            
+                            <div class="relative z-10 space-y-1 md:space-y-2">
+                                <span class="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-3 py-1 text-[10px] md:text-xs font-bold uppercase tracking-wider text-white backdrop-blur-sm">
+                                    Promo Spesial ✨
+                                </span>
+                                <h3 class="text-lg md:text-2xl font-black tracking-tight leading-tight drop-shadow-sm">
+                                    Temukan Penawaran Terbaik Hari Ini
+                                </h3>
+                                <p class="text-xs md:text-sm font-medium text-white/95 max-w-lg leading-relaxed">
+                                    Nikmati promo eksklusif penerbangan domestik dan internasional. Klik di sini untuk melihat info selengkapnya.
+                                </p>
+                            </div>
+                        </a>
+                    @endif
+                @endif
 
                 <div class="space-y-4">
                     @php $displayResults = $paginatedResults ?? collect($results); @endphp
@@ -823,6 +864,45 @@
                     <div class="mt-8 flex items-center justify-center">
                         {{ $paginatedResults->onEachSide(1)->links() }}
                     </div>
+                @endif
+
+                @if ($secondBanner)
+                    @php
+                        $bannerSrc2 = $secondBanner->banner_path 
+                            ? Storage::disk('s3')->url($secondBanner->banner_path) 
+                            : $secondBanner->banner_image_url;
+                    @endphp
+
+                    @if ($bannerSrc2)
+                        <div class="mt-6 rounded-[28px] overflow-hidden shadow-sm ring-1 ring-slate-200/80 max-w-[810px] w-full bg-slate-100 transition hover:shadow-md hover:-translate-y-0.5">
+                            @if ($secondBanner->banner_link)
+                                <a href="{{ $secondBanner->banner_link }}" target="_blank" rel="noopener noreferrer" class="w-full block">
+                                    <img src="{{ $bannerSrc2 }}" alt="Promo Banner" class="w-full h-auto block">
+                                </a>
+                            @else
+                                <img src="{{ $bannerSrc2 }}" alt="Promo Banner" class="w-full h-auto block">
+                            @endif
+                        </div>
+                    @elseif ($secondBanner->banner_link)
+                        <a href="{{ $secondBanner->banner_link }}" target="_blank" rel="noopener noreferrer" 
+                           class="mt-6 rounded-[28px] overflow-hidden shadow-sm ring-1 ring-slate-200/80 max-w-[810px] w-full bg-gradient-to-r from-blue-600 via-[#0361fc] to-[#00d2ff] flex flex-col justify-center px-8 md:px-12 py-6 text-white md:h-[195.5px] transition hover:shadow-lg hover:-translate-y-0.5 group relative" 
+                           style="aspect-ratio: 810 / 195.5;">
+                            <div class="absolute right-0 top-0 h-full w-1/3 bg-white/5 skew-x-12 translate-x-10 transition group-hover:translate-x-4"></div>
+                            <div class="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/10 blur-xl"></div>
+                            
+                            <div class="relative z-10 space-y-1 md:space-y-2">
+                                <span class="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-3 py-1 text-[10px] md:text-xs font-bold uppercase tracking-wider text-white backdrop-blur-sm">
+                                    Promo Spesial ✨
+                                </span>
+                                <h3 class="text-lg md:text-2xl font-black tracking-tight leading-tight drop-shadow-sm">
+                                    Temukan Penawaran Terbaik Hari Ini
+                                </h3>
+                                <p class="text-xs md:text-sm font-medium text-white/95 max-w-lg leading-relaxed">
+                                    Nikmati promo eksklusif penerbangan domestik dan internasional. Klik di sini untuk melihat info selengkapnya.
+                                </p>
+                            </div>
+                        </a>
+                    @endif
                 @endif
             </section>
 

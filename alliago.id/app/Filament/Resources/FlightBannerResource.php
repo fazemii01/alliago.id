@@ -36,12 +36,24 @@ class FlightBannerResource extends Resource
         return $user && ($user->hasRole('admin') || $user->hasPermissionTo('flight_pricing_config.update'));
     }
 
+    public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
+    {
+        $user = auth()->user();
+        return $user && ($user->hasRole('admin') || $user->hasPermissionTo('flight_pricing_config.delete'));
+    }
+
     public static function form(Form $form): Form
     {
         return $form->schema([
             Forms\Components\Section::make('Promo Banner Configuration')
-                ->description('Manage the promotional banner displayed above the flight search results.')
+                ->description('Manage promotional banners displayed on the flight search page.')
                 ->schema([
+                    Forms\Components\TextInput::make('label')
+                        ->label('Banner Identifier / Label')
+                        ->placeholder('e.g. Banner 1 (Top), Banner 2 (Bottom)')
+                        ->required()
+                        ->maxLength(255)
+                        ->columnSpanFull(),
                     Forms\Components\FileUpload::make('banner_path')
                         ->label('Banner Image (File Upload)')
                         ->image()
@@ -73,6 +85,10 @@ class FlightBannerResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('label')
+                    ->label('Banner Label')
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\ImageColumn::make('banner_preview')
                     ->label('Banner Preview')
                     ->state(fn ($record) => $record->banner_path ? \Illuminate\Support\Facades\Storage::disk('s3')->url($record->banner_path) : $record->banner_image_url)
@@ -91,6 +107,7 @@ class FlightBannerResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ]);
     }
 
