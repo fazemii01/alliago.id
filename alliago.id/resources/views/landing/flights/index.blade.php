@@ -754,7 +754,13 @@
                                     <div class="sm:text-right">
                                         <p class="text-[10px] font-semibold uppercase tracking-wide text-slate-400">Mulai dari</p>
                                         <p class="text-lg font-extrabold text-slate-900 sm:text-xl">{{ $flight['price'] }}</p>
-                                        <p class="text-[10px] text-slate-400">/ penumpang</p>
+                                        <p class="text-[10px] text-slate-400">
+                                            @if ($totalPassenger > 1)
+                                                Total ({{ $totalPassenger }} penumpang)
+                                            @else
+                                                / penumpang
+                                            @endif
+                                        </p>
                                     </div>
                                     @if (trim(strtoupper($flight['airline'] ?? '')) === 'ZZ')
                                         @if (auth()->check() && (auth()->user()->hasRole('admin') || auth()->user()->hasRole('staff')))
@@ -797,7 +803,7 @@
                                 @foreach ($flight['fare_breakdown'] as $fare)
                                     <span class="text-[11px] text-slate-500">
                                         <span class="font-semibold capitalize text-slate-700">{{ $fare['pax_type'] }}:</span>
-                                        {{ (trim(strtoupper($flight['airline'] ?? '')) === 'ZZ') ? $flight['price'] : $fare['total_fare'] }}
+                                        {{ $fare['total_fare'] }}
                                     </span>
                                 @endforeach
                             </div>

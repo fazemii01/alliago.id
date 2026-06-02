@@ -299,18 +299,16 @@ class DuffelFlightService
          $perBase = ($baseAmount + $markup) / $count;
          $perTax = $taxAmount / $count;
  
-         $isZz = strtoupper(trim($airline)) === 'ZZ';
- 
          return collect($passengers)
-             ->groupBy(fn ($p) => Arr::get($p, 'type', 'adult'))
-             ->map(fn ($group, $type) => [
-                 'pax_type' => $type,
-                 'base_fare' => $isZz ? $this->formatIdr($totalAmountWithMarkup) : $this->formatIdr(round($perBase * count($group))),
-                 'tax' => $isZz ? $this->formatIdr(0) : $this->formatIdr(round($perTax * count($group))),
-                 'total_fare' => $isZz ? $this->formatIdr($totalAmountWithMarkup) : $this->formatIdr(round($perPassenger * count($group))),
-             ])
-             ->values()
-             ->all();
+            ->groupBy(fn ($p) => Arr::get($p, 'type', 'adult'))
+            ->map(fn ($group, $type) => [
+                'pax_type' => $type,
+                'base_fare' => $this->formatIdr(round($perBase * count($group))),
+                'tax' => $this->formatIdr(round($perTax * count($group))),
+                'total_fare' => $this->formatIdr(round($perPassenger * count($group))),
+            ])
+            ->values()
+            ->all();
      }
 
     protected function get(string $path, array $query = []): array
