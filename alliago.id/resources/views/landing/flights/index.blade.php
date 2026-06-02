@@ -997,6 +997,26 @@
                             </div>
                         </div>
 
+                        <!-- Extra Baggage Section -->
+                        <div class="border-t border-slate-100 pt-4">
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-3">Pilih Bagasi Tambahan (Extra Baggage)</label>
+                            <div class="flex flex-wrap gap-2.5">
+                                <template x-for="bag in baggageOptions" :key="bag.weight">
+                                    <button type="button"
+                                            @click="selectBaggage(bag)"
+                                            :class="selectedBaggageWeight === bag.weight 
+                                                ? 'bg-blue-50 border-2 border-[#0361fc] text-[#0361fc] shadow-sm' 
+                                                : 'bg-slate-50 border border-slate-200 text-slate-700 hover:bg-slate-100'"
+                                            class="flex flex-col items-center justify-center p-3 rounded-2xl min-w-[105px] transition cursor-pointer text-center outline-none">
+                                        <span class="text-xs font-extrabold" x-text="'+' + bag.weight + ' kg'"></span>
+                                        <span class="text-[10px] mt-1 font-bold" 
+                                              x-text="bag.price === 0 ? 'Gratis' : 'Rp ' + Number(bag.price).toLocaleString('id-ID')"></span>
+                                    </button>
+                                </template>
+                            </div>
+                            <p class="mt-2 text-[10px] text-slate-400 font-medium">Bagasi default: Kabin 7kg & Check-in 20kg. Tambahan bagasi akan ditambahkan pada berat check-in.</p>
+                        </div>
+
                         <div class="border-t border-slate-100 pt-4">
                             <label class="block text-xs font-bold text-slate-500 uppercase">Metode Pembayaran</label>
                             <select x-model="paymentMethodId" class="mt-1 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm focus:border-[#0361fc] focus:outline-none" required>
@@ -1019,6 +1039,7 @@
                                 <div><span class="text-slate-500 font-semibold">Kelas:</span> <span class="font-bold text-slate-950 capitalize" x-text="flight.cabin_class"></span></div>
                                 <div><span class="text-slate-500 font-semibold">Keberangkatan:</span> <span class="font-bold text-slate-950" x-text="flight.depart_date + ' ' + (flight.depart_time || '')"></span></div>
                                 <div x-show="flight.trip_type === 'R'"><span class="text-slate-500 font-semibold">Kepulangan:</span> <span class="font-bold text-slate-950" x-text="flight.return_date + ' ' + (flight.return_time || '')"></span></div>
+                                <div><span class="text-slate-500 font-semibold">Bagasi:</span> <span class="font-bold text-slate-950" x-text="'7kg Kabin + 20kg Check-in' + (selectedBaggageWeight > 0 ? ' + ' + selectedBaggageWeight + 'kg Extra' : '')"></span></div>
                             </div>
                         </div>
 
@@ -1040,10 +1061,14 @@
                         </div>
 
                         <div class="p-5 bg-[#edf4ff]/40 rounded-2xl space-y-3 border border-[#edf4ff]">
-                            <div class="flex justify-between text-xs font-semibold text-slate-600"><span>Harga Pokok</span><span class="font-bold text-slate-900" x-text="'Rp ' + Number(flight.price_value).toLocaleString('id-ID')"></span></div>
-                            <div class="flex justify-between text-xs font-semibold text-slate-600 border-b border-slate-200 pb-2"><span>Pajak & Biaya</span><span class="font-bold text-slate-900" x-text="'Rp ' + Number(flight.tax).toLocaleString('id-ID')"></span></div>
-                            <div class="flex justify-between text-sm font-extrabold text-slate-900"><span>Total Tagihan</span><span class="text-lg font-black text-[#0361fc]" x-text="'Rp ' + Number(flight.total).toLocaleString('id-ID')"></span></div>
-                        </div>
+                                <div class="flex justify-between text-xs font-semibold text-slate-600"><span>Harga Tiket</span><span class="font-bold text-slate-900" x-text="'Rp ' + Number(flight.price_value).toLocaleString('id-ID')"></span></div>
+                                <div class="flex justify-between text-xs font-semibold text-slate-600" x-show="selectedBaggageWeight > 0">
+                                    <span>Bagasi Tambahan (+<span x-text="selectedBaggageWeight"></span> kg)</span>
+                                    <span class="font-bold text-slate-900" x-text="'Rp ' + Number(selectedBaggagePrice).toLocaleString('id-ID')"></span>
+                                </div>
+                                <div class="flex justify-between text-xs font-semibold text-slate-600 border-b border-slate-200 pb-2"><span>Pajak & Biaya</span><span class="font-bold text-slate-900" x-text="'Rp ' + Number(flight.tax).toLocaleString('id-ID')"></span></div>
+                                <div class="flex justify-between text-sm font-extrabold text-slate-900"><span>Total Tagihan</span><span class="text-lg font-black text-[#0361fc]" x-text="'Rp ' + Number(flight.total).toLocaleString('id-ID')"></span></div>
+                            </div>
                     </div>
 
                     <!-- STEP 4: Success & Links -->
@@ -1329,6 +1354,20 @@
                     referenceNumber: '',
                     loading: false,
                     errorMessage: '',
+                    
+                    // Baggage pricing configuration
+                    baggageOptions: [
+                        { weight: 0, price: 0 },
+                        { weight: 20, price: 1028872 },
+                        { weight: 25, price: 1372268 },
+                        { weight: 30, price: 1688253 },
+                        { weight: 40, price: 2409026 },
+                        { weight: 50, price: 3134682 },
+                        { weight: 60, price: 4072871 }
+                    ],
+                    selectedBaggageWeight: 0,
+                    selectedBaggagePrice: 0,
+                    
                     initWizard(flightData, filters) {
                         this.flight.airline = flightData.airline || 'ZZ';
                         this.flight.airline_name = flightData.airline_name || 'Virtual Airline';
@@ -1343,6 +1382,9 @@
                         this.flight.trip_type = filters.trip_type || 'O';
                         this.flight.price_value = flightData.price_value || 0;
                         this.flight.tax = 0;
+                        
+                        this.selectedBaggageWeight = 0;
+                        this.selectedBaggagePrice = 0;
                         this.calculateTotal();
 
                         this.clientId = '';
@@ -1358,7 +1400,12 @@
                         this.open = true;
                     },
                     calculateTotal() {
-                        this.flight.total = Number(this.flight.price_value) + Number(this.flight.tax);
+                        this.flight.total = Number(this.flight.price_value) + Number(this.flight.tax) + Number(this.selectedBaggagePrice);
+                    },
+                    selectBaggage(bag) {
+                        this.selectedBaggageWeight = bag.weight;
+                        this.selectedBaggagePrice = bag.price;
+                        this.calculateTotal();
                     },
                     nextStep() {
                         if (this.step === 1) {
@@ -1406,7 +1453,9 @@
                                     traveler_email: this.travelerEmail,
                                     traveler_phone: this.travelerPhone,
                                     payment_method_id: this.paymentMethodId,
-                                    flight: this.flight
+                                    flight: this.flight,
+                                    baggage_weight: this.selectedBaggageWeight,
+                                    baggage_price: this.selectedBaggagePrice
                                 })
                             });
                             const data = await response.json();

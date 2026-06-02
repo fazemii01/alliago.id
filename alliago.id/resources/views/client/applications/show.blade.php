@@ -154,6 +154,15 @@
                                             <p class="text-xs font-bold text-slate-400 uppercase">Keberangkatan</p>
                                             <p class="mt-1 font-bold text-slate-900 text-base">{{ $application->metadata['flight_details']['depart_date'] ?? '-' }} {{ $application->metadata['flight_details']['depart_time'] ?? '' }}</p>
                                         </div>
+                                        <div class="rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                                            <p class="text-xs font-bold text-slate-400 uppercase">Bagasi Penerbangan</p>
+                                            <p class="mt-1 font-bold text-slate-900 text-base">
+                                                Kabin: 7 kg | Check-in: {{ 20 + ($application->metadata['flight_details']['extra_baggage_weight'] ?? 0) }} kg
+                                                @if (isset($application->metadata['flight_details']['extra_baggage_weight']) && $application->metadata['flight_details']['extra_baggage_weight'] > 0)
+                                                    <span class="text-xs text-emerald-600 font-bold ml-1">(+{{ $application->metadata['flight_details']['extra_baggage_weight'] }} kg Extra)</span>
+                                                @endif
+                                            </p>
+                                        </div>
                                         @if (isset($application->metadata['flight_details']['return_date']))
                                             <div class="rounded-2xl border border-slate-100 bg-slate-50 p-4 sm:col-span-2">
                                                 <p class="text-xs font-bold text-slate-400 uppercase">Kepulangan (Round Trip)</p>

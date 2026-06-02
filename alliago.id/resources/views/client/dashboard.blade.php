@@ -210,6 +210,9 @@
                                                             @if (isset($application->metadata['flight_details']['return_date']))
                                                                 <div class="flex justify-between"><span class="text-slate-500">Tanggal Pulang:</span><span class="font-bold text-slate-900">{{ $application->metadata['flight_details']['return_date'] }} {{ $application->metadata['flight_details']['return_time'] ?? '' }}</span></div>
                                                             @endif
+                                                            @if (isset($application->metadata['flight_details']['extra_baggage_weight']) && $application->metadata['flight_details']['extra_baggage_weight'] > 0)
+                                                                <div class="flex justify-between"><span class="text-slate-500">Bagasi Tambahan:</span><span class="font-bold text-emerald-600">+{{ $application->metadata['flight_details']['extra_baggage_weight'] }} kg</span></div>
+                                                            @endif
                                                         </div>
                                                     </div>
                                                 @endif

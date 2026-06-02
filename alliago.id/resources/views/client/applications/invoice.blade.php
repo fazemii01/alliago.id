@@ -118,12 +118,28 @@
                                     </td>
                                      <td class="py-6 text-sm font-bold text-slate-900 text-right whitespace-nowrap">
                                         @if($invoiceAmount)
-                                            Rp {{ number_format($invoiceAmount, 0, ',', '.') }}
+                                            @if(!$application->visaProduct && isset($application->metadata['flight_details']['extra_baggage_price']) && $application->metadata['flight_details']['extra_baggage_price'] > 0)
+                                                Rp {{ number_format($invoiceAmount - $application->metadata['flight_details']['extra_baggage_price'], 0, ',', '.') }}
+                                            @else
+                                                Rp {{ number_format($invoiceAmount, 0, ',', '.') }}
+                                            @endif
                                         @else
                                             <span class="text-slate-400 text-xs">Menghubungi sistem...</span>
                                         @endif
                                      </td>
                                 </tr>
+
+                                @if(!$application->visaProduct && isset($application->metadata['flight_details']['extra_baggage_weight']) && $application->metadata['flight_details']['extra_baggage_weight'] > 0)
+                                <tr class="border-b border-slate-100">
+                                    <td class="py-6 text-sm font-medium text-slate-800">
+                                        Bagasi Tambahan (Extra Baggage) +{{ $application->metadata['flight_details']['extra_baggage_weight'] }} kg<br>
+                                        <span class="text-slate-500 font-normal">Layanan penambahan berat check-in untuk bagasi pesawat</span>
+                                    </td>
+                                    <td class="py-6 text-sm font-bold text-slate-900 text-right whitespace-nowrap">
+                                        Rp {{ number_format($application->metadata['flight_details']['extra_baggage_price'], 0, ',', '.') }}
+                                    </td>
+                                </tr>
+                                @endif
                             </tbody>
                         </table>
                     </div>
@@ -131,6 +147,10 @@
                     <!-- Summary -->
                     <div class="mt-8 flex justify-end">
                         <div class="w-full max-w-sm space-y-4 bg-slate-50 p-6 rounded-2xl">
+                            @if(!$application->visaProduct && isset($application->metadata['flight_details']['extra_baggage_weight']) && $application->metadata['flight_details']['extra_baggage_weight'] > 0)
+                                <div class="flex justify-between"><span class="text-sm text-slate-600">Harga Tiket</span><span class="text-sm font-bold text-slate-900">Rp {{ number_format($invoiceAmount - $application->metadata['flight_details']['extra_baggage_price'], 0, ',', '.') }}</span></div>
+                                <div class="flex justify-between"><span class="text-sm text-slate-600">Bagasi Tambahan (+{{ $application->metadata['flight_details']['extra_baggage_weight'] }} kg)</span><span class="text-sm font-bold text-slate-900">Rp {{ number_format($application->metadata['flight_details']['extra_baggage_price'], 0, ',', '.') }}</span></div>
+                            @endif
                             <div class="flex justify-between"><span class="text-sm text-slate-600">Subtotal</span><span class="text-sm font-bold text-slate-900">{{ $invoiceAmount ? 'Rp '.number_format($invoiceAmount, 0, ',', '.') : '-' }}</span></div>
                             <div class="flex justify-between border-b border-slate-200 pb-4"><span class="text-sm text-slate-600">Pajak (0%)</span><span class="text-sm font-bold text-slate-900">Rp 0</span></div>
                             <div class="flex justify-between pt-2"><span class="text-base font-bold text-slate-900">Total Keseluruhan</span><span class="text-lg font-black text-[#0361fc]">{{ $invoiceAmount ? 'Rp '.number_format($invoiceAmount, 0, ',', '.') : 'Menghubungi sistem...' }}</span></div>

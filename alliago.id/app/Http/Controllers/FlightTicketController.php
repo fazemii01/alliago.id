@@ -198,11 +198,15 @@ class FlightTicketController extends Controller
             'flight.price_value' => ['required', 'numeric', 'min:0'],
             'flight.tax' => ['required', 'numeric', 'min:0'],
             'flight.total' => ['nullable', 'numeric', 'min:0'],
+            'baggage_weight' => ['nullable', 'integer', 'min:0'],
+            'baggage_price' => ['nullable', 'numeric', 'min:0'],
         ]);
 
         $subtotal = (float) $request->input('flight.price_value');
         $tax = (float) $request->input('flight.tax', 0);
-        $total = $request->input('flight.total') !== null ? (float) $request->input('flight.total') : ($subtotal + $tax);
+        $baggagePrice = (float) $request->input('baggage_price', 0);
+        $baggageWeight = (int) $request->input('baggage_weight', 0);
+        $total = $request->input('flight.total') !== null ? (float) $request->input('flight.total') : ($subtotal + $tax + $baggagePrice);
 
         // Generate custom invoice metadata
         $metadata = [
@@ -223,10 +227,13 @@ class FlightTicketController extends Controller
                 'price_value' => $subtotal,
                 'tax' => $tax,
                 'total' => $total,
+                'extra_baggage_weight' => $baggageWeight,
+                'extra_baggage_price' => $baggagePrice,
             ],
             'price_breakdown' => [
                 'subtotal' => $subtotal,
                 'tax' => $tax,
+                'extra_baggage' => $baggagePrice,
                 'total' => $total,
             ],
             'invoice_amount' => $total,
