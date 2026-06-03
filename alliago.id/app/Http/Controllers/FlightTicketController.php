@@ -99,6 +99,14 @@ class FlightTicketController extends Controller
             $paymentMethods = \App\Models\PaymentMethod::where('is_active', true)->get(['id', 'name', 'provider', 'code'])->all();
         }
 
+        $recommendations = \App\Models\Recommendation::query()
+            ->with(['visaProduct.country'])
+            ->where('is_active', true)
+            ->orderBy('sort_order')
+            ->get()
+            ->pluck('visaProduct')
+            ->filter();
+
         return view('landing.flights.index', [
             'tripTypes' => $tripTypes,
             'filters' => $filters,
@@ -108,6 +116,7 @@ class FlightTicketController extends Controller
             'airlines' => $airlines,
             'users' => $users,
             'paymentMethods' => $paymentMethods,
+            'recommendations' => $recommendations,
         ]);
     }
 

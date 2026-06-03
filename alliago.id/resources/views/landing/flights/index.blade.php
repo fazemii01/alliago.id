@@ -594,13 +594,29 @@
                     </dl>
                 </div>
 
-                <div class="rounded-[28px] bg-white p-5 shadow-sm ring-1 ring-slate-200/80">
-                    <h3 class="text-xs font-bold uppercase tracking-[0.24em] text-slate-400">Catatan</h3>
-                    <p class="mt-3 flex items-start gap-2 text-sm leading-relaxed text-slate-500">
-                        <svg class="mt-0.5 h-4 w-4 shrink-0 text-[#0361fc]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd"/></svg>
-                        Harga estimasi dalam Rupiah. Kurs diperbarui tiap jam.
-                    </p>
-                </div>
+                @php
+                    $sidebarBanner = \App\Models\FlightPricingConfig::where('is_sidebar_banner_active', true)->orderBy('updated_at', 'desc')->first();
+                @endphp
+
+                @if ($sidebarBanner)
+                    @php
+                        $sidebarBannerSrc = $sidebarBanner->sidebar_banner_path 
+                            ? Storage::disk('s3')->url($sidebarBanner->sidebar_banner_path) 
+                            : $sidebarBanner->sidebar_banner_image_url;
+                    @endphp
+
+                    @if ($sidebarBannerSrc)
+                        <div class="rounded-[28px] overflow-hidden shadow-sm ring-1 ring-slate-200/80 transition hover:shadow-md hover:-translate-y-0.5 bg-slate-100">
+                            @if ($sidebarBanner->sidebar_banner_link)
+                                <a href="{{ $sidebarBanner->sidebar_banner_link }}" target="_blank" rel="noopener noreferrer" class="block w-full">
+                                    <img src="{{ $sidebarBannerSrc }}" alt="Sidebar Banner" class="w-full h-auto block">
+                                </a>
+                            @else
+                                <img src="{{ $sidebarBannerSrc }}" alt="Sidebar Banner" class="w-full h-auto block">
+                            @endif
+                        </div>
+                    @endif
+                @endif
 
                 @if (!empty($airlines))
                 <div class="rounded-[28px] bg-white p-5 shadow-sm ring-1 ring-slate-200/80">
@@ -636,6 +652,174 @@
                     $firstBanner = $activeConfigs->first();
                     $secondBanner = $activeConfigs->skip(1)->first();
                 @endphp
+
+                @if (isset($recommendations) && count($recommendations) > 0)
+                    <div class="mb-8 rounded-[28px] bg-white p-6 shadow-sm ring-1 ring-slate-200/80">
+                        <div class="mb-4 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                            <div>
+                                <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-[#0361fc]">Rekomendasi Layanan Kami yang lain</p>
+                                <h3 class="mt-1 text-base font-extrabold text-slate-900 sm:text-lg">
+                                    Rekomendasi Layanan Visa Terpopuler
+                                </h3>
+                            </div>
+                        </div>
+                        
+                        <div x-data="{
+                            canScrollLeft: false,
+                            canScrollRight: false,
+                            checkScroll() {
+                                const el = this.$refs.slider;
+                                if (!el) return;
+                                this.canScrollLeft = el.scrollLeft > 10;
+                                this.canScrollRight = el.scrollLeft < (el.scrollWidth - el.clientWidth - 10);
+                            },
+                            scroll(dir) {
+                                const el = this.$refs.slider;
+                                if (!el) return;
+                                const scrollAmount = dir === 'next' ? 260 : -260;
+                                el.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                            }
+                        }" x-init="setTimeout(() => checkScroll(), 300); window.addEventListener('resize', () => checkScroll())" 
+                        class="relative">
+                            
+                            {{-- Left arrow --}}
+                            <button type="button"
+                                    x-show="canScrollLeft"
+                                    @click="scroll('prev')"
+                                    class="absolute -left-4 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white border border-slate-200 text-slate-600 shadow-md transition hover:bg-slate-50 active:scale-95"
+                                    style="display: none;">
+                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
+                                </svg>
+                            </button>
+
+                            {{-- Right arrow --}}
+                            <button type="button"
+                                    x-show="canScrollRight"
+                                    @click="scroll('next')"
+                                    class="absolute -right-4 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white border border-slate-200 text-slate-600 shadow-md transition hover:bg-slate-50 active:scale-95"
+                                    style="display: none;">
+                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                                </svg>
+                            </button>
+
+                            {{-- Slider container --}}
+                            <div x-ref="slider"
+                                 @scroll.debounce.50ms="checkScroll()"
+                                 class="flex gap-4 overflow-x-auto pb-2 pt-1 scroll-smooth"
+                                 style="scrollbar-width: none; -ms-overflow-style: none;">
+                                
+                                @foreach($recommendations as $product)
+                                    @php
+                                        $hasDiscount = $product->discount_price && $product->discount_price < $product->base_price;
+                                        $discountPercent = $hasDiscount ? round((1 - $product->discount_price / $product->base_price) * 100) : 0;
+                                        $countryName = $product->country->name ?? '';
+                                        $countryCode = $product->country->code ?? '';
+                                        $flagEmoji = $product->country->flag_emoji ?? '🏳️';
+                                        
+                                        $cardImages = [
+                                            'Jepang' => 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=400&q=80',
+                                            'Korea Selatan' => 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=400&q=80',
+                                            'Australia' => 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&w=400&q=80',
+                                            'China' => 'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=400&q=80',
+                                            'Taiwan' => 'https://images.unsplash.com/photo-1470004914212-05527e49370b?auto=format&fit=crop&w=400&q=80',
+                                            'United States' => 'https://images.unsplash.com/photo-1485738422979-f5c462d49f04?auto=format&fit=crop&w=400&q=80',
+                                            'United Kingdom' => 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=400&q=80',
+                                            'Netherlands' => 'https://images.unsplash.com/photo-1534351590666-13e3e96b5017?auto=format&fit=crop&w=400&q=80',
+                                        ];
+                                        $defaultImage = 'https://images.unsplash.com/photo-1488085061387-422e29b40080?auto=format&fit=crop&w=400&q=80';
+                                        $cardImage = $cardImages[$countryName] ?? $defaultImage;
+                                    @endphp
+                                    
+                                    <a href="{{ route('visa.show', $product->slug) }}" 
+                                       class="group relative flex w-[230px] shrink-0 flex-col rounded-2xl border border-slate-200/80 bg-white p-2.5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#0361fc]/35 hover:shadow-md">
+                                        
+                                        {{-- Image card --}}
+                                        <div class="relative h-28 w-full overflow-hidden rounded-xl bg-slate-100">
+                                            <img src="{{ $cardImage }}" alt="{{ $product->name }}" 
+                                                 class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                                                 loading="lazy">
+                                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/30 via-transparent to-transparent"></div>
+                                            
+                                            {{-- Country / Flag badge --}}
+                                            <div class="absolute left-2 top-2 flex items-center gap-1 rounded-md bg-[#0361fc] px-1.5 py-0.5 text-[9px] font-extrabold text-white shadow-sm">
+                                                <span>{{ $flagEmoji }}</span>
+                                                <span class="truncate max-w-[80px]">{{ $countryName }}</span>
+                                            </div>
+
+                                            @if ($product->promo_label)
+                                                <div class="absolute right-2 top-2 rounded-md bg-red-500 px-1.5 py-0.5 text-[8px] font-black uppercase text-white shadow-sm">
+                                                    {{ $product->promo_label }}
+                                                </div>
+                                            @elseif ($hasDiscount)
+                                                <div class="absolute right-2 top-2 rounded-md bg-orange-500 px-1.5 py-0.5 text-[8px] font-black uppercase text-white shadow-sm">
+                                                    Hemat {{ $discountPercent }}%
+                                                </div>
+                                            @endif
+                                        </div>
+
+                                        {{-- Details --}}
+                                        <div class="mt-2.5 flex flex-1 flex-col">
+                                            <h4 class="text-xs font-bold text-slate-800 leading-snug line-clamp-1 group-hover:text-[#0361fc] transition-colors">
+                                                {{ $product->name }}
+                                            </h4>
+                                            <p class="mt-0.5 text-[9px] font-semibold text-slate-400 uppercase tracking-wider">
+                                                {{ $product->type }}
+                                            </p>
+
+                                            {{-- processing/stay durations --}}
+                                            <div class="mt-2 flex items-center gap-1.5 text-[9px] font-medium text-slate-500">
+                                                @if ($product->processing_time)
+                                                    <span class="flex items-center gap-0.5 rounded bg-slate-50 px-1 py-0.5 ring-1 ring-slate-150">
+                                                        ⏱️ {{ $product->processing_time }}
+                                                    </span>
+                                                @endif
+                                                @if ($product->stay_duration)
+                                                    <span class="flex items-center gap-0.5 rounded bg-slate-50 px-1 py-0.5 ring-1 ring-slate-150">
+                                                        📅 {{ $product->stay_duration }}
+                                                    </span>
+                                                @endif
+                                            </div>
+
+                                            {{-- Price tag --}}
+                                            <div class="mt-auto pt-2.5 flex items-center justify-between border-t border-slate-100/80">
+                                                <div class="flex flex-col">
+                                                    @if ($hasDiscount)
+                                                        <span class="text-[8px] font-medium text-slate-400 line-through leading-none">
+                                                            IDR {{ number_format($product->base_price, 0, ',', '.') }}
+                                                        </span>
+                                                        <span class="text-xs font-extrabold text-red-600 leading-none mt-0.5">
+                                                            IDR {{ number_format($product->discount_price, 0, ',', '.') }}
+                                                        </span>
+                                                    @else
+                                                        <span class="text-[8px] font-medium text-slate-400 leading-none">
+                                                            Mulai dari
+                                                        </span>
+                                                        <span class="text-xs font-extrabold text-slate-800 leading-none mt-0.5">
+                                                            IDR {{ number_format($product->base_price, 0, ',', '.') }}
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                                <span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-[#EDF4FF] text-[#0361fc] transition-all duration-300 group-hover:bg-[#0361fc] group-hover:text-white">
+                                                    <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                                                    </svg>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                @endforeach
+                            </div>
+                            
+                            <style>
+                                div[x-ref="slider"]::-webkit-scrollbar {
+                                    display: none;
+                                }
+                            </style>
+                        </div>
+                    </div>
+                @endif
 
                 @if ($firstBanner && !$hasSearch)
                     @php
@@ -905,6 +1089,8 @@
                     @endif
                 @endif
             </section>
+
+
 
         </div>
     </div>

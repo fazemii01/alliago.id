@@ -21,11 +21,11 @@
             <span class="text-[10px] font-semibold">{{ __('common.nav_flights') }}</span>
         </a>
 
-        <a href="{{ route('pages.process') }}" class="flex flex-col items-center justify-center gap-1 w-full h-full transition {{ request()->routeIs('pages.process') ? 'text-[#0361fc]' : 'text-slate-500 hover:text-[#0361fc]' }}">
+        <a href="{{ route('ferry.index') }}" class="flex flex-col items-center justify-center gap-1 w-full h-full transition {{ request()->routeIs('ferry.index') ? 'text-[#0361fc]' : 'text-slate-500 hover:text-[#0361fc]' }}">
             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75l3.75-9h12l3.75 9M2.25 12.75h19.5M2.25 12.75L.75 18.75h22.5L21.75 12.75M12 4.5V2.25" />
             </svg>
-            <span class="text-[10px] font-semibold">Proses</span>
+            <span class="text-[10px] font-semibold">Tiket Ferry</span>
         </a>
 
         <a href="{{ route('pages.faq') }}" class="flex flex-col items-center justify-center gap-1 w-full h-full transition {{ request()->routeIs('pages.faq') ? 'text-[#0361fc]' : 'text-slate-500 hover:text-[#0361fc]' }}">

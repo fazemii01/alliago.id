@@ -40,6 +40,9 @@ class InvoiceResource extends Resource
                     ->label('Invoice ID')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('user.name')
+                    ->label('User')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('traveler_name')
                     ->label('Customer')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('visaProduct.name')

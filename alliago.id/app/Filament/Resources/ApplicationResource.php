@@ -175,13 +175,17 @@ class ApplicationResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('reference_number')->searchable(),
                 Tables\Columns\TextColumn::make('user.name')->label('User')->searchable(),
+                Tables\Columns\TextColumn::make('traveler_name')
+                    ->label('Customer')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('visaProduct.name')
                     ->label('Product / Service')
                     ->searchable()
-                    ->default(fn ($record) => $record->metadata && ($record->metadata['type'] ?? null) === 'flight' 
-                        ? 'Flight: ' . ($record->metadata['flight_details']['airline_name'] ?? 'Penerbangan')
-                        : '-'
-                    ),
+                    ->default(fn ($record) => match ($record->metadata['type'] ?? null) {
+                        'flight' => 'Flight: ' . ($record->metadata['flight_details']['airline_name'] ?? 'Penerbangan'),
+                        'ferry'  => 'Ferry: ' . ($record->metadata['ferry_details']['origin'] ?? '') . ' → ' . ($record->metadata['ferry_details']['destination'] ?? ''),
+                        default  => '-',
+                    }),
                 Tables\Columns\TextColumn::make('status')->badge(),
                 Tables\Columns\TextColumn::make('metadata.payment_status')
                     ->label('Payment Status')

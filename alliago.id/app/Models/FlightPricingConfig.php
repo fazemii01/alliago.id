@@ -11,13 +11,14 @@ class FlightPricingConfig extends Model
 {
     use LogsActivity;
 
-    protected $fillable = ['label', 'addon_cost', 'service_fee', 'notes', 'zz_markup', 'zz_name', 'zz_logo_url', 'banner_path', 'banner_link', 'is_banner_active', 'banner_image_url'];
+    protected $fillable = ['label', 'addon_cost', 'service_fee', 'notes', 'zz_markup', 'zz_name', 'zz_logo_url', 'banner_path', 'banner_link', 'is_banner_active', 'banner_image_url', 'sidebar_banner_path', 'sidebar_banner_image_url', 'sidebar_banner_link', 'is_sidebar_banner_active'];
 
     protected $casts = [
         'addon_cost' => 'decimal:2',
         'service_fee' => 'decimal:2',
         'zz_markup'  => 'decimal:2',
         'is_banner_active' => 'boolean',
+        'is_sidebar_banner_active' => 'boolean',
     ];
 
     protected static function booted(): void

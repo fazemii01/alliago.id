@@ -6,6 +6,8 @@ use App\Http\Controllers\ClientApplicationController;
 use App\Http\Controllers\ClientDocumentController;
 use App\Http\Controllers\ClientDashboardController;
 use App\Http\Controllers\ClientMessageController;
+use App\Http\Controllers\FerryCheckoutController;
+use App\Http\Controllers\FerryTicketController;
 use App\Http\Controllers\FlightTicketController;
 use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\SitemapController;
@@ -36,6 +38,12 @@ Route::post('/admin/flights/generate-invoice', [FlightTicketController::class, '
     ->middleware(['auth', \App\Http\Middleware\EnsurePanelUserHasAdminRole::class])
     ->name('admin.flights.generate_invoice');
 Route::get('/flights/airline-logo/{iata}', [FlightTicketController::class, 'airlineLogo'])->name('flights.airline_logo');
+
+Route::get('/ferry', [FerryTicketController::class, 'index'])->name('ferry.index');
+Route::post('/ferry/order', [FerryTicketController::class, 'store'])->name('ferry.order.store');
+Route::get('/ferry/invoice/{application}', [FerryTicketController::class, 'invoice'])->name('ferry.invoice');
+Route::get('/ferry/checkout/{application}', [FerryCheckoutController::class, 'show'])->name('ferry.checkout');
+Route::post('/ferry/checkout/{application}', [FerryCheckoutController::class, 'store'])->name('ferry.checkout.store');
 
 Route::get('/detail', [\App\Http\Controllers\PageController::class, 'detail'])->name('pages.detail');
 Route::get('/proses', [\App\Http\Controllers\PageController::class, 'process'])->name('pages.process');
