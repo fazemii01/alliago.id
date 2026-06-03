@@ -14,7 +14,7 @@ class PaymentMethodPolicy
     public function viewAny(User $user): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('payment_methods.view_any');
+        return $user->can('payment_methods.view_any');
     }
 
     /**
@@ -23,7 +23,7 @@ class PaymentMethodPolicy
     public function view(User $user, PaymentMethod $paymentMethod): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('payment_methods.view');
+        return $user->can('payment_methods.view');
     }
 
     /**
@@ -32,7 +32,7 @@ class PaymentMethodPolicy
     public function create(User $user): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('payment_methods.create');
+        return $user->can('payment_methods.create');
     }
 
     /**
@@ -41,7 +41,7 @@ class PaymentMethodPolicy
     public function update(User $user, PaymentMethod $paymentMethod): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('payment_methods.update');
+        return $user->can('payment_methods.update');
     }
 
     /**
@@ -50,7 +50,7 @@ class PaymentMethodPolicy
     public function delete(User $user, PaymentMethod $paymentMethod): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('payment_methods.delete');
+        return $user->can('payment_methods.delete');
     }
 
     /**
@@ -59,7 +59,7 @@ class PaymentMethodPolicy
     public function restore(User $user, PaymentMethod $paymentMethod): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('payment_methods.delete');
+        return $user->can('payment_methods.delete');
     }
 
     /**
@@ -68,6 +68,6 @@ class PaymentMethodPolicy
     public function forceDelete(User $user, PaymentMethod $paymentMethod): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('payment_methods.delete');
+        return $user->can('payment_methods.delete');
     }
 }

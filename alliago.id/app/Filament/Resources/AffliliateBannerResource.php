@@ -27,19 +27,19 @@ class AffliliateBannerResource extends Resource
     public static function canAccess(): bool
     {
         $user = auth()->user();
-        return $user && ($user->hasRole('admin') || $user->hasPermissionTo('flight_pricing_config.view_any'));
+        return $user && ($user->hasRole('admin') || $user->can('flight_pricing_config.view_any'));
     }
 
     public static function canEdit(\Illuminate\Database\Eloquent\Model $record): bool
     {
         $user = auth()->user();
-        return $user && ($user->hasRole('admin') || $user->hasPermissionTo('flight_pricing_config.update'));
+        return $user && ($user->hasRole('admin') || $user->can('flight_pricing_config.update'));
     }
 
     public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
     {
         $user = auth()->user();
-        return $user && ($user->hasRole('admin') || $user->hasPermissionTo('flight_pricing_config.delete'));
+        return $user && ($user->hasRole('admin') || $user->can('flight_pricing_config.delete'));
     }
 
     public static function form(Form $form): Form

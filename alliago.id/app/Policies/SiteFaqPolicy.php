@@ -14,7 +14,7 @@ class SiteFaqPolicy
     public function viewAny(User $user): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('site_faqs.view_any');
+        return $user->can('site_faqs.view_any');
     }
 
     /**
@@ -23,7 +23,7 @@ class SiteFaqPolicy
     public function view(User $user, SiteFaq $siteFaq): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('site_faqs.view');
+        return $user->can('site_faqs.view');
     }
 
     /**
@@ -32,7 +32,7 @@ class SiteFaqPolicy
     public function create(User $user): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('site_faqs.create');
+        return $user->can('site_faqs.create');
     }
 
     /**
@@ -41,7 +41,7 @@ class SiteFaqPolicy
     public function update(User $user, SiteFaq $siteFaq): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('site_faqs.update');
+        return $user->can('site_faqs.update');
     }
 
     /**
@@ -50,7 +50,7 @@ class SiteFaqPolicy
     public function delete(User $user, SiteFaq $siteFaq): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('site_faqs.delete');
+        return $user->can('site_faqs.delete');
     }
 
     /**
@@ -59,7 +59,7 @@ class SiteFaqPolicy
     public function restore(User $user, SiteFaq $siteFaq): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('site_faqs.delete');
+        return $user->can('site_faqs.delete');
     }
 
     /**
@@ -68,6 +68,6 @@ class SiteFaqPolicy
     public function forceDelete(User $user, SiteFaq $siteFaq): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('site_faqs.delete');
+        return $user->can('site_faqs.delete');
     }
 }

@@ -14,7 +14,7 @@ class VisaProductPolicy
     public function viewAny(User $user): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('visa_products.view_any');
+        return $user->can('visa_products.view_any');
     }
 
     /**
@@ -23,7 +23,7 @@ class VisaProductPolicy
     public function view(User $user, VisaProduct $visaProduct): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('visa_products.view');
+        return $user->can('visa_products.view');
     }
 
     /**
@@ -32,7 +32,7 @@ class VisaProductPolicy
     public function create(User $user): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('visa_products.create');
+        return $user->can('visa_products.create');
     }
 
     /**
@@ -41,7 +41,7 @@ class VisaProductPolicy
     public function update(User $user, VisaProduct $visaProduct): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('visa_products.update');
+        return $user->can('visa_products.update');
     }
 
     /**
@@ -50,7 +50,7 @@ class VisaProductPolicy
     public function delete(User $user, VisaProduct $visaProduct): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('visa_products.delete');
+        return $user->can('visa_products.delete');
     }
 
     /**
@@ -59,7 +59,7 @@ class VisaProductPolicy
     public function restore(User $user, VisaProduct $visaProduct): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('visa_products.delete');
+        return $user->can('visa_products.delete');
     }
 
     /**
@@ -68,6 +68,6 @@ class VisaProductPolicy
     public function forceDelete(User $user, VisaProduct $visaProduct): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('visa_products.delete');
+        return $user->can('visa_products.delete');
     }
 }

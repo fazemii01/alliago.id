@@ -14,7 +14,7 @@ class CountryPolicy
     public function viewAny(User $user): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('countries.view_any');
+        return $user->can('countries.view_any');
     }
 
     /**
@@ -23,7 +23,7 @@ class CountryPolicy
     public function view(User $user, Country $country): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('countries.view');
+        return $user->can('countries.view');
     }
 
     /**
@@ -32,7 +32,7 @@ class CountryPolicy
     public function create(User $user): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('countries.create');
+        return $user->can('countries.create');
     }
 
     /**
@@ -41,7 +41,7 @@ class CountryPolicy
     public function update(User $user, Country $country): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('countries.update');
+        return $user->can('countries.update');
     }
 
     /**
@@ -50,7 +50,7 @@ class CountryPolicy
     public function delete(User $user, Country $country): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('countries.delete');
+        return $user->can('countries.delete');
     }
 
     /**
@@ -59,7 +59,7 @@ class CountryPolicy
     public function restore(User $user, Country $country): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('countries.delete');
+        return $user->can('countries.delete');
     }
 
     /**
@@ -68,6 +68,6 @@ class CountryPolicy
     public function forceDelete(User $user, Country $country): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('countries.delete');
+        return $user->can('countries.delete');
     }
 }

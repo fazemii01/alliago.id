@@ -14,7 +14,7 @@ class TestimonialPolicy
     public function viewAny(User $user): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('testimonials.view_any');
+        return $user->can('testimonials.view_any');
     }
 
     /**
@@ -23,7 +23,7 @@ class TestimonialPolicy
     public function view(User $user, Testimonial $testimonial): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('testimonials.view');
+        return $user->can('testimonials.view');
     }
 
     /**
@@ -32,7 +32,7 @@ class TestimonialPolicy
     public function create(User $user): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('testimonials.create');
+        return $user->can('testimonials.create');
     }
 
     /**
@@ -41,7 +41,7 @@ class TestimonialPolicy
     public function update(User $user, Testimonial $testimonial): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('testimonials.update');
+        return $user->can('testimonials.update');
     }
 
     /**
@@ -50,7 +50,7 @@ class TestimonialPolicy
     public function delete(User $user, Testimonial $testimonial): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('testimonials.delete');
+        return $user->can('testimonials.delete');
     }
 
     /**
@@ -59,7 +59,7 @@ class TestimonialPolicy
     public function restore(User $user, Testimonial $testimonial): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('testimonials.delete');
+        return $user->can('testimonials.delete');
     }
 
     /**
@@ -68,6 +68,6 @@ class TestimonialPolicy
     public function forceDelete(User $user, Testimonial $testimonial): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('testimonials.delete');
+        return $user->can('testimonials.delete');
     }
 }

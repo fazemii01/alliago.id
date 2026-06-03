@@ -13,7 +13,7 @@ class ActivityLogPolicy
     public function viewAny(User $user): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('activity_logs.view_any');
+        return $user->can('activity_logs.view_any');
     }
 
     /**
@@ -22,8 +22,9 @@ class ActivityLogPolicy
     public function view(User $user, ActivityLog $activityLog): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('activity_logs.view');
+        return $user->can('activity_logs.view');
     }
+
 
     /**
      * Determine whether the user can create models.

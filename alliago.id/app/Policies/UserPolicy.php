@@ -13,7 +13,7 @@ class UserPolicy
     public function viewAny(User $user): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('users.view_any');
+        return $user->can('users.view_any');
     }
 
     /**
@@ -22,7 +22,7 @@ class UserPolicy
     public function view(User $user, User $model): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('users.view');
+        return $user->can('users.view');
     }
 
     /**
@@ -31,7 +31,7 @@ class UserPolicy
     public function create(User $user): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('users.create');
+        return $user->can('users.create');
     }
 
     /**
@@ -40,7 +40,7 @@ class UserPolicy
     public function update(User $user, User $model): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('users.update');
+        return $user->can('users.update');
     }
 
     /**
@@ -49,7 +49,7 @@ class UserPolicy
     public function delete(User $user, User $model): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('users.delete');
+        return $user->can('users.delete');
     }
 
     /**
@@ -58,7 +58,7 @@ class UserPolicy
     public function restore(User $user, User $model): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('users.delete');
+        return $user->can('users.delete');
     }
 
     /**
@@ -67,6 +67,6 @@ class UserPolicy
     public function forceDelete(User $user, User $model): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('users.delete');
+        return $user->can('users.delete');
     }
 }

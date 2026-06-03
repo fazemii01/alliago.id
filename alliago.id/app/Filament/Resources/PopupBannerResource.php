@@ -27,7 +27,7 @@ class PopupBannerResource extends Resource
     public static function canAccess(): bool
     {
         $user = auth()->user();
-        return $user && ($user->hasRole('admin') || $user->hasPermissionTo('flight_pricing_config.view_any'));
+        return $user && ($user->hasRole('admin') || $user->can('flight_pricing_config.view_any'));
     }
 
     public static function form(Form $form): Form

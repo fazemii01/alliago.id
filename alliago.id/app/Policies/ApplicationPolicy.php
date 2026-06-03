@@ -14,7 +14,7 @@ class ApplicationPolicy
     public function viewAny(User $user): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('applications.view_any');
+        return $user->can('applications.view_any');
     }
 
     /**
@@ -23,7 +23,7 @@ class ApplicationPolicy
     public function view(User $user, Application $application): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('applications.view');
+        return $user->can('applications.view');
     }
 
     /**
@@ -32,7 +32,7 @@ class ApplicationPolicy
     public function create(User $user): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('applications.create');
+        return $user->can('applications.create');
     }
 
     /**
@@ -41,7 +41,7 @@ class ApplicationPolicy
     public function update(User $user, Application $application): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('applications.update');
+        return $user->can('applications.update');
     }
 
     /**
@@ -50,7 +50,7 @@ class ApplicationPolicy
     public function delete(User $user, Application $application): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('applications.delete');
+        return $user->can('applications.delete');
     }
 
     /**
@@ -59,7 +59,7 @@ class ApplicationPolicy
     public function restore(User $user, Application $application): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('applications.delete');
+        return $user->can('applications.delete');
     }
 
     /**
@@ -68,6 +68,6 @@ class ApplicationPolicy
     public function forceDelete(User $user, Application $application): bool
     {
         if ($user->hasRole('admin')) return true;
-        return $user->hasPermissionTo('applications.delete');
+        return $user->can('applications.delete');
     }
 }
