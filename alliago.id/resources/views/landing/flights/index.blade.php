@@ -557,7 +557,7 @@
         <div class="page-wrapper grid gap-6 lg:grid-cols-4">
 
             {{-- Sidebar --}}
-            <aside class="space-y-5 lg:col-span-1">
+            <aside class="space-y-5 lg:col-span-1 min-w-0">
                 <div class="rounded-[28px] bg-white p-5 shadow-sm ring-1 ring-slate-200/80">
                     <h3 class="text-xs font-bold uppercase tracking-[0.24em] text-slate-400">Ringkasan</h3>
                     <dl class="mt-4 space-y-3.5 text-sm">
@@ -606,13 +606,13 @@
                     @endphp
 
                     @if ($sidebarBannerSrc)
-                        <div class="rounded-[28px] overflow-hidden shadow-sm ring-1 ring-slate-200/80 transition hover:shadow-md hover:-translate-y-0.5 bg-slate-100">
+                        <div class="w-full max-w-md mx-auto lg:max-w-none rounded-[28px] overflow-hidden shadow-sm ring-1 ring-slate-200/80 transition hover:shadow-md hover:-translate-y-0.5 bg-slate-100">
                             @if ($sidebarBanner->sidebar_banner_link)
                                 <a href="{{ $sidebarBanner->sidebar_banner_link }}" target="_blank" rel="noopener noreferrer" class="block w-full">
-                                    <img src="{{ $sidebarBannerSrc }}" alt="Sidebar Banner" class="w-full h-auto block">
+                                    <img src="{{ $sidebarBannerSrc }}" alt="Sidebar Banner" class="w-full max-w-full h-auto block">
                                 </a>
                             @else
-                                <img src="{{ $sidebarBannerSrc }}" alt="Sidebar Banner" class="w-full h-auto block">
+                                <img src="{{ $sidebarBannerSrc }}" alt="Sidebar Banner" class="w-full max-w-full h-auto block">
                             @endif
                         </div>
                     @endif
@@ -645,7 +645,7 @@
             </aside>
 
             {{-- Results --}}
-            <section class="lg:col-span-3">
+            <section class="lg:col-span-3 min-w-0">
                 @php
                     $flightConfig = \App\Models\FlightPricingConfig::current();
                     $activeConfigs = \App\Models\FlightPricingConfig::where('is_banner_active', true)->orderBy('updated_at', 'desc')->get();
@@ -832,16 +832,15 @@
                         <div class="mb-6 rounded-[28px] overflow-hidden shadow-sm ring-1 ring-slate-200/80 max-w-[810px] w-full bg-slate-100 transition hover:shadow-md hover:-translate-y-0.5">
                             @if ($firstBanner->banner_link)
                                 <a href="{{ $firstBanner->banner_link }}" target="_blank" rel="noopener noreferrer" class="w-full block">
-                                    <img src="{{ $bannerSrc }}" alt="Promo Banner" class="w-full h-auto block">
+                                    <img src="{{ $bannerSrc }}" alt="Promo Banner" class="w-full max-w-full h-auto block">
                                 </a>
                             @else
-                                <img src="{{ $bannerSrc }}" alt="Promo Banner" class="w-full h-auto block">
+                                <img src="{{ $bannerSrc }}" alt="Promo Banner" class="w-full max-w-full h-auto block">
                             @endif
                         </div>
                     @elseif ($firstBanner->banner_link)
                         <a href="{{ $firstBanner->banner_link }}" target="_blank" rel="noopener noreferrer" 
-                           class="mb-6 rounded-[28px] overflow-hidden shadow-sm ring-1 ring-slate-200/80 max-w-[810px] w-full bg-gradient-to-r from-blue-600 via-[#0361fc] to-[#00d2ff] flex flex-col justify-center px-8 md:px-12 py-6 text-white md:h-[195.5px] transition hover:shadow-lg hover:-translate-y-0.5 group relative" 
-                           style="aspect-ratio: 810 / 195.5;">
+                           class="mb-6 rounded-[28px] overflow-hidden shadow-sm ring-1 ring-slate-200/80 max-w-[810px] w-full bg-gradient-to-r from-blue-600 via-[#0361fc] to-[#00d2ff] flex flex-col justify-center px-6 py-8 md:px-12 md:py-6 text-white h-auto md:h-[195.5px] transition hover:shadow-lg hover:-translate-y-0.5 group relative aspect-auto md:aspect-[810/195.5]">
                             <div class="absolute right-0 top-0 h-full w-1/3 bg-white/5 skew-x-12 translate-x-10 transition group-hover:translate-x-4"></div>
                             <div class="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/10 blur-xl"></div>
                             
@@ -890,16 +889,15 @@
                         <div class="mb-6 rounded-[28px] overflow-hidden shadow-sm ring-1 ring-slate-200/80 max-w-[810px] w-full bg-slate-100 transition hover:shadow-md hover:-translate-y-0.5">
                             @if ($firstBanner->banner_link)
                                 <a href="{{ $firstBanner->banner_link }}" target="_blank" rel="noopener noreferrer" class="w-full block">
-                                    <img src="{{ $bannerSrc }}" alt="Promo Banner" class="w-full h-auto block">
+                                    <img src="{{ $bannerSrc }}" alt="Promo Banner" class="w-full max-w-full h-auto block">
                                 </a>
                             @else
-                                <img src="{{ $bannerSrc }}" alt="Promo Banner" class="w-full h-auto block">
+                                <img src="{{ $bannerSrc }}" alt="Promo Banner" class="w-full max-w-full h-auto block">
                             @endif
                         </div>
                     @elseif ($firstBanner->banner_link)
                         <a href="{{ $firstBanner->banner_link }}" target="_blank" rel="noopener noreferrer" 
-                           class="mb-6 rounded-[28px] overflow-hidden shadow-sm ring-1 ring-slate-200/80 max-w-[810px] w-full bg-gradient-to-r from-blue-600 via-[#0361fc] to-[#00d2ff] flex flex-col justify-center px-8 md:px-12 py-6 text-white md:h-[195.5px] transition hover:shadow-lg hover:-translate-y-0.5 group relative" 
-                           style="aspect-ratio: 810 / 195.5;">
+                           class="mb-6 rounded-[28px] overflow-hidden shadow-sm ring-1 ring-slate-200/80 max-w-[810px] w-full bg-gradient-to-r from-blue-600 via-[#0361fc] to-[#00d2ff] flex flex-col justify-center px-6 py-8 md:px-12 md:py-6 text-white h-auto md:h-[195.5px] transition hover:shadow-lg hover:-translate-y-0.5 group relative aspect-auto md:aspect-[810/195.5]">
                             <div class="absolute right-0 top-0 h-full w-1/3 bg-white/5 skew-x-12 translate-x-10 transition group-hover:translate-x-4"></div>
                             <div class="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/10 blur-xl"></div>
                             
@@ -1061,16 +1059,15 @@
                         <div class="mt-6 rounded-[28px] overflow-hidden shadow-sm ring-1 ring-slate-200/80 max-w-[810px] w-full bg-slate-100 transition hover:shadow-md hover:-translate-y-0.5">
                             @if ($secondBanner->banner_link)
                                 <a href="{{ $secondBanner->banner_link }}" target="_blank" rel="noopener noreferrer" class="w-full block">
-                                    <img src="{{ $bannerSrc2 }}" alt="Promo Banner" class="w-full h-auto block">
+                                    <img src="{{ $bannerSrc2 }}" alt="Promo Banner" class="w-full max-w-full h-auto block">
                                 </a>
                             @else
-                                <img src="{{ $bannerSrc2 }}" alt="Promo Banner" class="w-full h-auto block">
+                                <img src="{{ $bannerSrc2 }}" alt="Promo Banner" class="w-full max-w-full h-auto block">
                             @endif
                         </div>
                     @elseif ($secondBanner->banner_link)
                         <a href="{{ $secondBanner->banner_link }}" target="_blank" rel="noopener noreferrer" 
-                           class="mt-6 rounded-[28px] overflow-hidden shadow-sm ring-1 ring-slate-200/80 max-w-[810px] w-full bg-gradient-to-r from-blue-600 via-[#0361fc] to-[#00d2ff] flex flex-col justify-center px-8 md:px-12 py-6 text-white md:h-[195.5px] transition hover:shadow-lg hover:-translate-y-0.5 group relative" 
-                           style="aspect-ratio: 810 / 195.5;">
+                           class="mt-6 rounded-[28px] overflow-hidden shadow-sm ring-1 ring-slate-200/80 max-w-[810px] w-full bg-gradient-to-r from-blue-600 via-[#0361fc] to-[#00d2ff] flex flex-col justify-center px-6 py-8 md:px-12 md:py-6 text-white h-auto md:h-[195.5px] transition hover:shadow-lg hover:-translate-y-0.5 group relative aspect-auto md:aspect-[810/195.5]">
                             <div class="absolute right-0 top-0 h-full w-1/3 bg-white/5 skew-x-12 translate-x-10 transition group-hover:translate-x-4"></div>
                             <div class="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/10 blur-xl"></div>
                             

@@ -87,7 +87,7 @@
              @keydown.escape.window="dismiss()">
              
              <!-- Modal Card -->
-             <div class="relative bg-white dark:bg-slate-900 rounded-[32px] overflow-hidden shadow-2xl w-full max-w-[85vw] sm:max-w-[70vw] md:max-w-2xl lg:max-w-3xl transform transition-all duration-500 ring-1 ring-white/10"
+             <div class="relative bg-white dark:bg-slate-900 rounded-[32px] overflow-hidden shadow-2xl w-full max-w-[85vw] sm:max-w-[70vw] md:max-w-2xl lg:max-w-3xl transform transition-all duration-500 ring-1 ring-white/10 max-h-[85vh] flex flex-col"
                   x-show="show"
                   x-transition:enter="transition ease-out duration-500 transform"
                   x-transition:enter-start="opacity-0 scale-95 translate-y-4"
@@ -103,7 +103,7 @@
                           class="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-slate-950/50 text-white backdrop-blur-md transition hover:bg-slate-950/70 hover:rotate-90 hover:scale-105 active:scale-95 shadow-md duration-300"
                           aria-label="Close Promo">
                       <svg class="h-4.5 w-4.5 stroke-[2.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                       </svg>
                   </button>
 
@@ -112,14 +112,14 @@
                       <a href="{{ $popupBanner->redirect_link }}" target="_blank" rel="noopener noreferrer" class="block w-full cursor-pointer group overflow-hidden">
                           <picture class="block w-full">
                               <source media="(max-width: 767px)" srcset="{{ $mobileSrc }}">
-                              <img src="{{ $desktopSrc }}" alt="{{ $popupBanner->name }}" class="w-full h-auto object-contain block transition-transform duration-500 group-hover:scale-[1.03]">
+                              <img src="{{ $desktopSrc }}" alt="{{ $popupBanner->name }}" class="w-full max-w-full h-auto max-h-[80vh] object-contain block transition-transform duration-500 group-hover:scale-[1.03] mx-auto">
                           </picture>
                       </a>
                   @else
                       <div class="block w-full overflow-hidden">
                           <picture class="block w-full">
                               <source media="(max-width: 767px)" srcset="{{ $mobileSrc }}">
-                              <img src="{{ $desktopSrc }}" alt="{{ $popupBanner->name }}" class="w-full h-auto object-contain block transition-transform duration-500 hover:scale-[1.03]">
+                              <img src="{{ $desktopSrc }}" alt="{{ $popupBanner->name }}" class="w-full max-w-full h-auto max-h-[80vh] object-contain block transition-transform duration-500 hover:scale-[1.03] mx-auto">
                           </picture>
                       </div>
                   @endif
