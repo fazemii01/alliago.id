@@ -19,6 +19,7 @@ class VisaProduct extends Model
         'name',
         'slug',
         'type',
+        'icon_image_path',
         'promo_label',
         'processing_time',
         'stay_duration',

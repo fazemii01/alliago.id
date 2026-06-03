@@ -49,10 +49,15 @@
                 <div>
                     <div class="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
                         <div class="flex flex-wrap items-start justify-between gap-4">
-                            <div>
-                                <p class="text-xs font-bold uppercase tracking-[0.2em] text-slate-500">{{ $visaProduct->country->name }}</p>
-                                <h1 class="mt-2 text-4xl font-extrabold tracking-tight sm:text-5xl">{{ $visaProduct->name }}</h1>
-                                <p class="mt-4 max-w-2xl text-lg text-slate-600">{{ $visaProduct->short_description ?: 'This visa product is managed in the admin catalog and ready for client orders.' }}</p>
+                            <div class="flex items-start gap-4">
+                                @if ($visaProduct->icon_image_path)
+                                    <img src="{{ \Storage::url($visaProduct->icon_image_path) }}" alt="{{ $visaProduct->name }}" class="h-16 w-16 rounded-2xl object-cover border border-slate-100 shadow-sm shrink-0 mt-1">
+                                @endif
+                                <div>
+                                    <p class="text-xs font-bold uppercase tracking-[0.2em] text-slate-500">{{ $visaProduct->country->name }}</p>
+                                    <h1 class="mt-2 text-4xl font-extrabold tracking-tight sm:text-5xl">{{ $visaProduct->name }}</h1>
+                                    <p class="mt-4 max-w-2xl text-lg text-slate-600">{{ $visaProduct->short_description ?: 'This visa product is managed in the admin catalog and ready for client orders.' }}</p>
+                                </div>
                             </div>
                             <span class="inline-flex shrink-0 items-center rounded-full bg-blue-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#0361fc] ring-1 ring-inset ring-[#0361fc]/10">{{ $visaProduct->type }}</span>
                         </div>
