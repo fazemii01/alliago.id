@@ -16,22 +16,34 @@ class FerryTicketController extends Controller
         $canOrder = auth()->check()
             && (auth()->user()->hasRole('admin') || auth()->user()->hasRole('staff'));
 
+        $users = [];
+        if ($canOrder) {
+            $users = \App\Models\User::orderBy('name')->get(['id', 'name', 'email', 'phone'])->all();
+        }
+
         return view('landing.ferry.index', [
             'routes'   => FerryRoute::where('is_active', true)->get(),
             'canOrder' => $canOrder,
+            'users'    => $users,
         ]);
     }
 
     public function store(Request $request): JsonResponse
     {
-        $validated = $request->validate([
+        $rules = [
             'route_id'        => ['required', 'integer', 'exists:ferry_routes,id'],
             'passenger_name'  => ['required', 'string', 'max:255'],
             'passenger_email' => ['required', 'email', 'max:255'],
             'passenger_phone' => ['required', 'string', 'max:50'],
             'travel_date'     => ['required', 'date', 'after_or_equal:today'],
             'passenger_count' => ['required', 'integer', 'min:1', 'max:10'],
-        ]);
+        ];
+
+        if (auth()->check() && (auth()->user()->hasRole('admin') || auth()->user()->hasRole('staff'))) {
+            $rules['client_id'] = ['required', 'exists:users,id'];
+        }
+
+        $validated = $request->validate($rules);
 
         $route       = FerryRoute::findOrFail($validated['route_id']);
         $totalAmount = $route->price * $validated['passenger_count'];
@@ -54,8 +66,10 @@ class FerryTicketController extends Controller
             'payment_status' => 'unpaid',
         ];
 
+        $clientId = $validated['client_id'] ?? auth()->id();
+
         $application = Application::create([
-            'user_id'          => auth()->id(),
+            'user_id'          => $clientId,
             'visa_product_id'  => null,
             'reference_number' => 'FRT-' . strtoupper(Str::random(10)),
             'status'           => 'pending_payment',

@@ -286,6 +286,22 @@
             {{-- Step 2: Informasi Pembeli --}}
             <div x-show="step === 2" x-transition>
                 <div class="space-y-4">
+                    @if (isset($users) && count($users) > 0)
+                    <div>
+                        <label class="mb-1.5 block text-sm font-bold text-slate-700">Pilih Akun Client (User ID)</label>
+                        <select x-model="form.client_id"
+                            @change="const selectedUser = users.find(u => u.id == $event.target.value); if(selectedUser) { form.passenger_name = selectedUser.name; form.passenger_email = selectedUser.email; form.passenger_phone = selectedUser.phone || ''; }"
+                            class="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0361fc] focus:border-transparent transition" required>
+                            <option value="">-- Pilih Akun --</option>
+                            <template x-for="u in users" :key="u.id">
+                                <option :value="u.id" x-text="`${u.name} (${u.email})`"></option>
+                            </template>
+                        </select>
+                        <p class="mt-1 text-[10px] text-slate-400 font-medium">Akun client ini yang akan menerima invoice di dashboard mereka.</p>
+                        <p x-show="errors.client_id" x-text="errors.client_id" class="mt-1 text-xs font-medium text-rose-500"></p>
+                    </div>
+                    @endif
+
                     <div>
                         <label class="mb-1.5 block text-sm font-bold text-slate-700">Nama Lengkap</label>
                         <input type="text" x-model="form.passenger_name"
@@ -391,11 +407,12 @@
 <script>
     function ferryWizard() {
         return {
+            users: @json($users ?? []),
             open: false,
             step: 1,
             loading: false,
             ticket: { key: '', origin: '', destination: '', price: 0, label: '' },
-            form: { travel_date: '', passenger_count: 1, passenger_name: '', passenger_email: '', passenger_phone: '' },
+            form: { client_id: '', travel_date: '', passenger_count: 1, passenger_name: '', passenger_email: '', passenger_phone: '' },
             errors: {},
             submitError: '',
             result: { reference_number: '', invoice_url: '' },
@@ -405,7 +422,7 @@
 
             openWith(detail) {
                 this.ticket = detail;
-                this.form = { travel_date: '', passenger_count: 1, passenger_name: '', passenger_email: '', passenger_phone: '' };
+                this.form = { client_id: '', travel_date: '', passenger_count: 1, passenger_name: '', passenger_email: '', passenger_phone: '' };
                 this.errors = {};
                 this.submitError = '';
                 this.step = 1;
@@ -492,6 +509,7 @@
                     if (this.form.travel_date < this.minDate()) { this.errors.travel_date = 'Tanggal tidak boleh di masa lalu.'; return; }
                 }
                 if (this.step === 2) {
+                    if (this.users.length > 0 && !this.form.client_id) { this.errors.client_id = 'Pilih akun client.'; return; }
                     if (!this.form.passenger_name.trim()) { this.errors.passenger_name = 'Nama wajib diisi.'; return; }
                     if (!this.form.passenger_email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.passenger_email)) {
                         this.errors.passenger_email = 'Email tidak valid.'; return;
@@ -519,6 +537,7 @@
                             passenger_phone: this.form.passenger_phone,
                             travel_date: this.form.travel_date,
                             passenger_count: this.form.passenger_count,
+                            client_id: this.form.client_id,
                         }),
                     });
                     const data = await res.json();
