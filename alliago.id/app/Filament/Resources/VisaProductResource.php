@@ -43,7 +43,7 @@ class VisaProductResource extends Resource
                         ->label('Icon Image')
                         ->image()
                         ->directory('visa-products/icons')
-                        ->maxSize(1024),
+                        ->maxSize(5120),
                     Forms\Components\TextInput::make('promo_label')
                         ->maxLength(255),
                     Forms\Components\TextInput::make('processing_time')
