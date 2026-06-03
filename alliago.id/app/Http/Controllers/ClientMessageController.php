@@ -10,7 +10,7 @@ class ClientMessageController extends Controller
 {
     public function store(Request $request, Application $application): RedirectResponse
     {
-        abort_unless($application->user_id === $request->user()->id, 403);
+        abort_unless($application->user_id === $request->user()->id || $request->user()->hasRole('admin') || $request->user()->hasRole('staff'), 403);
 
         $validated = $request->validate([
             'message' => ['required', 'string', 'max:2000'],

@@ -6,6 +6,8 @@ use App\Models\Country;
 use App\Models\SiteFaq;
 use App\Models\Testimonial;
 use App\Models\VisaProduct;
+use App\Models\PopupBanner;
+use Illuminate\Support\Facades\Schema;
 
 class LandingPageController extends Controller
 {
@@ -39,12 +41,22 @@ class LandingPageController extends Controller
             ->orderBy('sort_order')
             ->get();
 
+        $popupBanner = null;
+        try {
+            if (Schema::hasTable('popup_banners')) {
+                $popupBanner = PopupBanner::where('is_active', true)->first();
+            }
+        } catch (\Throwable $e) {
+            // Graceful fallback if migrations haven't run or table doesn't exist
+        }
+
         return view('landing.home', compact(
             'countries',
             'featuredProducts',
             'highlightProduct',
             'testimonials',
             'siteFaqs',
+            'popupBanner',
         ));
     }
 }

@@ -1,0 +1,56 @@
+<?php
+
+return [
+    'hero_title_main' => 'Your Trusted Visa Platform',
+    'hero_title_sub' => 'Where do you need a visa to?',
+    'hero_subtitle' => 'The most transparent visa platform. Real-time pricing, honest timelines, and expert human support.',
+    'hero_from' => 'From',
+    'hero_to' => 'To',
+    'hero_destination_placeholder' => 'Select destination country',
+    'hero_purpose' => 'Travel purpose',
+    'hero_purpose_tourism' => 'Tourism / Holiday',
+    'hero_purpose_business' => 'Business',
+    'hero_purpose_family' => 'Family',
+    'hero_purpose_student' => 'Student',
+    'hero_search_btn' => 'Search Visa',
+
+    'services_view_all' => 'View All Visas',
+    'services_filter' => 'Filter',
+    'services_departure' => 'Departure',
+    'services_popular' => 'Popular',
+    'services_no_products' => 'No visa products available yet. Please add from the admin panel.',
+    'services_processing_prefix' => 'Ready in',
+    'services_from_price' => 'From',
+    'services_cat_trending' => 'Trending Visas',
+    'services_cat_online' => '100% Online',
+    'services_cat_schengen' => 'Schengen',
+    'services_cat_asia' => 'Asia',
+    'services_cat_americas' => 'Americas',
+    'services_cat_middle_east' => 'Middle East',
+
+    'process_title' => 'Easy process in 3 steps',
+    'process_step1_title' => 'Fill the form',
+    'process_step1_desc' => 'Complete your personal data and visa requirements.',
+    'process_step2_title' => 'Pay & submit documents',
+    'process_step2_desc' => 'Secure payment, documents received within minutes.',
+    'process_step3_title' => 'Receive your visa',
+    'process_step3_desc' => 'We handle everything, you just wait for the result.',
+
+    'cta_title' => 'Ready to start your journey?',
+    'cta_subtitle' => 'Join thousands of travelers who already trust Alliago with their visa needs.',
+    'cta_btn' => 'Get Started',
+
+    'faq_title' => 'Frequently Asked Questions',
+    'faq_subtitle' => 'Everything you need to know about our service.',
+
+    'features_title' => 'Why choose Alliago?',
+    'detail_title' => 'Why Alliago?',
+    'testimonials_title' => 'What they say',
+
+    'footer_visa_japan' => 'Japan Visa',
+    'footer_visa_korea' => 'Korea Visa',
+    'footer_visa_australia' => 'Australia Visa',
+    'footer_visa_schengen' => 'Schengen Visa',
+    'footer_contact_label' => 'WhatsApp: +62 813-3445-5616',
+    'footer_email_label' => 'Email: support@Alliago.id',
+];

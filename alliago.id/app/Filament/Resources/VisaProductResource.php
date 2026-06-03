@@ -39,6 +39,11 @@ class VisaProductResource extends Resource
                     Forms\Components\TextInput::make('type')
                         ->required()
                         ->maxLength(255),
+                    Forms\Components\FileUpload::make('icon_image_path')
+                        ->label('Icon Image')
+                        ->image()
+                        ->directory('visa-products/icons')
+                        ->maxSize(5120),
                     Forms\Components\TextInput::make('promo_label')
                         ->maxLength(255),
                     Forms\Components\TextInput::make('processing_time')
@@ -143,6 +148,9 @@ class VisaProductResource extends Resource
         return $table
             ->defaultSort('sort_order')
             ->columns([
+                Tables\Columns\ImageColumn::make('icon_image_path')
+                    ->label('Icon')
+                    ->square(),
                 Tables\Columns\TextColumn::make('name')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('country.name')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('type')->badge(),

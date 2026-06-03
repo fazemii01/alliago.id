@@ -2,13 +2,13 @@
 
 namespace App\Filament\Resources\ApplicationResource\RelationManagers;
 
-use Filament\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Tables\Actions\Action;
 
 class MessagesRelationManager extends RelationManager
 {

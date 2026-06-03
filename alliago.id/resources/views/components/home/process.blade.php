@@ -3,8 +3,8 @@
     <div>
       <p class="text-xs font-bold tracking-wide font-medium text-brand mb-3">Proses pengajuan</p>
       <h2 class="text-4xl md:text-5xl font-bold tracking-[-0.05em] mb-5">Simple seperti checkout.</h2>
-      <p class="text-slate-700 font-medium leading-relaxed text-lg mb-7">SPUN terasa jelas karena user tahu langkah berikutnya. Bagian ini dibuat untuk memberi rasa aman setelah user klik apply.</p>
-      <a href="#search" class="btn-primary rounded-full px-7 py-4 inline-flex text-sm font-bold tracking-wide font-semibold">Mulai Cek Visa</a>
+      <p class="text-slate-700 font-medium leading-relaxed text-lg mb-7">Alliago.id mempermudah proses pengajuan visa Anda dengan langkah-langkah yang jelas dan mudah diikuti.</p>
+      <a href="{{ route('visa.index') }}" class="btn-primary rounded-full px-7 py-4 inline-flex text-sm font-bold tracking-wide font-semibold">Mulai Cek Visa</a>
     </div>
     <div class="card rounded-[28px] p-6 md:p-8">
       <div class="space-y-8">

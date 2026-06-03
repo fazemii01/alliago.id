@@ -1,2 +1,7 @@
 User-agent: *
-Disallow:
+Disallow: /client/
+Disallow: /admin-dashboard
+Disallow: /api/
+Disallow: /lang/
+
+Sitemap: https://www.alliago.id/sitemap.xml

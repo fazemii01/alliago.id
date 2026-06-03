@@ -20,6 +20,9 @@ class ClientDashboardController extends Controller
             ->get();
 
         $documentsNeedAttention = $applications->sum(function (Application $application): int {
+            if ($application->status === 'pending_payment' || $application->status === 'pending_verification') {
+                return 0;
+            }
             return $application->documents->whereIn('status', ['pending_upload', 'needs_revision'])->count();
         });
 

@@ -8,15 +8,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
+use App\Traits\LogsActivity;
+
 class VisaProduct extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     protected $fillable = [
         'country_id',
         'name',
         'slug',
         'type',
+        'icon_image_path',
         'promo_label',
         'processing_time',
         'stay_duration',

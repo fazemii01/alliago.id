@@ -1,0 +1,40 @@
+Mohon dilakukan booking & pembayaran sampai dengan status reservasi 'Ticketed', dan informasikan/share etiket utk masing2 case.
+ref etiket: https://uat-backup.darmawisataindonesiah2h.co.id:7080/manual/tiket/etiket-airline.png
+
+** Tiket dgn status Processed, bisa di lakukan issued ulang sampai Ticketed
+
+
+## Menggunakan Airline/Schedule
+
+1. reservasi maskapai QG SUB->CGK RoundTrip untuk 1 Pax Adult tgl 24 JUNI 2026
+
+2. reservasi maskapai QG SUB->CGK OneWay  untuk 2 Pax Adult, 1 Pax Child dan 1 Infant tgl 24 JUNI 2026. 
+Infant di pangku oleh dewasa ke-2
+
+3. reservasi maskapai QG CGK->KNO  (pilih yang transit) OneWay  untuk 1 Pax Adult, 1 child tgl 25 JUNI 2026 beserta 1 baggage untuk paxadult dan paxChild, dan pilih meal saat transit utk child saja
+
+4. reservasi maskapai QG CGK->KNO (pilih yang transit)  RoundTrip untuk 2 Pax Adult, 1 Pax Child dan 1 Infant (dipangku pax ke-2) 
+tgl 24 JUNI 2026
+
+5. reservasi maskapai QZ SUB->CGK OneWay  untuk 1 Pax Adult tgl 24 JUNI 2026 beserta 1 baggage, 2 addons meal dan 1 pilihan seat
+
+6. reservasi maskapai QZ SUB->CGK RoundTrip  untuk 2 Pax Adult, 1 Pax Child dan 1 Infant tgl 25 JUNI 2026 beserta 1 baggage untuk paxadult dan paxChild,  2 addons meal dan 1 pilihan seat (untuk 1 pax child saja) saat pulang (H+1)
+
+7. reservasi maskapai JT SUB->CGK OneWay  (pilih yang non transit) untuk 1 Pax Adult tgl 24 JUNI 2026
+
+8. reservasi maskapai JT SUB->CGK RoundTrip  (pilih yang non transit) untuk 2 Pax Adult, 1 Pax Child dan 1 Infant tgl 24 JUNI 2026
+Infant di pangku oleh dewasa ke-1
+
+9. reservasi maskapai JT SUB->CGK RoundTrip  (pilih yang transit) untuk 1 Pax Adult tgl 24 JUNI 2026
+
+10. reservasi maskapai JT SUB->CGK RoundTrip  (pilih yang transit) untuk 2 Pax Adult, 1 Pax Child dan 1 Infant (dipangku pax ke-2) 
+tgl 24 JUNI 2026
+
+
+## Menggunakan Airline/ScheduleAllAirline
+Route: SUB-CGK
+parameter:
+isShowEachAirline = true
+cacheType: FullLive 
+
+11. Pilih maskapai JT SUB->CGK OneWay  (pilih yang non transit) untuk 1 Pax Adult tgl 24 JUNI 2026

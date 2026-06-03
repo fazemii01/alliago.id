@@ -41,6 +41,7 @@ class UserResource extends Resource
                     ->label('Assigned role')
                     ->options([
                         'admin' => 'Admin',
+                        'staff' => 'Staff',
                         'user' => 'User',
                     ])
                     ->required()
@@ -85,11 +86,18 @@ class UserResource extends Resource
                     ->label('Role')
                     ->options([
                         'admin' => 'Admin',
+                        'staff' => 'Staff',
                         'user' => 'User',
                     ]),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
             ]);
     }
 

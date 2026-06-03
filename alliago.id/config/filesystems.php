@@ -1,5 +1,32 @@
 <?php
 
+/*
+|--------------------------------------------------------------------------
+| MinIO (S3-compatible) endpoint derivation
+|--------------------------------------------------------------------------
+|
+| The canonical MinIO connection is described by the MINIO_* variables.
+| MINIO_ENDPOINT is a bare host:port (no scheme) and MINIO_SECURE carries
+| the scheme decision, so the full endpoint URL must be computed here. The
+| AWS_* variables remain optional overrides that take precedence when set.
+|
+*/
+
+$minioSecure = filter_var(env('MINIO_SECURE', false), FILTER_VALIDATE_BOOLEAN);
+$minioEndpoint = env('MINIO_ENDPOINT');                       // host:port, no scheme
+$minioUploadEndpoint = env('MINIO_UPLOAD_ENDPOINT') ?: $minioEndpoint;
+$minioBucket = env('MINIO_BUCKET_NAME', 'alliago');
+
+$minioBaseUrl = $minioEndpoint
+    ? ($minioSecure ? 'https' : 'http').'://'.$minioEndpoint
+    : null;
+
+$minioUploadBaseUrl = $minioUploadEndpoint
+    ? ($minioSecure ? 'https' : 'http').'://'.$minioUploadEndpoint
+    : null;
+
+$minioPublicUrl = $minioBaseUrl ? $minioBaseUrl.'/'.$minioBucket : null;
+
 return [
 
     /*
@@ -49,15 +76,21 @@ return [
 
         's3' => [
             'driver' => 's3',
-            'key' => env('AWS_ACCESS_KEY_ID'),
-            'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            'region' => env('AWS_DEFAULT_REGION'),
-            'bucket' => env('AWS_BUCKET'),
-            'url' => env('AWS_URL'),
-            'endpoint' => env('AWS_ENDPOINT'),
-            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
-            'throw' => false,
+            'key' => env('AWS_ACCESS_KEY_ID') ?: env('MINIO_ACCESS_KEY'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY') ?: env('MINIO_SECRET_KEY'),
+            'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
+            'bucket' => env('AWS_BUCKET') ?: $minioBucket,
+            'url' => env('AWS_URL') ?: $minioPublicUrl,
+            'endpoint' => env('AWS_ENDPOINT') ?: $minioUploadBaseUrl,
+            'use_path_style_endpoint' => filter_var(env('AWS_USE_PATH_STYLE_ENDPOINT') ?: true, FILTER_VALIDATE_BOOLEAN),
+            'throw' => true,
             'report' => false,
+            'options' => [
+                'http' => [
+                    'connect_timeout' => 10,
+                    'timeout' => 30,
+                ],
+            ],
         ],
 
     ],
