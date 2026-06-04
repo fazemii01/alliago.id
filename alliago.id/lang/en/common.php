@@ -2,6 +2,8 @@
 
 return [
     'nav_visa' => 'Visa',
+    'nav_flights' => 'Flights',
+    'nav_about' => 'About Us',
     'nav_detail' => 'Details',
     'nav_process' => 'Process',
     'nav_faq' => 'FAQ',
@@ -36,6 +38,7 @@ return [
     'footer_how_it_works' => 'How It Works',
     'footer_refund_policy' => 'Refund Policy',
     'footer_privacy_policy' => 'Privacy Policy',
+    'footer_currency_rates' => 'Currency Rates',
     'footer_tagline' => 'Visa assistance platform for travelers, families, students, and business trips.',
     'footer_rights' => '© 2026 Alliago.id. All rights reserved.',
 

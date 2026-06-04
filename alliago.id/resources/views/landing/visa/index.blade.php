@@ -114,9 +114,7 @@
                                class="group relative flex flex-col rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#0361fc]/30 hover:shadow-xl hover:shadow-[#0361fc]/5">
                                 <div class="flex items-start justify-between gap-4">
                                     <div class="flex items-start gap-3">
-                                        @if ($visaProduct->icon_image_path)
-                                            <img src="{{ \Storage::url($visaProduct->icon_image_path) }}" alt="{{ $visaProduct->name }}" class="h-12 w-12 rounded-xl object-cover border border-slate-100 shadow-sm shrink-0">
-                                        @endif
+                                        <img src="{{ $visaProduct->icon_url }}" alt="{{ $visaProduct->name }}" class="h-12 w-12 rounded-xl object-cover border border-slate-100 shadow-sm shrink-0">
                                         <div>
                                             <p class="text-xs font-bold uppercase tracking-wider text-slate-500">{{ $visaProduct->country->name }}</p>
                                             <h2 class="mt-1 text-xl font-bold leading-tight text-slate-900 group-hover:text-[#0361fc] transition-colors">{{ $visaProduct->name }}</h2>

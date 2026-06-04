@@ -40,6 +40,12 @@ class FerryRouteResource extends Resource
                         ->required()
                         ->minValue(0)
                         ->suffix('IDR'),
+                    Forms\Components\FileUpload::make('ship_image_path')
+                        ->label('Foto Kapal (Ship Image)')
+                        ->image()
+                        ->directory('ferry-routes/ships')
+                        ->maxSize(5120)
+                        ->nullable(),
                     Forms\Components\Toggle::make('is_active')
                         ->label('Aktif')
                         ->default(true),
@@ -64,6 +70,9 @@ class FerryRouteResource extends Resource
                     ->label('Harga')
                     ->formatStateUsing(fn ($state) => 'Rp ' . number_format($state, 0, ',', '.'))
                     ->sortable(),
+                Tables\Columns\ImageColumn::make('ship_image_path')
+                    ->label('Foto Kapal')
+                    ->circular(),
                 Tables\Columns\IconColumn::make('is_active')
                     ->label('Aktif')
                     ->boolean(),

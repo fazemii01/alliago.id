@@ -14,7 +14,7 @@
       <a href="{{ route('visa.index') }}" class="transition hover:text-[#0361fc] {{ request()->routeIs('visa.index') ? 'text-[#0361fc]' : '' }}">{{ __('common.nav_visa') }}</a>
       <a href="{{ route('flights.index') }}" class="transition hover:text-[#0361fc] {{ request()->routeIs('flights.index') ? 'text-[#0361fc]' : '' }}">{{ __('common.nav_flights') }}</a>
       <a href="{{ route('ferry.index') }}" class="transition hover:text-[#0361fc] {{ request()->routeIs('ferry.index') ? 'text-[#0361fc]' : '' }}">Tiket Ferry</a>
-      <a href="{{ route('pages.faq') }}" class="transition hover:text-[#0361fc] {{ request()->routeIs('pages.faq') ? 'text-[#0361fc]' : '' }}">{{ __('common.nav_faq') }}</a>
+      <a href="{{ route('pages.currency_rates') }}" class="transition hover:text-[#0361fc] {{ request()->routeIs('pages.currency_rates') ? 'text-[#0361fc]' : '' }}">{{ __('common.nav_currency_rates') }}</a>
     </nav>
 
     <div class="hidden items-center gap-3 md:flex">

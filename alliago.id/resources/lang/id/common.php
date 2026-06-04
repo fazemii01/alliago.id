@@ -6,6 +6,8 @@ return [
     'nav_detail' => 'Detail',
     'nav_process' => 'Proses',
     'nav_faq' => 'FAQ',
+    'nav_currency_rates' => 'Mata Uang',
+    'footer_faq' => 'FAQ',
     'nav_login' => 'Masuk',
     'nav_whatsapp' => 'WhatsApp',
     'nav_check_visa' => 'Cek Visa',
@@ -37,6 +39,7 @@ return [
     'footer_how_it_works' => 'Cara Kerja',
     'footer_refund_policy' => 'Kebijakan Refund',
     'footer_privacy_policy' => 'Privacy Policy',
+    'footer_currency_rates' => 'Mata Uang',
     'footer_tagline' => 'Platform bantuan visa untuk traveler, keluarga, pelajar, dan perjalanan bisnis.',
     'footer_rights' => '© 2026 Alliago.id. All rights reserved.',
 

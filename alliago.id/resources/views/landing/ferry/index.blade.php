@@ -60,33 +60,46 @@
                     <button
                         type="button"
                         onclick="openWizard({{ $route->id }}, '{{ $route->origin }}', '{{ $route->destination }}', {{ $route->price }}, '{{ $route->origin }} → {{ $route->destination }}')"
-                        class="group flex flex-col gap-3 px-5 py-5 text-left transition-colors hover:bg-[#EDF4FF]/60 sm:px-6 sm:py-6 cursor-pointer"
+                        class="group flex flex-col gap-3 px-5 py-5 text-left transition-colors hover:bg-[#EDF4FF]/60 sm:px-6 sm:py-6 cursor-pointer relative overflow-hidden"
                     >
                     @else
                     <a
                         href="https://wa.me/6281334455616?text={{ urlencode('Halo, saya ingin pesan tiket ferry ' . $route->origin . ' → ' . $route->destination . ' (Rp ' . number_format($route->price, 0, ',', '.') . ')') }}"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="group flex flex-col gap-3 px-5 py-5 text-left transition-colors hover:bg-[#EDF4FF]/60 sm:px-6 sm:py-6 cursor-pointer"
+                        class="group flex flex-col gap-3 px-5 py-5 text-left transition-colors hover:bg-[#EDF4FF]/60 sm:px-6 sm:py-6 cursor-pointer relative overflow-hidden"
                     >
                     @endif
-                        <div class="flex items-center gap-2 min-w-0">
-                            <span class="text-sm font-extrabold text-slate-900 truncate">{{ $route->origin }}</span>
-                            <svg class="h-3.5 w-3.5 text-[#0361fc] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                            </svg>
-                            <span class="text-sm font-extrabold text-slate-900 truncate">{{ $route->destination }}</span>
+                        <div class="relative z-10 flex flex-col h-full gap-3">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <span class="text-sm font-extrabold text-slate-900 truncate">{{ $route->origin }}</span>
+                                <svg class="h-3.5 w-3.5 text-[#0361fc] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                                </svg>
+                                <span class="text-sm font-extrabold text-slate-900 truncate">{{ $route->destination }}</span>
+                            </div>
+                            <div>
+                                <p class="text-xl font-black text-[#0361fc] leading-none">Rp {{ number_format($route->price, 0, ',', '.') }}</p>
+                                <p class="mt-1 text-[11px] font-medium text-slate-400">per penumpang</p>
+                            </div>
+                            <div class="flex items-center gap-1.5 text-xs font-bold text-[#0361fc] group-hover:underline mt-auto">
+                                @if($canOrder) Pesan Sekarang @else Hubungi via WhatsApp @endif
+                                <svg class="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                                </svg>
+                            </div>
                         </div>
-                        <div>
-                            <p class="text-xl font-black text-[#0361fc] leading-none">Rp {{ number_format($route->price, 0, ',', '.') }}</p>
-                            <p class="mt-1 text-[11px] font-medium text-slate-400">per penumpang</p>
+
+                        @if ($route->ship_image_path)
+                        <div class="absolute right-0 top-0 bottom-0 w-[45%] overflow-hidden pointer-events-none z-0">
+                            <img
+                                src="{{ \Storage::url($route->ship_image_path) }}"
+                                alt="Kapal {{ $route->origin }} - {{ $route->destination }}"
+                                class="h-full w-full object-cover object-right transition-transform duration-300 group-hover:scale-105"
+                            >
+                            <div class="absolute inset-0 bg-gradient-to-r from-white via-white/50 to-transparent group-hover:from-[#EDF4FF]/90 group-hover:via-[#EDF4FF]/50 transition-colors duration-200"></div>
                         </div>
-                        <div class="flex items-center gap-1.5 text-xs font-bold text-[#0361fc] group-hover:underline mt-auto">
-                            @if($canOrder) Pesan Sekarang @else Hubungi via WhatsApp @endif
-                            <svg class="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                            </svg>
-                        </div>
+                        @endif
                     @if($canOrder) </button> @else </a> @endif
                     @endforeach
                 </div>

@@ -39,4 +39,8 @@ return [
         'secret' => env('DUFFEL_SECRET'),
     ],
 
+    'abstract_currency' => [
+        'key' => env('EXCHANGE_RATE_API_KEY'),
+    ],
+
 ];

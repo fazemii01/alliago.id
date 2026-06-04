@@ -75,7 +75,7 @@ $categories = [
         $countryName = $product->country->name ?? '';
         $countryCode = $product->country->code ?? '';
         $flagEmoji = $flagImages[$countryCode] ?? ($product->country->flag_emoji ?? '🏳️');
-        $cardImage = $cardImages[$countryName] ?? $defaultImage;
+        $cardImage = $product->icon_url;
       @endphp
       <a href="{{ route('visa.show', $product->slug) }}" class="visa-card group block rounded-2xl border border-slate-200/80 bg-white p-5 transition-all hover:shadow-lg hover:border-blue-200/60">
         <div class="flex items-start justify-between gap-3">

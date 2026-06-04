@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class FerryRoute extends Model
 {
-    protected $fillable = ['origin', 'destination', 'price', 'is_active'];
+    protected $fillable = ['origin', 'destination', 'price', 'ship_image_path', 'is_active'];
 
     protected $casts = [
         'price'     => 'integer',

@@ -718,18 +718,7 @@
                                         $countryCode = $product->country->code ?? '';
                                         $flagEmoji = $product->country->flag_emoji ?? '🏳️';
                                         
-                                        $cardImages = [
-                                            'Jepang' => 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=400&q=80',
-                                            'Korea Selatan' => 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=400&q=80',
-                                            'Australia' => 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&w=400&q=80',
-                                            'China' => 'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=400&q=80',
-                                            'Taiwan' => 'https://images.unsplash.com/photo-1470004914212-05527e49370b?auto=format&fit=crop&w=400&q=80',
-                                            'United States' => 'https://images.unsplash.com/photo-1485738422979-f5c462d49f04?auto=format&fit=crop&w=400&q=80',
-                                            'United Kingdom' => 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=400&q=80',
-                                            'Netherlands' => 'https://images.unsplash.com/photo-1534351590666-13e3e96b5017?auto=format&fit=crop&w=400&q=80',
-                                        ];
-                                        $defaultImage = 'https://images.unsplash.com/photo-1488085061387-422e29b40080?auto=format&fit=crop&w=400&q=80';
-                                        $cardImage = $cardImages[$countryName] ?? $defaultImage;
+                                        $cardImage = $product->icon_url;
                                     @endphp
                                     
                                     <a href="{{ route('visa.show', $product->slug) }}" 

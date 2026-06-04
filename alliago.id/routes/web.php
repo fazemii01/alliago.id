@@ -47,6 +47,8 @@ Route::post('/ferry/checkout/{application}', [FerryCheckoutController::class, 's
 
 Route::get('/detail', [\App\Http\Controllers\PageController::class, 'detail'])->name('pages.detail');
 Route::get('/proses', [\App\Http\Controllers\PageController::class, 'process'])->name('pages.process');
+Route::get('/about', [\App\Http\Controllers\PageController::class, 'about'])->name('pages.about');
+Route::get('/currency-rates', [\App\Http\Controllers\PageController::class, 'currencyRates'])->name('pages.currency_rates');
 Route::get('/faq', [\App\Http\Controllers\PageController::class, 'faq'])->name('pages.faq');
 Route::get('/refund-policy', [\App\Http\Controllers\PageController::class, 'refundPolicy'])->name('pages.refund_policy');
 Route::get('/privacy-policy', [\App\Http\Controllers\PageController::class, 'privacyPolicy'])->name('pages.privacy_policy');
