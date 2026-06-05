@@ -106,7 +106,7 @@ class FerryCheckoutController extends Controller
                         'description'          => 'Tiket Ferry: ' . ($ferry['origin'] ?? '') . ' → ' . ($ferry['destination'] ?? ''),
                         'success_redirect_url' => route('ferry.invoice', $application),
                         'failure_redirect_url' => route('ferry.checkout', $application),
-                        'currency'             => 'IDR',
+                        'currency'             => 'MYR',
                     ]);
 
                 if ($response->successful()) {

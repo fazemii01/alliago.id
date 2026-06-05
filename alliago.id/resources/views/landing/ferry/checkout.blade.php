@@ -44,7 +44,7 @@
                     <p class="text-xs text-slate-400 mt-1">Penumpang: <span class="font-medium text-slate-600">{{ $application->traveler_name }}</span></p>
                 </div>
                 <div class="text-right flex-shrink-0">
-                    <p class="text-2xl font-extrabold text-[#0361fc]">Rp {{ number_format($invoiceAmount, 0, ',', '.') }}</p>
+                    <p class="text-2xl font-extrabold text-[#0361fc]">RM {{ number_format($invoiceAmount, 0, ',', '.') }}</p>
                 </div>
             </div>
         </div>

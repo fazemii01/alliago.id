@@ -19,9 +19,9 @@ return new class extends Migration
         });
 
         DB::table('ferry_routes')->insert([
-            ['origin' => 'Pidi',         'destination' => 'Dumai',         'price' => 1125000, 'is_active' => true, 'created_at' => now(), 'updated_at' => now()],
-            ['origin' => 'Pidi',         'destination' => 'Tanjung Balai', 'price' => 1125000, 'is_active' => true, 'created_at' => now(), 'updated_at' => now()],
-            ['origin' => 'Stulang Laut', 'destination' => 'Batam',         'price' => 900000,  'is_active' => true, 'created_at' => now(), 'updated_at' => now()],
+            ['origin' => 'Port Dickson', 'destination' => 'Dumai',         'price' => 265, 'is_active' => true, 'created_at' => now(), 'updated_at' => now()],
+            ['origin' => 'Port Dickson', 'destination' => 'Tanjung Balai', 'price' => 265, 'is_active' => true, 'created_at' => now(), 'updated_at' => now()],
+            ['origin' => 'Stulang Laut', 'destination' => 'Batam Center',  'price' => 225, 'is_active' => true, 'created_at' => now(), 'updated_at' => now()],
         ]);
     }
 

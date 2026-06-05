@@ -35,11 +35,11 @@ class FerryRouteResource extends Resource
                         ->required()
                         ->maxLength(100),
                     Forms\Components\TextInput::make('price')
-                        ->label('Harga (Rp)')
+                        ->label('Harga (RM)')
                         ->numeric()
                         ->required()
                         ->minValue(0)
-                        ->suffix('IDR'),
+                        ->suffix('MYR'),
                     Forms\Components\FileUpload::make('ship_image_path')
                         ->label('Foto Kapal (Ship Image)')
                         ->image()
@@ -68,7 +68,7 @@ class FerryRouteResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('price')
                     ->label('Harga')
-                    ->formatStateUsing(fn ($state) => 'Rp ' . number_format($state, 0, ',', '.'))
+                    ->formatStateUsing(fn ($state) => 'RM ' . number_format($state, 0, ',', '.'))
                     ->sortable(),
                 Tables\Columns\ImageColumn::make('ship_image_path')
                     ->label('Foto Kapal')

@@ -1,6 +1,6 @@
 <x-layouts.app
     title="Tiket Ferry | Alliago.id — Pesan Tiket Kapal Cepat"
-    description="Pesan tiket kapal ferry lintas selat dengan mudah. Rute Pidi–Dumai, Pidi–Tanjung Balai, dan Stulang Laut–Batam. Harga terjangkau, pemesanan cepat bersama Alliago.id."
+    description="Pesan tiket kapal ferry lintas selat dengan mudah. Rute Port Dickson–Dumai, Port Dickson–Tanjung Balai, dan Stulang Laut–Batam Center. Harga terjangkau, pemesanan cepat bersama Alliago.id."
 >
 <x-home.header />
 
@@ -64,7 +64,7 @@
                     >
                     @else
                     <a
-                        href="https://wa.me/6281334455616?text={{ urlencode('Halo, saya ingin pesan tiket ferry ' . $route->origin . ' → ' . $route->destination . ' (Rp ' . number_format($route->price, 0, ',', '.') . ')') }}"
+                        href="https://wa.me/6281334455616?text={{ urlencode('Halo, saya ingin pesan tiket ferry ' . $route->origin . ' → ' . $route->destination . ' (RM ' . number_format($route->price, 0, ',', '.') . ')') }}"
                         target="_blank"
                         rel="noopener noreferrer"
                         class="group flex flex-col gap-3 px-5 py-5 text-left transition-colors hover:bg-[#EDF4FF]/60 sm:px-6 sm:py-6 cursor-pointer relative overflow-hidden"
@@ -79,7 +79,7 @@
                                 <span class="text-sm font-extrabold text-slate-900 truncate">{{ $route->destination }}</span>
                             </div>
                             <div>
-                                <p class="text-xl font-black text-[#0361fc] leading-none">Rp {{ number_format($route->price, 0, ',', '.') }}</p>
+                                <p class="text-xl font-black text-[#0361fc] leading-none">RM {{ number_format($route->price, 0, ',', '.') }}</p>
                                 <p class="mt-1 text-[11px] font-medium text-slate-400">per penumpang</p>
                             </div>
                             <div class="flex items-center gap-1.5 text-xs font-bold text-[#0361fc] group-hover:underline mt-auto">
@@ -211,7 +211,7 @@
                     </div>
                     <div class="mt-3 border-t border-[#0361fc]/10 pt-3 flex items-center justify-between">
                         <span class="text-xs font-medium text-slate-500">Harga/penumpang</span>
-                        <span class="text-base font-black text-[#0361fc]" x-text="`Rp ${formatPrice(ticket.price)}`"></span>
+                        <span class="text-base font-black text-[#0361fc]" x-text="`RM ${formatPrice(ticket.price)}`"></span>
                     </div>
                 </div>
 
@@ -290,7 +290,7 @@
                             <span class="text-sm text-slate-500">penumpang</span>
                         </div>
                         <p class="mt-2 text-sm text-slate-500">
-                            Subtotal: <span class="font-bold text-slate-900" x-text="`Rp ${formatPrice(ticket.price * form.passenger_count)}`"></span>
+                            Subtotal: <span class="font-bold text-slate-900" x-text="`RM ${formatPrice(ticket.price * form.passenger_count)}`"></span>
                         </p>
                     </div>
                 </div>
@@ -362,7 +362,7 @@
                     </div>
                     <div class="flex items-center justify-between px-4 py-3.5 bg-[#EDF4FF]">
                         <span class="text-sm font-bold text-slate-900">Total Pembayaran</span>
-                        <span class="text-lg font-black text-[#0361fc]" x-text="`Rp ${formatPrice(ticket.price * form.passenger_count)}`"></span>
+                        <span class="text-lg font-black text-[#0361fc]" x-text="`RM ${formatPrice(ticket.price * form.passenger_count)}`"></span>
                     </div>
                 </div>
 
@@ -454,7 +454,7 @@
 
             minDate() { return new Date().toISOString().split('T')[0]; },
 
-            formatPrice(n) { return new Intl.NumberFormat('id-ID').format(n); },
+            formatPrice(n) { return new Intl.NumberFormat('en-US').format(n); },
 
             formatDate(d) {
                 if (!d) return '-';

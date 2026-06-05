@@ -116,7 +116,7 @@
                                     </td>
                                     <td class="py-6 text-sm font-bold text-slate-900 text-right whitespace-nowrap">
                                         @if($invoiceAmount)
-                                            Rp {{ number_format($invoiceAmount, 0, ',', '.') }}
+                                            RM {{ number_format($invoiceAmount, 0, ',', '.') }}
                                         @else
                                             <span class="text-slate-400 text-xs">&mdash;</span>
                                         @endif
@@ -131,15 +131,15 @@
                         <div class="w-full max-w-sm space-y-4 bg-slate-50 p-6 rounded-2xl">
                             <div class="flex justify-between">
                                 <span class="text-sm text-slate-600">Subtotal</span>
-                                <span class="text-sm font-bold text-slate-900">{{ $invoiceAmount ? 'Rp '.number_format($invoiceAmount, 0, ',', '.') : '&mdash;' }}</span>
+                                <span class="text-sm font-bold text-slate-900">{{ $invoiceAmount ? 'RM '.number_format($invoiceAmount, 0, ',', '.') : '&mdash;' }}</span>
                             </div>
                             <div class="flex justify-between border-b border-slate-200 pb-4">
                                 <span class="text-sm text-slate-600">Pajak (0%)</span>
-                                <span class="text-sm font-bold text-slate-900">Rp 0</span>
+                                <span class="text-sm font-bold text-slate-900">RM 0</span>
                             </div>
                             <div class="flex justify-between pt-2">
                                 <span class="text-base font-bold text-slate-900">Total Keseluruhan</span>
-                                <span class="text-lg font-black text-[#0361fc]">{{ $invoiceAmount ? 'Rp '.number_format($invoiceAmount, 0, ',', '.') : '&mdash;' }}</span>
+                                <span class="text-lg font-black text-[#0361fc]">{{ $invoiceAmount ? 'RM '.number_format($invoiceAmount, 0, ',', '.') : '&mdash;' }}</span>
                             </div>
                         </div>
                     </div>

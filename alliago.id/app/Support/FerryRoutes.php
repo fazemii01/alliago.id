@@ -5,26 +5,26 @@ namespace App\Support;
 class FerryRoutes
 {
     const ROUTES = [
-        'pidi-dumai' => [
-            'key'         => 'pidi-dumai',
-            'origin'      => 'Pidi',
+        'port-dickson-dumai' => [
+            'key'         => 'port-dickson-dumai',
+            'origin'      => 'Port Dickson',
             'destination' => 'Dumai',
-            'price'       => 1125000,
-            'label'       => 'Ferry Pidi → Dumai',
+            'price'       => 265,
+            'label'       => 'Ferry Port Dickson → Dumai',
         ],
-        'pidi-tanjung-balai' => [
-            'key'         => 'pidi-tanjung-balai',
-            'origin'      => 'Pidi',
+        'port-dickson-tanjung-balai' => [
+            'key'         => 'port-dickson-tanjung-balai',
+            'origin'      => 'Port Dickson',
             'destination' => 'Tanjung Balai',
-            'price'       => 1125000,
-            'label'       => 'Ferry Pidi → Tanjung Balai',
+            'price'       => 265,
+            'label'       => 'Ferry Port Dickson → Tanjung Balai',
         ],
         'stulang-laut-batam' => [
             'key'         => 'stulang-laut-batam',
             'origin'      => 'Stulang Laut',
-            'destination' => 'Batam',
-            'price'       => 900000,
-            'label'       => 'Ferry Stulang Laut → Batam',
+            'destination' => 'Batam Center',
+            'price'       => 225,
+            'label'       => 'Ferry Stulang Laut → Batam Center',
         ],
     ];
 
