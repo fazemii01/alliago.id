@@ -38,10 +38,110 @@
                  MAIN CONTENT — grid floats below hero banner
                  ══════════════════════════════════════════════════════ --}}
             <div class="relative z-20 -mt-10 sm:-mt-14 px-2 sm:px-4">
-                <div class="grid gap-8 lg:grid-cols-3">
+                <div class="flex flex-col gap-8">
                     
-                    <!-- Left: Exchange Rates List Table (2/3 width) -->
-                    <div class="lg:col-span-2 bg-white rounded-2xl shadow-[0_24px_60px_rgba(0,0,0,0.18)] ring-1 ring-slate-200/60 p-6 md:p-8" x-data="{ search: '' }">
+                    <!-- Top: Calculator Convert Widget (Full width) -->
+                    <div 
+                        class="bg-white rounded-3xl shadow-[0_24px_60px_rgba(0,0,0,0.18)] ring-1 ring-slate-200/60 p-6 md:p-8"
+                        x-data="currencyConverter()"
+                    >
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="flex h-8 w-8 items-center justify-center rounded-xl bg-[#EDF4FF]">
+                                <svg class="h-4 w-4 text-[#0361fc]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-extrabold text-slate-900">Kalkulator Kurs Mata Uang</h3>
+                                <p class="text-xs text-slate-400 font-medium">Konversi mata uang real-time instan</p>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-11 gap-5 items-end">
+                            <!-- Input Amount -->
+                            <div class="md:col-span-3">
+                                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Jumlah</label>
+                                <input 
+                                    type="number" 
+                                    x-model.number="amount"
+                                    class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0361fc] focus:border-transparent transition"
+                                    placeholder="Masukkan jumlah..."
+                                >
+                            </div>
+
+                            <!-- Source Currency -->
+                            <div class="md:col-span-3">
+                                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Dari</label>
+                                <div class="relative">
+                                    <select 
+                                        x-model="fromCurrency"
+                                        class="w-full appearance-none rounded-xl border border-slate-200 bg-white px-4 py-3 pr-10 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0361fc] focus:border-transparent transition cursor-pointer"
+                                    >
+                                        <option value="IDR">IDR - Rupiah Indonesia</option>
+                                        <template x-for="r in Object.values(rates)" :key="r.code">
+                                            <option :value="r.code" x-text="`${r.code} - ${r.name}`"></option>
+                                        </template>
+                                    </select>
+                                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
+                                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Swap Button -->
+                            <div class="flex justify-center md:pb-2.5 md:col-span-1">
+                                <button 
+                                    type="button"
+                                    @click="swap()"
+                                    class="flex h-10 w-10 items-center justify-center rounded-full bg-[#0361fc] hover:bg-blue-700 text-white shadow-md border border-[#0361fc]/10 transition cursor-pointer transform hover:scale-105 duration-200"
+                                >
+                                    <svg class="h-5 w-5 hidden md:block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                                    </svg>
+                                    <svg class="h-5 w-5 block md:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <!-- Target Currency -->
+                            <div class="md:col-span-4">
+                                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Ke</label>
+                                <div class="relative">
+                                    <select 
+                                        x-model="toCurrency"
+                                        class="w-full appearance-none rounded-xl border border-slate-200 bg-white px-4 py-3 pr-10 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0361fc] focus:border-transparent transition cursor-pointer"
+                                    >
+                                        <option value="IDR">IDR - Rupiah Indonesia</option>
+                                        <template x-for="r in Object.values(rates)" :key="r.code">
+                                            <option :value="r.code" x-text="`${r.code} - ${r.name}`"></option>
+                                        </template>
+                                    </select>
+                                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
+                                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Result Output -->
+                            <div class="md:col-span-11 mt-4 pt-6 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                                <div>
+                                    <span class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Hasil Konversi</span>
+                                    <p class="text-3xl font-black text-[#0361fc] tracking-tight break-all" x-text="formatResult(convert())"></p>
+                                </div>
+                                <div class="text-left sm:text-right">
+                                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Nilai Tukar Referensi</p>
+                                    <p class="text-sm font-bold text-slate-950 mt-1">
+                                        1 <span class="text-[#0361fc]" x-text="fromCurrency"></span> = 
+                                        <span class="text-[#0361fc]" x-text="formatRateSingle()"></span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom: Exchange Rates List Table (Full width) -->
+                    <div class="bg-white rounded-3xl shadow-[0_24px_60px_rgba(0,0,0,0.18)] ring-1 ring-slate-200/60 p-6 md:p-8" x-data="{ search: '' }">
                         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
                             <div>
                                 <h2 class="text-xl font-extrabold text-slate-900">Nilai Tukar Rupiah</h2>
@@ -125,93 +225,6 @@
                             </span>
                         </div>
                     </div>
-
-                    <!-- Right: Calculator Convert Widget (1/3 width) -->
-                    <div class="lg:col-span-1">
-                        <div 
-                            class="bg-white rounded-2xl shadow-[0_24px_60px_rgba(0,0,0,0.18)] ring-1 ring-slate-200/60 p-6 md:p-8"
-                            x-data="currencyConverter()"
-                        >
-                            <h3 class="text-xl font-extrabold text-slate-900 mb-6">Kalkulator Kurs</h3>
-                            
-                            <div class="space-y-5">
-                                <!-- Input Amount -->
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Jumlah</label>
-                                    <input 
-                                        type="number" 
-                                        x-model.number="amount"
-                                        class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0361fc] focus:border-transparent transition"
-                                        placeholder="Masukkan jumlah..."
-                                    >
-                                </div>
-
-                                <!-- Source Currency -->
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Dari</label>
-                                    <div class="relative">
-                                        <select 
-                                            x-model="fromCurrency"
-                                            class="w-full appearance-none rounded-xl border border-slate-200 bg-white px-4 py-3 pr-10 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0361fc] focus:border-transparent transition cursor-pointer"
-                                        >
-                                            <option value="IDR">IDR - Rupiah Indonesia</option>
-                                            <template x-for="r in Object.values(rates)" :key="r.code">
-                                                <option :value="r.code" x-text="`${r.code} - ${r.name}`"></option>
-                                            </template>
-                                        </select>
-                                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
-                                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Swap Button -->
-                                <div class="flex justify-center -my-2 relative z-10">
-                                    <button 
-                                        type="button"
-                                        @click="swap()"
-                                        class="flex h-9 w-9 items-center justify-center rounded-full bg-[#0361fc] hover:bg-blue-700 text-white shadow-md border border-[#0361fc]/10 transition cursor-pointer"
-                                    >
-                                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
-                                        </svg>
-                                    </button>
-                                </div>
-
-                                <!-- Target Currency -->
-                                <div>
-                                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Ke</label>
-                                    <div class="relative">
-                                        <select 
-                                            x-model="toCurrency"
-                                            class="w-full appearance-none rounded-xl border border-slate-200 bg-white px-4 py-3 pr-10 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0361fc] focus:border-transparent transition cursor-pointer"
-                                        >
-                                            <option value="IDR">IDR - Rupiah Indonesia</option>
-                                            <template x-for="r in Object.values(rates)" :key="r.code">
-                                                <option :value="r.code" x-text="`${r.code} - ${r.name}`"></option>
-                                            </template>
-                                        </select>
-                                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
-                                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Result Output -->
-                                <div class="mt-8 pt-6 border-t border-slate-100">
-                                    <span class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Hasil Konversi</span>
-                                    <p class="text-2xl font-black text-[#0361fc] tracking-tight break-all" x-text="formatResult(convert())"></p>
-                                    <p class="text-[10px] text-slate-400 font-semibold mt-1">
-                                        1 <span x-text="fromCurrency"></span> = 
-                                        <span x-text="formatRateSingle()"></span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
 
             <!-- Info / Disclaimer Strip Section -->
             <div class="container mx-auto px-4 mt-16 max-w-4xl pb-16">
