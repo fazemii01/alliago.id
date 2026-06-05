@@ -45,8 +45,15 @@
                         <h2 class="text-xl font-bold text-slate-900">Total Tagihan</h2>
                         <p class="text-sm text-slate-500">Silakan lakukan pembayaran sesuai dengan nominal berikut</p>
                     </div>
+                    @php
+                        $currency = $application->metadata['price_breakdown']['currency'] ?? 'IDR';
+                        $total = $application->metadata['price_breakdown']['total'] ?? 0;
+                        $formattedTotal = $currency === 'IDR'
+                            ? 'Rp ' . number_format($total, 0, ',', '.')
+                            : 'RM ' . number_format($total, 0, ',', '.');
+                    @endphp
                     <div class="text-right">
-                        <p class="text-3xl font-extrabold text-[#0361fc]">Rp {{ number_format($application->metadata['price_breakdown']['total'] ?? 0, 0, ',', '.') }}</p>
+                        <p class="text-3xl font-extrabold text-[#0361fc]">{{ $formattedTotal }}</p>
                     </div>
                 </div>
 

@@ -141,9 +141,9 @@
                                 <div class="mt-auto pt-8 flex items-end justify-between gap-4">
                                     <div>
                                         @if ($visaProduct->discount_price)
-                                            <p class="text-xs font-medium text-slate-400 line-through">IDR {{ number_format((float) $visaProduct->base_price, 0, ',', '.') }}</p>
+                                            <p class="text-xs font-medium text-slate-400 line-through">{{ $visaProduct->formatted_base_price }}</p>
                                         @endif
-                                        <p class="text-xl font-bold text-slate-900">IDR {{ number_format((float) $visaProduct->discount_price ?: (float) $visaProduct->base_price, 0, ',', '.') }}</p>
+                                        <p class="text-xl font-bold text-slate-900">{{ $visaProduct->formatted_display_price }}</p>
                                     </div>
                                     <span class="inline-flex items-center justify-center rounded-full bg-slate-900 px-4 py-2 text-xs font-bold text-white transition-colors group-hover:bg-[#0361fc]">
                                         View details

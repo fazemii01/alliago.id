@@ -17,8 +17,8 @@
     },
     "offers": {
         "@type": "Offer",
-        "priceCurrency": "IDR",
-        "price": "{{ $visaProduct->discount_price ?? $visaProduct->base_price }}",
+        "priceCurrency": "{{ \App\Models\VisaSetting::current()->currency }}",
+        "price": "{{ $visaProduct->display_discount_price ?? $visaProduct->display_base_price }}",
         "availability": "https://schema.org/InStock",
         "url": "{{ url()->current() }}"
     }
@@ -165,9 +165,9 @@
                     <div class="sticky top-24 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
                         <p class="text-xs font-bold uppercase tracking-wider text-slate-500">Starting price</p>
                         @if ($visaProduct->discount_price)
-                            <p class="mt-2 text-sm font-medium text-slate-400 line-through">IDR {{ number_format((float) $visaProduct->base_price, 0, ',', '.') }}</p>
+                            <p class="mt-2 text-sm font-medium text-slate-400 line-through">{{ $visaProduct->formatted_base_price }}</p>
                         @endif
-                        <p class="mt-1 text-4xl font-extrabold tracking-tight text-slate-900">IDR {{ number_format((float) $visaProduct->discount_price ?: (float) $visaProduct->base_price, 0, ',', '.') }}</p>
+                        <p class="mt-1 text-4xl font-extrabold tracking-tight text-slate-900">{{ $visaProduct->formatted_display_price }}</p>
 
                         @if ($visaProduct->promo_label)
                             <div class="mt-4 inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-600 ring-1 ring-inset ring-emerald-600/10">
@@ -202,7 +202,7 @@
                                                     <p class="mt-1 text-xs text-slate-600">{{ $addon->description }}</p>
                                                 @endif
                                             </div>
-                                            <span class="text-sm font-bold text-slate-900 whitespace-nowrap">IDR {{ number_format((float) $addon->price, 0, ',', '.') }}</span>
+                                            <span class="text-sm font-bold text-slate-900 whitespace-nowrap">{{ $addon->formatted_price }}</span>
                                         </div>
                                     </div>
                                 @empty

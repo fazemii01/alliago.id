@@ -579,9 +579,18 @@
                     payment_method_id: '{{ old('payment_method_id') }}',
                     addons: @json(old('addons', [])),
                 },
-                basePrice: {{ (float) ($visaProduct->base_price) }},
-                discountPrice: {{ (float) ($visaProduct->discount_price ?: 0) }},
-                availableAddons: @json($visaProduct->addons),
+                visaCurrency: '{{ \App\Models\VisaSetting::current()->currency }}',
+                exchangeRate: {{ \App\Models\VisaSetting::getIdrToTargetRate(\App\Models\VisaSetting::current()->currency) }},
+                basePrice: {{ (float) ($visaProduct->display_base_price) }},
+                discountPrice: {{ (float) ($visaProduct->display_discount_price ?: 0) }},
+                availableAddons: @json($visaProduct->addons->map(fn($a) => [
+                    'id' => $a->id,
+                    'name' => $a->name,
+                    'description' => $a->description,
+                    'price' => (float) $a->display_price,
+                    'is_active' => $a->is_active,
+                    'sort_order' => $a->sort_order,
+                ])),
                 
                 init() {
                     // Initialize Flatpickr
@@ -726,8 +735,9 @@
                     });
 
                     if (this.form.delivery_method === 'hard_file') {
-                        if (this.form.hard_file_pickup === 'kurir') total += 79000;
-                        if (this.form.hard_file_delivery === 'kurir') total += 79000;
+                        let courierFee = 79000 / this.exchangeRate;
+                        if (this.form.hard_file_pickup === 'kurir') total += courierFee;
+                        if (this.form.hard_file_delivery === 'kurir') total += courierFee;
                     }
 
                     return total;
@@ -739,7 +749,11 @@
                     return this.subtotal + this.tax;
                 },
                 formatRupiah(amount) {
-                    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(amount);
+                    if (this.visaCurrency === 'IDR') {
+                        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(amount);
+                    } else {
+                        return 'RM ' + new Intl.NumberFormat('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(amount);
+                    }
                 },
                 toggleAddon(id) {
                     const idStr = String(id);

@@ -154,8 +154,12 @@ class VisaProductResource extends Resource
                 Tables\Columns\TextColumn::make('name')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('country.name')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('type')->badge(),
-                Tables\Columns\TextColumn::make('base_price')->money('IDR', divideBy: 1)->sortable(),
-                Tables\Columns\TextColumn::make('discount_price')->money('IDR', divideBy: 1)->sortable(),
+                Tables\Columns\TextColumn::make('base_price')
+                    ->formatStateUsing(fn ($record) => $record->formatted_base_price)
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('discount_price')
+                    ->formatStateUsing(fn ($record) => $record->formatted_discount_price ?? '-')
+                    ->sortable(),
                 Tables\Columns\IconColumn::make('is_active')->boolean(),
                 Tables\Columns\TextColumn::make('updated_at')->dateTime()->since()->sortable(),
             ])

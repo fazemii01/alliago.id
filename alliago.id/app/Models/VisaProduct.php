@@ -103,4 +103,62 @@ class VisaProduct extends Model
     {
         return $this->hasMany(Application::class)->latest();
     }
+
+    public function getDisplayBasePriceAttribute(): float
+    {
+        $current = VisaSetting::current();
+        $currency = $current->currency;
+        $rate = VisaSetting::getIdrToTargetRate($currency);
+        if ($currency === 'IDR') {
+            return (float) $this->base_price;
+        }
+        return (float) $this->base_price / $rate;
+    }
+
+    public function getDisplayDiscountPriceAttribute(): ?float
+    {
+        if (is_null($this->discount_price)) {
+            return null;
+        }
+        $current = VisaSetting::current();
+        $currency = $current->currency;
+        $rate = VisaSetting::getIdrToTargetRate($currency);
+        if ($currency === 'IDR') {
+            return (float) $this->discount_price;
+        }
+        return (float) $this->discount_price / $rate;
+    }
+
+    public function getFormattedBasePriceAttribute(): string
+    {
+        $current = VisaSetting::current();
+        $currency = $current->currency;
+        $price = $this->display_base_price;
+        if ($currency === 'IDR') {
+            return 'Rp ' . number_format($price, 0, ',', '.');
+        }
+        return 'RM ' . number_format($price, 0, ',', '.');
+    }
+
+    public function getFormattedDiscountPriceAttribute(): ?string
+    {
+        $price = $this->display_discount_price;
+        if (is_null($price)) {
+            return null;
+        }
+        $current = VisaSetting::current();
+        $currency = $current->currency;
+        if ($currency === 'IDR') {
+            return 'Rp ' . number_format($price, 0, ',', '.');
+        }
+        return 'RM ' . number_format($price, 0, ',', '.');
+    }
+
+    public function getFormattedDisplayPriceAttribute(): string
+    {
+        if (!is_null($this->discount_price)) {
+            return $this->formatted_discount_price;
+        }
+        return $this->formatted_base_price;
+    }
 }

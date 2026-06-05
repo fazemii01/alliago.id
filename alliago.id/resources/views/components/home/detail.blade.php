@@ -24,7 +24,7 @@ $tags = array_filter([
           </div>
           <div class="min-w-0 rounded-2xl border border-slate-100 bg-slate-50 p-4 sm:min-w-[160px] md:self-start">
             <p class="text-[10px] font-bold tracking-wide font-medium text-slate-500">Mulai dari</p>
-            <p class="text-2xl font-bold text-brand">IDR {{ number_format($product->discount_price ?? $product->base_price, 0, ',', '.') }}</p>
+            <p class="text-2xl font-bold text-brand">{{ $product->formatted_display_price }}</p>
           </div>
         </div>
 
@@ -90,10 +90,10 @@ $tags = array_filter([
 
         <div class="mb-5 border-t border-slate-100 pt-5">
           @if($product->discount_price && $product->discount_price < $product->base_price)
-          <div class="mb-2 flex justify-between gap-3 text-sm font-bold text-slate-500"><span>Harga normal</span><span class="line-through">IDR {{ number_format($product->base_price, 0, ',', '.') }}</span></div>
-          <div class="flex items-end justify-between gap-3"><span class="font-bold">Total</span><span class="text-2xl font-bold text-brand sm:text-3xl">IDR {{ number_format($product->discount_price, 0, ',', '.') }}</span></div>
+          <div class="mb-2 flex justify-between gap-3 text-sm font-bold text-slate-500"><span>Harga normal</span><span class="line-through">{{ $product->formatted_base_price }}</span></div>
+          <div class="flex items-end justify-between gap-3"><span class="font-bold">Total</span><span class="text-2xl font-bold text-brand sm:text-3xl">{{ $product->formatted_discount_price }}</span></div>
           @else
-          <div class="flex items-end justify-between gap-3"><span class="font-bold">Total</span><span class="text-2xl font-bold text-brand sm:text-3xl">IDR {{ number_format($product->base_price, 0, ',', '.') }}</span></div>
+          <div class="flex items-end justify-between gap-3"><span class="font-bold">Total</span><span class="text-2xl font-bold text-brand sm:text-3xl">{{ $product->formatted_base_price }}</span></div>
           @endif
         </div>
 

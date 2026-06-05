@@ -357,7 +357,7 @@
                             <p class="mt-4 text-sm text-slate-600 line-clamp-2">{{ $visaProduct->short_description ?: __('client.dashboard_default_desc') }}</p>
                             <div class="mt-6 flex items-end justify-between text-sm">
                                 <span class="text-xs font-bold uppercase tracking-wider text-slate-400">{{ __('client.dashboard_starting_from') }}</span>
-                                <span class="text-lg font-bold text-slate-900">IDR {{ number_format((float) $visaProduct->discount_price ?: (float) $visaProduct->base_price, 0, ',', '.') }}</span>
+                                <span class="text-lg font-bold text-slate-900">{{ $visaProduct->formatted_display_price }}</span>
                             </div>
                         </a>
                     @empty

@@ -99,6 +99,7 @@ class ClientApplicationController extends Controller
                     'subtotal' => $data['subtotal'],
                     'tax' => $data['tax'],
                     'total' => $data['total'],
+                    'currency' => \App\Models\VisaSetting::current()->currency,
                 ],
                 'payment_status' => 'unpaid',
             ]

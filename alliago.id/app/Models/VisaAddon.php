@@ -30,4 +30,26 @@ class VisaAddon extends Model
     {
         return $this->belongsTo(VisaProduct::class);
     }
+
+    public function getDisplayPriceAttribute(): float
+    {
+        $current = VisaSetting::current();
+        $currency = $current->currency;
+        $rate = VisaSetting::getIdrToTargetRate($currency);
+        if ($currency === 'IDR') {
+            return (float) $this->price;
+        }
+        return (float) $this->price / $rate;
+    }
+
+    public function getFormattedPriceAttribute(): string
+    {
+        $current = VisaSetting::current();
+        $currency = $current->currency;
+        $price = $this->display_price;
+        if ($currency === 'IDR') {
+            return 'Rp ' . number_format($price, 0, ',', '.');
+        }
+        return 'RM ' . number_format($price, 0, ',', '.');
+    }
 }

@@ -107,13 +107,13 @@ $categories = [
         {{-- Price row --}}
         <div class="flex items-center gap-2 mt-1">
           @if($hasDiscount)
-          <span class="text-sm font-bold text-brand">{{ __('home.services_from_price') }} IDR {{ number_format($product->discount_price, 0, ',', '.') }}</span>
-          <span class="text-xs text-slate-400 line-through font-medium">IDR {{ number_format($product->base_price, 0, ',', '.') }}</span>
+          <span class="text-sm font-bold text-brand">{{ __('home.services_from_price') }} {{ $product->formatted_discount_price }}</span>
+          <span class="text-xs text-slate-400 line-through font-medium">{{ $product->formatted_base_price }}</span>
           <span class="inline-flex items-center px-2 py-0.5 rounded-md bg-red-50 text-[11px] font-bold text-red-500 border border-red-100">
             {{ $discountPercent }}% OFF
           </span>
           @else
-          <span class="text-sm font-bold text-brand">{{ __('home.services_from_price') }} IDR {{ number_format($product->base_price, 0, ',', '.') }}</span>
+          <span class="text-sm font-bold text-brand">{{ __('home.services_from_price') }} {{ $product->formatted_base_price }}</span>
           @endif
         </div>
       </a>

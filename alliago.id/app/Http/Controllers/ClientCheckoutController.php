@@ -106,6 +106,11 @@ class ClientCheckoutController extends Controller
                 return back()->with('error', 'Konfigurasi Xendit tidak valid.');
             }
 
+            $currency = 'IDR';
+            if ($application->visaProduct) {
+                $currency = $metadata['price_breakdown']['currency'] ?? 'IDR';
+            }
+
             $response = \Illuminate\Support\Facades\Http::withBasicAuth($secretKey, '')
                 ->post('https://api.xendit.co/v2/invoices', [
                     'external_id' => $application->reference_number,
@@ -114,7 +119,7 @@ class ClientCheckoutController extends Controller
                     'description' => 'Pembayaran ' . ($application->visaProduct ? 'Visa: ' . $application->visaProduct->name : 'Tiket Pesawat: ' . ($metadata['flight_details']['airline_name'] ?? 'Penerbangan')),
                     'success_redirect_url' => route('client.dashboard'),
                     'failure_redirect_url' => route('client.applications.checkout', $application),
-                    'currency' => 'IDR',
+                    'currency' => $currency,
                 ]);
 
             if ($response->successful()) {
