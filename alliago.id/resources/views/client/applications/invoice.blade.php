@@ -14,10 +14,7 @@
 @endpush
 
 @php
-    $currency = 'IDR';
-    if ($application->visaProduct) {
-        $currency = $application->metadata['price_breakdown']['currency'] ?? 'IDR';
-    }
+    $currency = $application->metadata['price_breakdown']['currency'] ?? 'IDR';
     $currencySymbol = $currency === 'IDR' ? 'Rp' : 'RM';
 @endphp
 
@@ -127,7 +124,7 @@
                                      <td class="py-6 text-sm font-bold text-slate-900 text-right whitespace-nowrap">
                                         @if($invoiceAmount)
                                             @if(!$application->visaProduct && isset($application->metadata['flight_details']['extra_baggage_price']) && $application->metadata['flight_details']['extra_baggage_price'] > 0)
-                                                Rp {{ number_format($invoiceAmount - $application->metadata['flight_details']['extra_baggage_price'], 0, ',', '.') }}
+                                                {{ $currencySymbol }} {{ number_format($invoiceAmount - $application->metadata['flight_details']['extra_baggage_price'], 0, ',', '.') }}
                                             @else
                                                 {{ $currencySymbol }} {{ number_format($invoiceAmount, 0, ',', '.') }}
                                             @endif
@@ -144,7 +141,7 @@
                                         <span class="text-slate-500 font-normal">Layanan penambahan berat check-in untuk bagasi pesawat</span>
                                     </td>
                                     <td class="py-6 text-sm font-bold text-slate-900 text-right whitespace-nowrap">
-                                        Rp {{ number_format($application->metadata['flight_details']['extra_baggage_price'], 0, ',', '.') }}
+                                        {{ $currencySymbol }} {{ number_format($application->metadata['flight_details']['extra_baggage_price'], 0, ',', '.') }}
                                     </td>
                                 </tr>
                                 @endif
@@ -167,8 +164,8 @@
                                 <div class="flex justify-between pt-2"><span class="text-base font-bold text-slate-900">Total Keseluruhan</span><span class="text-lg font-black text-[#0361fc]">{{ $currencySymbol }} {{ number_format($totalVal, 0, ',', '.') }}</span></div>
                             @else
                                 @if(!$application->visaProduct && isset($application->metadata['flight_details']['extra_baggage_weight']) && $application->metadata['flight_details']['extra_baggage_weight'] > 0)
-                                    <div class="flex justify-between"><span class="text-sm text-slate-600">Harga Tiket</span><span class="text-sm font-bold text-slate-900">Rp {{ number_format($invoiceAmount - $application->metadata['flight_details']['extra_baggage_price'], 0, ',', '.') }}</span></div>
-                                    <div class="flex justify-between"><span class="text-sm text-slate-600">Bagasi Tambahan (+{{ $application->metadata['flight_details']['extra_baggage_weight'] }} kg)</span><span class="text-sm font-bold text-slate-900">Rp {{ number_format($application->metadata['flight_details']['extra_baggage_price'], 0, ',', '.') }}</span></div>
+                                    <div class="flex justify-between"><span class="text-sm text-slate-600">Harga Tiket</span><span class="text-sm font-bold text-slate-900">{{ $currencySymbol }} {{ number_format($invoiceAmount - $application->metadata['flight_details']['extra_baggage_price'], 0, ',', '.') }}</span></div>
+                                    <div class="flex justify-between"><span class="text-sm text-slate-600">Bagasi Tambahan (+{{ $application->metadata['flight_details']['extra_baggage_weight'] }} kg)</span><span class="text-sm font-bold text-slate-900">{{ $currencySymbol }} {{ number_format($application->metadata['flight_details']['extra_baggage_price'], 0, ',', '.') }}</span></div>
                                 @endif
                                 <div class="flex justify-between"><span class="text-sm text-slate-600">Subtotal</span><span class="text-sm font-bold text-slate-900">{{ $invoiceAmount ? $currencySymbol . ' ' . number_format($invoiceAmount, 0, ',', '.') : '-' }}</span></div>
                                 <div class="flex justify-between border-b border-slate-200 pb-4"><span class="text-sm text-slate-600">Pajak (0%)</span><span class="text-sm font-bold text-slate-900">{{ $currencySymbol }} 0</span></div>

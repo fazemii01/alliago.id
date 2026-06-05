@@ -154,6 +154,8 @@
                                                 @php
                                                     $paymentStatus = $application->metadata['payment_status'] ?? 'unpaid';
                                                     $amount = $application->metadata['invoice_amount'] ?? $application->metadata['price_breakdown']['total'] ?? 0;
+                                                    $currency = $application->metadata['price_breakdown']['currency'] ?? 'IDR';
+                                                    $currencySymbol = $currency === 'IDR' ? 'Rp' : 'RM';
                                                 @endphp
                                                 @if ($paymentStatus === 'paid')
                                                     <span class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-emerald-700 ring-1 ring-inset ring-emerald-600/10">
@@ -179,7 +181,7 @@
                                                 <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-slate-50 p-4 rounded-2xl border border-slate-100 gap-4">
                                                     <div>
                                                         <p class="text-xs font-bold text-slate-500 uppercase tracking-wide">Total Tagihan</p>
-                                                        <p class="text-xl font-extrabold text-slate-900 mt-1">Rp {{ number_format($amount, 0, ',', '.') }}</p>
+                                                        <p class="text-xl font-extrabold text-slate-900 mt-1">{{ $currencySymbol }} {{ number_format($amount, 0, ',', '.') }}</p>
                                                     </div>
                                                     @if ($paymentStatus !== 'paid' && $paymentStatus !== 'pending_verification')
                                                         <a href="{{ route('client.applications.checkout', $application) }}" class="inline-flex items-center justify-center rounded-full bg-[#0361fc] px-5 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-blue-700 transition">

@@ -776,17 +776,17 @@
                                                 <div class="flex flex-col">
                                                     @if ($hasDiscount)
                                                         <span class="text-[8px] font-medium text-slate-400 line-through leading-none">
-                                                            IDR {{ number_format($product->base_price, 0, ',', '.') }}
+                                                            {{ $product->formatted_base_price }}
                                                         </span>
                                                         <span class="text-xs font-extrabold text-red-600 leading-none mt-0.5">
-                                                            IDR {{ number_format($product->discount_price, 0, ',', '.') }}
+                                                            {{ $product->formatted_discount_price }}
                                                         </span>
                                                     @else
                                                         <span class="text-[8px] font-medium text-slate-400 leading-none">
                                                             Mulai dari
                                                         </span>
                                                         <span class="text-xs font-extrabold text-slate-800 leading-none mt-0.5">
-                                                            IDR {{ number_format($product->base_price, 0, ',', '.') }}
+                                                            {{ $product->formatted_base_price }}
                                                         </span>
                                                     @endif
                                                 </div>
@@ -1194,22 +1194,22 @@
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-slate-500 uppercase">Harga Pokok (IDR)</label>
+                                <label class="block text-xs font-bold text-slate-500 uppercase" x-text="'Harga Pokok (' + flightCurrency + ')'">Harga Pokok</label>
                                 <input type="number" x-model="flight.price_value" @input="calculateTotal()" class="mt-1 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm focus:border-[#0361fc] focus:outline-none" required>
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-slate-500 uppercase">Pajak/Biaya (IDR)</label>
+                                <label class="block text-xs font-bold text-slate-500 uppercase" x-text="'Pajak/Biaya (' + flightCurrency + ')'">Pajak/Biaya</label>
                                 <input type="number" x-model="flight.tax" @input="calculateTotal()" class="mt-1 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm focus:border-[#0361fc] focus:outline-none">
                             </div>
                         </div>
 
                         <div class="mt-4 p-4 bg-slate-50 rounded-2xl flex flex-col gap-2">
                             <div class="flex justify-between items-center">
-                                <label class="text-xs font-bold text-slate-500 uppercase">Total Harga (IDR)</label>
+                                <label class="text-xs font-bold text-slate-500 uppercase" x-text="'Total Harga (' + flightCurrency + ')'">Total Harga (IDR)</label>
                                 <span class="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-full">Dapat diedit manual</span>
                             </div>
                             <div class="relative mt-1">
-                                <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-sm font-extrabold text-slate-400">Rp</span>
+                                <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-sm font-extrabold text-slate-400" x-text="flightCurrency === 'IDR' ? 'Rp' : 'RM'">Rp</span>
                                 <input type="number" x-model="flight.total" class="block w-full rounded-xl border border-slate-300 pl-10 pr-4 py-2.5 text-sm font-black text-[#0361fc] focus:border-[#0361fc] focus:outline-none" required>
                             </div>
                         </div>
