@@ -1262,7 +1262,7 @@
                                             class="flex flex-col items-center justify-center p-3 rounded-2xl min-w-[105px] transition cursor-pointer text-center outline-none">
                                         <span class="text-xs font-extrabold" x-text="'+' + bag.weight + ' kg'"></span>
                                         <span class="text-[10px] mt-1 font-bold" 
-                                              x-text="bag.price === 0 ? 'Gratis' : 'Rp ' + Number(bag.price).toLocaleString('id-ID')"></span>
+                                              x-text="bag.price === 0 ? 'Gratis' : formatCurrency(bag.price)"></span>
                                     </button>
                                 </template>
                             </div>
@@ -1313,13 +1313,13 @@
                         </div>
 
                         <div class="p-5 bg-[#edf4ff]/40 rounded-2xl space-y-3 border border-[#edf4ff]">
-                                <div class="flex justify-between text-xs font-semibold text-slate-600"><span>Harga Tiket</span><span class="font-bold text-slate-900" x-text="'Rp ' + Number(flight.price_value).toLocaleString('id-ID')"></span></div>
+                                <div class="flex justify-between text-xs font-semibold text-slate-600"><span>Harga Tiket</span><span class="font-bold text-slate-900" x-text="formatCurrency(flight.price_value)"></span></div>
                                 <div class="flex justify-between text-xs font-semibold text-slate-600" x-show="selectedBaggageWeight > 0">
                                     <span>Bagasi Tambahan (+<span x-text="selectedBaggageWeight"></span> kg)</span>
-                                    <span class="font-bold text-slate-900" x-text="'Rp ' + Number(selectedBaggagePrice).toLocaleString('id-ID')"></span>
+                                    <span class="font-bold text-slate-900" x-text="formatCurrency(selectedBaggagePrice)"></span>
                                 </div>
-                                <div class="flex justify-between text-xs font-semibold text-slate-600 border-b border-slate-200 pb-2"><span>Pajak & Biaya</span><span class="font-bold text-slate-900" x-text="'Rp ' + Number(flight.tax).toLocaleString('id-ID')"></span></div>
-                                <div class="flex justify-between text-sm font-extrabold text-slate-900"><span>Total Tagihan</span><span class="text-lg font-black text-[#0361fc]" x-text="'Rp ' + Number(flight.total).toLocaleString('id-ID')"></span></div>
+                                <div class="flex justify-between text-xs font-semibold text-slate-600 border-b border-slate-200 pb-2"><span>Pajak & Biaya</span><span class="font-bold text-slate-900" x-text="formatCurrency(flight.tax)"></span></div>
+                                <div class="flex justify-between text-sm font-extrabold text-slate-900"><span>Total Tagihan</span><span class="text-lg font-black text-[#0361fc]" x-text="formatCurrency(flight.total)"></span></div>
                             </div>
                     </div>
 
@@ -1606,6 +1606,21 @@
                     referenceNumber: '',
                     loading: false,
                     errorMessage: '',
+                    flightCurrency: '{{ \App\Models\FlightPricingConfig::current()->currency ?? "IDR" }}',
+                    exchangeRate: {{ \App\Models\VisaSetting::getIdrToTargetRate(\App\Models\FlightPricingConfig::current()->currency ?? "IDR") }},
+                    formatCurrency(amount) {
+                        if (this.flightCurrency === 'IDR') {
+                            return 'Rp ' + Number(amount).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+                        } else {
+                            return 'RM ' + Number(amount).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+                        }
+                    },
+                    init() {
+                        this.baggageOptions = this.baggageOptions.map(bag => ({
+                            weight: bag.weight,
+                            price: bag.price / this.exchangeRate
+                        }));
+                    },
                     
                     // Baggage pricing configuration
                     baggageOptions: [

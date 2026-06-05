@@ -244,6 +244,7 @@ class FlightTicketController extends Controller
                 'tax' => $tax,
                 'extra_baggage' => $baggagePrice,
                 'total' => $total,
+                'currency' => \App\Models\FlightPricingConfig::current()->currency ?? 'IDR',
             ],
             'invoice_amount' => $total,
         ];
@@ -287,7 +288,7 @@ class FlightTicketController extends Controller
                         'description' => 'Pembayaran Tiket Pesawat: ' . ($metadata['flight_details']['airline_name'] ?? 'Penerbangan'),
                         'success_redirect_url' => route('client.dashboard'),
                         'failure_redirect_url' => route('client.applications.checkout', $application),
-                        'currency' => 'IDR',
+                        'currency' => $metadata['price_breakdown']['currency'] ?? 'IDR',
                     ]);
 
                 if ($response->successful()) {

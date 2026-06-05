@@ -106,10 +106,7 @@ class ClientCheckoutController extends Controller
                 return back()->with('error', 'Konfigurasi Xendit tidak valid.');
             }
 
-            $currency = 'IDR';
-            if ($application->visaProduct) {
-                $currency = $metadata['price_breakdown']['currency'] ?? 'IDR';
-            }
+            $currency = $metadata['price_breakdown']['currency'] ?? 'IDR';
 
             $response = \Illuminate\Support\Facades\Http::withBasicAuth($secretKey, '')
                 ->post('https://api.xendit.co/v2/invoices', [

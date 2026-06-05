@@ -84,6 +84,10 @@
                             @php
                                 $paymentStatus = $application->metadata['payment_status'] ?? 'unpaid';
                                 $amount = $application->metadata['invoice_amount'] ?? $application->metadata['price_breakdown']['total'] ?? 0;
+                                $currency = $application->metadata['price_breakdown']['currency'] ?? 'IDR';
+                                $formattedAmount = $currency === 'IDR'
+                                    ? 'Rp ' . number_format($amount, 0, ',', '.')
+                                    : 'RM ' . number_format($amount, 0, ',', '.');
                             @endphp
                             @if ($paymentStatus === 'paid')
                                 <span class="inline-flex shrink-0 items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-emerald-700 ring-1 ring-inset ring-emerald-600/10">
@@ -109,7 +113,7 @@
                             <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-slate-50 p-5 rounded-2xl border border-slate-100 gap-4">
                                 <div>
                                     <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Tagihan</p>
-                                    <p class="text-2xl font-extrabold text-slate-900 mt-1">Rp {{ number_format($amount, 0, ',', '.') }}</p>
+                                    <p class="text-2xl font-extrabold text-slate-900 mt-1">{{ $formattedAmount }}</p>
                                 </div>
                                 <div class="flex gap-3">
                                     @if ($paymentStatus !== 'paid' && $paymentStatus !== 'pending_verification')

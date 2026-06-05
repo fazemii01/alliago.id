@@ -159,7 +159,12 @@ class H2hFlightService
 
         $airlineIataEarly = (string) Arr::get($journey, 'airlineID', Arr::get($segments->first() ?? [], 'flightDetail.0.airlineCode', ''));
         $config = FlightPricingConfig::current();
+        $currency = $config->currency ?? 'IDR';
+        $rate = \App\Models\VisaSetting::getIdrToTargetRate($currency);
+
         $totalPrice = $numericFare + $config->markupFor($airlineIataEarly);
+        $displayTotalPrice = $currency === 'IDR' ? $totalPrice : ($totalPrice / $rate);
+        $displayNumericFare = $currency === 'IDR' ? $numericFare : ($numericFare / $rate);
 
         $flightNumbers = $flightDetails
             ->map(fn ($detail) => trim(collect([
@@ -206,9 +211,9 @@ class H2hFlightService
             'flight_numbers' => $flightNumbers,
             'duration' => $this->formatDuration(Arr::get($journey, 'jiDepartTime'), Arr::get($journey, 'jiArrivalTime')),
             'stops' => $flightDetails->count() > 1 ? ($flightDetails->count() - 1) . ' stop' . ($flightDetails->count() > 2 ? 's' : '') : 'Direct',
-            'net_price' => $numericFare,
+            'net_price' => $displayNumericFare,
             'price' => $this->formatCurrency($totalPrice),
-            'price_value' => $totalPrice,
+            'price_value' => $displayTotalPrice,
             'start_time' => $this->formatTime(Arr::get($journey, 'jiDepartTime', Arr::get($firstFlight, 'fdDepartTime'))),
             'start_location' => Arr::get($journey, 'jiOrigin', Arr::get($firstFlight, 'fdOrigin')),
             'end_time' => $this->formatTime(Arr::get($journey, 'jiArrivalTime', Arr::get($lastFlight, 'fdArrivalTime'))),
@@ -311,17 +316,28 @@ class H2hFlightService
 
     protected function formatCurrency(mixed $amount): string
     {
+        $config = FlightPricingConfig::current();
+        $currency = $config->currency ?? 'IDR';
+        
+        $val = 0.0;
         if (is_numeric($amount)) {
-            return 'IDR ' . number_format((float) $amount, 0, ',', '.');
+            $val = (float) $amount;
+        } else {
+            $numeric = preg_replace('/[^0-9.]/', '', (string) $amount);
+            if ($numeric !== '') {
+                $val = (float) $numeric;
+            } else {
+                return (string) $amount;
+            }
         }
-
-        $numeric = preg_replace('/[^0-9.]/', '', (string) $amount);
-
-        if ($numeric !== '') {
-            return 'IDR ' . number_format((float) $numeric, 0, ',', '.');
+        
+        if ($currency === 'IDR') {
+            return 'IDR ' . number_format($val, 0, ',', '.');
         }
-
-        return (string) $amount;
+        
+        $rate = \App\Models\VisaSetting::getIdrToTargetRate($currency);
+        $converted = $val / $rate;
+        return 'RM ' . number_format($converted, 0, ',', '.');
     }
 
     protected function formatTime(?string $dateTime): string

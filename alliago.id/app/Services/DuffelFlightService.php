@@ -258,7 +258,12 @@ class DuffelFlightService
         $totalAmountIdr = round($totalAmount * $idrRate);
         $airlineIata = (string) Arr::get($firstSegment, 'marketing_carrier.iata_code', Arr::get($firstSegment, 'operating_carrier.iata_code', ''));
         $config = FlightPricingConfig::current();
+        $currency = $config->currency ?? 'IDR';
+        $rate = \App\Models\VisaSetting::getIdrToTargetRate($currency);
+
         $totalWithMarkup = $totalAmountIdr + $config->markupFor($airlineIata);
+        $displayTotalWithMarkup = $currency === 'IDR' ? $totalWithMarkup : ($totalWithMarkup / $rate);
+        $displayTotalAmountIdr = $currency === 'IDR' ? $totalAmountIdr : ($totalAmountIdr / $rate);
 
         return [
             'offer_id' => (string) Arr::get($offer, 'id'),
@@ -268,9 +273,9 @@ class DuffelFlightService
             'flight_numbers' => $flightNumbers,
             'duration' => $this->formatDuration($departingAt, $arrivingAt),
             'stops' => $stopCount > 0 ? $stopCount . ' stop' . ($stopCount > 1 ? 's' : '') : 'Direct',
-            'net_price' => $totalAmountIdr,
+            'net_price' => $displayTotalAmountIdr,
             'price' => $this->formatIdr($totalWithMarkup),
-            'price_value' => $totalWithMarkup,
+            'price_value' => $displayTotalWithMarkup,
             'start_date' => $this->formatDate($departingAt),
             'start_time' => $this->formatTime($departingAt),
             'start_location' => (string) Arr::get($firstSegment, 'origin.iata_code', ''),
@@ -279,13 +284,13 @@ class DuffelFlightService
             'end_location' => (string) Arr::get($lastSegment, 'destination.iata_code', ''),
             'class' => $cabinClass,
             'info' => $info,
-            'fare_breakdown' => $this->buildFareBreakdown($offer, $idrRate, (float) $config->markupFor($airlineIata), $airlineIata),
+            'fare_breakdown' => $this->buildFareBreakdown($offer, $idrRate, (float) $config->markupFor($airlineIata), $airlineIata, $currency, $rate),
             'journey_reference' => (string) Arr::get($offer, 'id'),
             'passport_required' => (bool) Arr::get($offer, 'passenger_identity_documents_required', false),
         ];
      }
  
-     protected function buildFareBreakdown(array $offer, float $idrRate = 1.0, float $markup = 0.0, string $airline = ''): array
+     protected function buildFareBreakdown(array $offer, float $idrRate = 1.0, float $markup = 0.0, string $airline = '', string $targetCurrency = 'IDR', float $convRate = 1.0): array
      {
          $passengers = Arr::get($offer, 'passengers', []);
          $totalAmount = (float) Arr::get($offer, 'total_amount', 0) * $idrRate;
@@ -295,8 +300,18 @@ class DuffelFlightService
  
          // Include markup in total amount and distribute it per passenger
          $totalAmountWithMarkup = $totalAmount + $markup;
+         
+         if ($targetCurrency !== 'IDR') {
+             $totalAmountWithMarkup /= $convRate;
+             $baseAmount = ($baseAmount + $markup) / $convRate;
+             $taxAmount /= $convRate;
+         }
+         
          $perPassenger = $totalAmountWithMarkup / $count;
-         $perBase = ($baseAmount + $markup) / $count;
+         $perBase = $baseAmount / $count;
+         if ($targetCurrency === 'IDR') {
+             $perBase = ($baseAmount + $markup) / $count;
+         }
          $perTax = $taxAmount / $count;
  
          return collect($passengers)
@@ -347,7 +362,14 @@ class DuffelFlightService
 
     protected function formatIdr(float $amount): string
     {
-        return 'Rp ' . number_format($amount, 0, ',', '.');
+        $config = FlightPricingConfig::current();
+        $currency = $config->currency ?? 'IDR';
+        if ($currency === 'IDR') {
+            return 'Rp ' . number_format($amount, 0, ',', '.');
+        }
+        $rate = \App\Models\VisaSetting::getIdrToTargetRate($currency);
+        $converted = $amount / $rate;
+        return 'RM ' . number_format($converted, 0, ',', '.');
     }
 
     protected function formatDate(?string $dateTime): string

@@ -42,6 +42,13 @@ class FlightPricingConfigResource extends Resource
                     Forms\Components\TextInput::make('label')
                         ->required()
                         ->maxLength(255),
+                    Forms\Components\Select::make('currency')
+                        ->options([
+                            'IDR' => 'IDR (Indonesian Rupiah)',
+                            'MYR' => 'MYR (Malaysian Ringgit)',
+                        ])
+                        ->required()
+                        ->helperText('Setting this currency will convert all flight ticket search prices, addons, markups, and checkout to the selected currency.'),
                     Forms\Components\TextInput::make('addon_cost')
                         ->label('Add-ons Cost (IDR)')
                         ->numeric()
@@ -86,6 +93,13 @@ class FlightPricingConfigResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('label'),
+                Tables\Columns\TextColumn::make('currency')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'IDR' => 'success',
+                        'MYR' => 'info',
+                        default => 'gray',
+                    }),
                 Tables\Columns\TextColumn::make('addon_cost')
                     ->label('Add-ons Cost')
                     ->money('IDR', locale: 'id'),
