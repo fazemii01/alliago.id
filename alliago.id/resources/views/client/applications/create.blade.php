@@ -583,14 +583,7 @@
                 exchangeRate: {{ \App\Models\VisaSetting::getIdrToTargetRate(\App\Models\VisaSetting::current()->currency) }},
                 basePrice: {{ (float) ($visaProduct->display_base_price) }},
                 discountPrice: {{ (float) ($visaProduct->display_discount_price ?: 0) }},
-                availableAddons: @json($visaProduct->addons->map(fn($a) => [
-                    'id' => $a->id,
-                    'name' => $a->name,
-                    'description' => $a->description,
-                    'price' => (float) $a->display_price,
-                    'is_active' => $a->is_active,
-                    'sort_order' => $a->sort_order,
-                ])),
+                availableAddons: @json($availableAddons),
                 
                 init() {
                     // Initialize Flatpickr

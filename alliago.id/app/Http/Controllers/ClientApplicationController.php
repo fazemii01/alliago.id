@@ -47,8 +47,20 @@ class ClientApplicationController extends Controller
     {
         abort_unless($visaProduct->is_active, 404);
 
+        $visaProduct->load(['country', 'documents', 'addons']);
+
+        $availableAddons = $visaProduct->addons->map(fn($a) => [
+            'id' => $a->id,
+            'name' => $a->name,
+            'description' => $a->description,
+            'price' => (float) $a->display_price,
+            'is_active' => $a->is_active,
+            'sort_order' => $a->sort_order,
+        ]);
+
         return view('client.applications.create', [
-            'visaProduct' => $visaProduct->load(['country', 'documents', 'addons']),
+            'visaProduct' => $visaProduct,
+            'availableAddons' => $availableAddons,
             'paymentMethods' => \App\Models\PaymentMethod::where('is_active', true)->get(),
             'client' => auth()->user(),
         ]);
