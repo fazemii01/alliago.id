@@ -13,6 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->validateCsrfTokens(except: [
             'webhooks/xendit',
+            'admin/flights/generate-invoice',
         ]);
         $middleware->web(append: [
             \App\Http\Middleware\SetLocale::class,
