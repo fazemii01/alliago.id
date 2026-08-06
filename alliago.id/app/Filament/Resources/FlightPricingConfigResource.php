@@ -28,6 +28,15 @@ class FlightPricingConfigResource extends Resource
         return $user && ($user->hasRole('admin') || $user->can('flight_pricing_config.view_any'));
     }
 
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()
+            ->where(function (\Illuminate\Database\Eloquent\Builder $query) {
+                $query->where('label', 'Default')
+                      ->orWhere('id', 1);
+            });
+    }
+
     public static function canEdit(\Illuminate\Database\Eloquent\Model $record): bool
     {
         $user = auth()->user();

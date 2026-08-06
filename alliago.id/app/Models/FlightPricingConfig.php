@@ -11,7 +11,7 @@ class FlightPricingConfig extends Model
 {
     use LogsActivity;
 
-    protected $fillable = ['label', 'currency', 'addon_cost', 'service_fee', 'notes', 'zz_markup', 'zz_name', 'zz_logo_url', 'banner_path', 'banner_link', 'is_banner_active', 'banner_image_url', 'sidebar_banner_path', 'sidebar_banner_image_url', 'sidebar_banner_link', 'is_sidebar_banner_active'];
+    protected $fillable = ['id', 'label', 'currency', 'addon_cost', 'service_fee', 'notes', 'zz_markup', 'zz_name', 'zz_logo_url', 'banner_path', 'banner_link', 'is_banner_active', 'banner_image_url', 'sidebar_banner_path', 'sidebar_banner_image_url', 'sidebar_banner_link', 'is_sidebar_banner_active'];
 
     protected $casts = [
         'addon_cost' => 'decimal:2',
@@ -31,10 +31,16 @@ class FlightPricingConfig extends Model
     public static function current(): self
     {
         return Cache::remember('flight_pricing_config', 300, fn () =>
-            static::firstOrCreate(
-                ['id' => 1],
-                ['label' => 'Default', 'addon_cost' => 0, 'service_fee' => 500000]
-            )
+            static::where('id', 1)
+                ->orWhere('label', 'Default')
+                ->first()
+            ?? static::create([
+                'id' => 1,
+                'label' => 'Default',
+                'addon_cost' => 0,
+                'service_fee' => 500000,
+                'currency' => 'IDR',
+            ])
         );
     }
 
