@@ -154,8 +154,8 @@
                                                 @php
                                                     $paymentStatus = $application->metadata['payment_status'] ?? 'unpaid';
                                                     $amount = $application->metadata['invoice_amount'] ?? $application->metadata['price_breakdown']['total'] ?? 0;
-                                                    $currency = $application->metadata['price_breakdown']['currency'] ?? 'IDR';
-                                                    $currencySymbol = $currency === 'IDR' ? 'Rp' : 'RM';
+                                                    $currency = $application->metadata['price_breakdown']['currency'] ?? $application->metadata['currency'] ?? 'IDR';
+                                                    $currencySymbol = in_array(strtoupper($currency), ['MYR', 'RM']) ? 'RM' : 'Rp';
                                                 @endphp
                                                 @if ($paymentStatus === 'paid')
                                                     <span class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-emerald-700 ring-1 ring-inset ring-emerald-600/10">

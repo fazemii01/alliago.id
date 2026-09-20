@@ -19,18 +19,25 @@ class InvoiceOverview extends BaseWidget
             ->where('created_at', '>=', $currentMonth)
             ->get();
 
-        $thisMonthTotal = $thisMonthInvoices->sum(function($app) {
-            return $app->metadata['invoice_amount'] ?? $app->metadata['price_breakdown']['total'] ?? ($app->visaProduct?->discount_price ?? $app->visaProduct?->base_price ?? 0);
-        });
+        $rate = \App\Models\VisaSetting::getIdrToTargetRate('MYR');
+
+        $calculateRevenue = function ($app) use ($rate) {
+            $curr = $app->metadata['price_breakdown']['currency'] ?? $app->metadata['currency'] ?? 'IDR';
+            $amount = (float) ($app->metadata['invoice_amount'] ?? $app->metadata['price_breakdown']['total'] ?? ($app->visaProduct?->discount_price ?? $app->visaProduct?->base_price ?? 0));
+            if (in_array(strtoupper($curr), ['MYR', 'RM']) || (($app->metadata['type'] ?? '') === 'ferry')) {
+                return $amount * ($rate > 0 ? $rate : 3450);
+            }
+            return $amount;
+        };
+
+        $thisMonthTotal = $thisMonthInvoices->sum($calculateRevenue);
 
         // Calculate last month's paid invoices
         $lastMonthInvoices = Application::where('status', '!=', 'pending_payment')
             ->whereBetween('created_at', [$lastMonth, $currentMonth->copy()->subSecond()])
             ->get();
 
-        $lastMonthTotal = $lastMonthInvoices->sum(function($app) {
-            return $app->metadata['invoice_amount'] ?? $app->metadata['price_breakdown']['total'] ?? ($app->visaProduct?->discount_price ?? $app->visaProduct?->base_price ?? 0);
-        });
+        $lastMonthTotal = $lastMonthInvoices->sum($calculateRevenue);
 
         // Calculate trend
         $trend = 0;

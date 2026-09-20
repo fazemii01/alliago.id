@@ -1139,6 +1139,30 @@
 
                     <!-- STEP 1: Flight details -->
                     <div x-show="step === 1" class="space-y-4">
+                        <!-- Currency Type Selector -->
+                        <div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Tipe Mata Uang Invoice</label>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">Pilih mata uang untuk tagihan invoice penerbangan ini</p>
+                                </div>
+                                <div class="inline-flex rounded-xl bg-slate-200/70 p-1">
+                                    <button type="button"
+                                            @click="setCurrency('IDR')"
+                                            :class="flightCurrency === 'IDR' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'"
+                                            class="px-4 py-1.5 rounded-lg text-xs font-extrabold transition">
+                                        IDR (Rp)
+                                    </button>
+                                    <button type="button"
+                                            @click="setCurrency('MYR')"
+                                            :class="(flightCurrency === 'MYR' || flightCurrency === 'RM') ? 'bg-[#0361fc] text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'"
+                                            class="px-4 py-1.5 rounded-lg text-xs font-extrabold transition">
+                                        RM (Ringgit)
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-xs font-bold text-slate-500 uppercase">Airline Name</label>
@@ -1607,7 +1631,7 @@
                     loading: false,
                     errorMessage: '',
                     flightCurrency: '{{ \App\Models\FlightPricingConfig::current()->currency ?? "IDR" }}',
-                    exchangeRate: {{ \App\Models\VisaSetting::getIdrToTargetRate(\App\Models\FlightPricingConfig::current()->currency ?? "IDR") }},
+                    exchangeRate: {{ \App\Models\VisaSetting::getIdrToTargetRate("MYR") }},
                     formatCurrency(amount) {
                         if (this.flightCurrency === 'IDR') {
                             return 'Rp ' + Number(amount).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
@@ -1615,15 +1639,43 @@
                             return 'RM ' + Number(amount).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
                         }
                     },
-                    init() {
-                        this.baggageOptions = this.baggageOptions.map(bag => ({
+                    setCurrency(targetCurrency) {
+                        const newCurr = targetCurrency === 'RM' ? 'MYR' : targetCurrency;
+                        const oldCurr = this.flightCurrency === 'RM' ? 'MYR' : this.flightCurrency;
+                        if (newCurr === oldCurr) return;
+
+                        this.flightCurrency = newCurr;
+                        const rate = this.exchangeRate > 0 ? this.exchangeRate : 3450;
+
+                        this.baggageOptions = this.baseBaggageOptions.map(bag => ({
                             weight: bag.weight,
-                            price: bag.price / this.exchangeRate
+                            price: newCurr === 'MYR' ? Math.round(bag.price / rate) : bag.price
+                        }));
+
+                        if (this.flight.price_value > 0) {
+                            if (newCurr === 'MYR' && oldCurr === 'IDR') {
+                                this.flight.price_value = Math.round(this.flight.price_value / rate);
+                                this.flight.tax = Math.round((this.flight.tax || 0) / rate);
+                            } else if (newCurr === 'IDR' && oldCurr === 'MYR') {
+                                this.flight.price_value = Math.round(this.flight.price_value * rate);
+                                this.flight.tax = Math.round((this.flight.tax || 0) * rate);
+                            }
+                        }
+
+                        const found = this.baggageOptions.find(b => b.weight === this.selectedBaggageWeight);
+                        this.selectedBaggagePrice = found ? found.price : 0;
+                        this.calculateTotal();
+                    },
+                    init() {
+                        const rate = this.exchangeRate > 0 ? this.exchangeRate : 3450;
+                        this.baggageOptions = this.baseBaggageOptions.map(bag => ({
+                            weight: bag.weight,
+                            price: (this.flightCurrency === 'MYR' || this.flightCurrency === 'RM') ? Math.round(bag.price / rate) : bag.price
                         }));
                     },
                     
                     // Baggage pricing configuration
-                    baggageOptions: [
+                    baseBaggageOptions: [
                         { weight: 0, price: 0 },
                         { weight: 20, price: 1028872 },
                         { weight: 25, price: 1372268 },
@@ -1632,6 +1684,7 @@
                         { weight: 50, price: 3134682 },
                         { weight: 60, price: 4072871 }
                     ],
+                    baggageOptions: [],
                     selectedBaggageWeight: 0,
                     selectedBaggagePrice: 0,
                     
@@ -1720,6 +1773,7 @@
                                     traveler_email: this.travelerEmail,
                                     traveler_phone: this.travelerPhone,
                                     payment_method_id: this.paymentMethodId,
+                                    currency: (this.flightCurrency === 'MYR' || this.flightCurrency === 'RM') ? 'MYR' : 'IDR',
                                     flight: this.flight,
                                     baggage_weight: this.selectedBaggageWeight,
                                     baggage_price: this.selectedBaggagePrice

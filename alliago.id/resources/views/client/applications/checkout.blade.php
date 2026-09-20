@@ -46,11 +46,11 @@
                         <p class="text-sm text-slate-500">Silakan lakukan pembayaran sesuai dengan nominal berikut</p>
                     </div>
                     @php
-                        $currency = $application->metadata['price_breakdown']['currency'] ?? 'IDR';
-                        $total = $application->metadata['price_breakdown']['total'] ?? 0;
-                        $formattedTotal = $currency === 'IDR'
-                            ? 'Rp ' . number_format($total, 0, ',', '.')
-                            : 'RM ' . number_format($total, 0, ',', '.');
+                        $currency = $application->metadata['price_breakdown']['currency'] ?? $application->metadata['currency'] ?? 'IDR';
+                        $total = $application->metadata['price_breakdown']['total'] ?? $application->metadata['invoice_amount'] ?? 0;
+                        $formattedTotal = in_array(strtoupper($currency), ['MYR', 'RM'])
+                            ? 'RM ' . number_format($total, 0, ',', '.')
+                            : 'Rp ' . number_format($total, 0, ',', '.');
                     @endphp
                     <div class="text-right">
                         <p class="text-3xl font-extrabold text-[#0361fc]">{{ $formattedTotal }}</p>

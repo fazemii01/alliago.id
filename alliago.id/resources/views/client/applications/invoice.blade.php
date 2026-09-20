@@ -14,21 +14,28 @@
 @endpush
 
 @php
-    $currency = $application->metadata['price_breakdown']['currency'] ?? 'IDR';
-    $currencySymbol = $currency === 'IDR' ? 'Rp' : 'RM';
+    $currency = $application->metadata['price_breakdown']['currency'] ?? $application->metadata['currency'] ?? 'IDR';
+    $isMyr = in_array(strtoupper($currency), ['MYR', 'RM']);
+    $currencySymbol = $isMyr ? 'RM' : 'Rp';
 @endphp
 
     <div class="invoice-wrap min-h-screen bg-slate-50 text-slate-900 py-12 font-sans">
         <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-            <div class="no-print mb-6 flex justify-between items-center">
+            <div class="no-print mb-6 flex flex-wrap justify-between items-center gap-4">
                 <a href="{{ route('client.applications.show', $application) }}" class="inline-flex items-center text-sm font-medium text-slate-600 hover:text-slate-900">
                     <svg class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
                     Kembali ke Detail Aplikasi
                 </a>
-                <button onclick="window.print()" class="inline-flex items-center rounded-full bg-white px-4 py-2 text-sm font-bold text-slate-700 shadow-sm ring-1 ring-inset ring-slate-300 hover:bg-slate-50">
-                    <svg class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
-                    Print / PDF
-                </button>
+                <div class="flex items-center gap-3">
+                    <span class="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700 ring-1 ring-inset ring-slate-200">
+                        <svg class="h-3.5 w-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        Mata Uang: {{ $isMyr ? 'RM (Ringgit)' : 'IDR (Rp)' }}
+                    </span>
+                    <button onclick="window.print()" class="inline-flex items-center rounded-full bg-white px-4 py-2 text-sm font-bold text-slate-700 shadow-sm ring-1 ring-inset ring-slate-300 hover:bg-slate-50">
+                        <svg class="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
+                        Print / PDF
+                    </button>
+                </div>
             </div>
 
             <div class="invoice-card bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
@@ -177,8 +184,9 @@
                     @if(in_array($application->status, ['pending_payment', 'payment_failed']))
                         <div class="mt-10 flex flex-col items-center gap-3 print:hidden">
                             @if($application->status === 'payment_failed')
-                                <p class="text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-2xl px-5 py-3 text-center">
-                                    ⚠️ Pembayaran sebelumnya tidak berhasil atau jumlah kurang. Silakan coba bayar kembali.
+                                <p class="text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-2xl px-5 py-3 text-center flex items-center justify-center gap-2">
+                                    <svg class="h-4 w-4 shrink-0 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                                    <span>Pembayaran sebelumnya tidak berhasil atau jumlah kurang. Silakan coba bayar kembali.</span>
                                 </p>
                             @endif
                             <a href="{{ route('client.applications.checkout', $application) }}" class="rounded-full bg-[#0361fc] px-8 py-3 text-sm font-bold text-white shadow-sm hover:bg-blue-700 transition">

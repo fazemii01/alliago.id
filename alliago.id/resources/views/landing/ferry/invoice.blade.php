@@ -147,8 +147,9 @@
                     @if(in_array($application->status, ['pending_payment', 'payment_failed']))
                         <div class="mt-10 flex flex-col items-center gap-3 print:hidden">
                             @if($application->status === 'payment_failed')
-                                <p class="text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-2xl px-5 py-3 text-center">
-                                    ⚠️ Pembayaran sebelumnya tidak berhasil. Silakan coba bayar kembali.
+                                <p class="text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-2xl px-5 py-3 text-center flex items-center justify-center gap-2">
+                                    <svg class="h-4 w-4 shrink-0 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                                    <span>Pembayaran sebelumnya tidak berhasil. Silakan coba bayar kembali.</span>
                                 </p>
                             @endif
                             <a href="{{ route('ferry.checkout', $application) }}" class="rounded-full bg-[#0361fc] px-8 py-3 text-sm font-bold text-white shadow-sm hover:bg-blue-700 transition">

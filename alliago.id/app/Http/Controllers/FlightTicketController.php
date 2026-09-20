@@ -214,6 +214,7 @@ class FlightTicketController extends Controller
             'flight.total' => ['nullable', 'numeric', 'min:0'],
             'baggage_weight' => ['nullable', 'integer', 'min:0'],
             'baggage_price' => ['nullable', 'numeric', 'min:0'],
+            'currency' => ['nullable', 'string', 'in:IDR,MYR,RM'],
         ]);
 
         $subtotal = (float) $request->input('flight.price_value');
@@ -221,6 +222,11 @@ class FlightTicketController extends Controller
         $baggagePrice = (float) $request->input('baggage_price', 0);
         $baggageWeight = (int) $request->input('baggage_weight', 0);
         $total = $request->input('flight.total') !== null ? (float) $request->input('flight.total') : ($subtotal + $tax + $baggagePrice);
+
+        $currency = $request->input('currency') ?: (\App\Models\FlightPricingConfig::current()->currency ?? 'IDR');
+        if (strtoupper($currency) === 'RM') {
+            $currency = 'MYR';
+        }
 
         // Generate custom invoice metadata
         $metadata = [
@@ -249,8 +255,9 @@ class FlightTicketController extends Controller
                 'tax' => $tax,
                 'extra_baggage' => $baggagePrice,
                 'total' => $total,
-                'currency' => \App\Models\FlightPricingConfig::current()->currency ?? 'IDR',
+                'currency' => $currency,
             ],
+            'currency' => $currency,
             'invoice_amount' => $total,
         ];
 
