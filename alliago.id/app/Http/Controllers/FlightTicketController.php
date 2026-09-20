@@ -215,6 +215,7 @@ class FlightTicketController extends Controller
             'baggage_weight' => ['nullable', 'integer', 'min:0'],
             'baggage_price' => ['nullable', 'numeric', 'min:0'],
             'currency' => ['nullable', 'string', 'in:IDR,MYR,RM'],
+            'convert_to_rm' => ['nullable', 'boolean'],
         ]);
 
         $subtotal = (float) $request->input('flight.price_value');
@@ -226,6 +227,16 @@ class FlightTicketController extends Controller
         $currency = $request->input('currency') ?: (\App\Models\FlightPricingConfig::current()->currency ?? 'IDR');
         if (strtoupper($currency) === 'RM') {
             $currency = 'MYR';
+        }
+
+        // Convert IDR amount to MYR (RM) if target currency is MYR and conversion is requested or amount is in IDR magnitude
+        if ($currency === 'MYR' && ($request->boolean('convert_to_rm') || $total >= 50000)) {
+            $rate = \App\Models\VisaSetting::getIdrToTargetRate('MYR');
+            $rate = $rate > 0 ? $rate : 3450;
+            $subtotal = round($subtotal / $rate);
+            $tax = round($tax / $rate);
+            $baggagePrice = round($baggagePrice / $rate);
+            $total = $subtotal + $tax + $baggagePrice;
         }
 
         // Generate custom invoice metadata

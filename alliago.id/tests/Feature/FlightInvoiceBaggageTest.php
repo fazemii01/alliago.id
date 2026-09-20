@@ -130,4 +130,117 @@ class FlightInvoiceBaggageTest extends TestCase
         $invoiceResponse->assertStatus(200);
         $invoiceResponse->assertSee('RM');
     }
+
+    public function test_admin_converts_idr_amount_to_rm_when_generating_invoice(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+
+        $client = User::factory()->create();
+        $paymentMethod = PaymentMethod::create([
+            'name' => 'Bank Transfer Mandiri',
+            'provider' => 'manual',
+            'code' => 'mandiri_conversion',
+            'is_active' => true,
+            'configuration' => [],
+        ]);
+
+        // Sending a 4,000,000 IDR amount with currency RM should be converted using the exchange rate
+        $payload = [
+            'client_id' => $client->id,
+            'traveler_name' => 'Budi Santoso',
+            'traveler_email' => 'budi.santoso@example.com',
+            'traveler_phone' => '+628111222333',
+            'payment_method_id' => $paymentMethod->id,
+            'currency' => 'RM',
+            'convert_to_rm' => true,
+            'flight' => [
+                'airline' => 'ZZ',
+                'airline_name' => 'Virtual Airline ZZ',
+                'flight_numbers' => 'ZZ-100',
+                'origin' => 'CGK',
+                'destination' => 'KUL',
+                'depart_date' => '2026-09-01',
+                'depart_time' => '08:00',
+                'cabin_class' => 'economy',
+                'price_value' => 4000000, // 4 million IDR
+                'tax' => 0,
+                'total' => 4000000,
+            ],
+            'baggage_weight' => 0,
+            'baggage_price' => 0,
+        ];
+
+        $response = $this->actingAs($admin)
+            ->postJson('/admin/flights/generate-invoice', $payload);
+
+        $response->assertStatus(200);
+
+        $application = Application::where('traveler_name', 'Budi Santoso')->first();
+        $this->assertNotNull($application);
+        $this->assertEquals('MYR', $application->metadata['currency']);
+
+        $rate = \App\Models\VisaSetting::getIdrToTargetRate('MYR');
+        $expectedAmount = round(4000000 / $rate); // ~1,159 RM instead of 4,000,000 RM
+
+        $this->assertEquals($expectedAmount, $application->metadata['invoice_amount']);
+        $this->assertEquals($expectedAmount, $application->metadata['price_breakdown']['total']);
+        $this->assertNotEquals(4000000, $application->metadata['invoice_amount']);
+    }
+
+    public function test_converting_existing_application_currency_from_idr_to_rm(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+
+        $client = User::factory()->create();
+
+        $application = Application::create([
+            'user_id' => $client->id,
+            'visa_product_id' => null,
+            'reference_number' => 'FLT-TEST12345',
+            'status' => 'pending_payment',
+            'traveler_name' => 'John Doe',
+            'traveler_email' => 'john.doe@example.com',
+            'metadata' => [
+                'type' => 'flight',
+                'currency' => 'IDR',
+                'invoice_amount' => 4000000,
+                'price_breakdown' => [
+                    'currency' => 'IDR',
+                    'total' => 4000000,
+                    'subtotal' => 4000000,
+                ],
+                'flight_details' => [
+                    'airline' => 'ZZ',
+                    'airline_name' => 'Virtual Airline ZZ',
+                    'price_value' => 4000000,
+                    'total' => 4000000,
+                ],
+            ],
+        ]);
+
+        $rate = \App\Models\VisaSetting::getIdrToTargetRate('MYR');
+        $expectedConverted = round(4000000 / $rate);
+
+        // When viewing in IDR
+        $response = $this->actingAs($client)->get(route('client.applications.invoice', $application));
+        $response->assertStatus(200);
+        $response->assertSee('Rp 4.000.000');
+
+        // Now update application currency to MYR with conversion (like Filament change_currency action does)
+        $metadata = $application->metadata;
+        $metadata['currency'] = 'MYR';
+        $metadata['price_breakdown']['currency'] = 'MYR';
+        $metadata['invoice_amount'] = round($metadata['invoice_amount'] / $rate);
+        $metadata['price_breakdown']['total'] = $metadata['invoice_amount'];
+        $application->update(['metadata' => $metadata]);
+
+        $responseMyr = $this->actingAs($client)->get(route('client.applications.invoice', $application));
+        $responseMyr->assertStatus(200);
+        $responseMyr->assertSee('RM ' . number_format($expectedConverted, 0, ',', '.'));
+        $responseMyr->assertDontSee('RM 4.000.000');
+    }
 }
+
+

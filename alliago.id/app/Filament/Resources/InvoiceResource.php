@@ -147,18 +147,53 @@ class InvoiceResource extends Resource
                                 'MYR' => 'RM (Malaysian Ringgit - RM)',
                             ])
                             ->required()
+                            ->live()
+                            ->afterStateUpdated(function ($state, Forms\Set $set, Forms\Get $get) {
+                                if (!$get('auto_convert')) {
+                                    return;
+                                }
+                                $rate = \App\Models\VisaSetting::getIdrToTargetRate('MYR');
+                                $rate = $rate > 0 ? $rate : 3450;
+                                $currentAmount = (float) $get('invoice_amount');
+                                
+                                if ($state === 'MYR' && $currentAmount >= 500) {
+                                    // Converting from IDR to RM
+                                    $set('invoice_amount', round($currentAmount / $rate));
+                                } elseif ($state === 'IDR' && $currentAmount < 50000 && $currentAmount > 0) {
+                                    // Converting from RM to IDR
+                                    $set('invoice_amount', round($currentAmount * $rate));
+                                }
+                            })
                             ->default(fn (Application $record) => in_array(strtoupper($record->metadata['price_breakdown']['currency'] ?? $record->metadata['currency'] ?? ''), ['MYR', 'RM']) ? 'MYR' : 'IDR'),
+                        Forms\Components\Toggle::make('auto_convert')
+                            ->label('Konversi Nominal Otomatis')
+                            ->default(true)
+                            ->helperText(fn () => 'Kurs acuan: 1 RM ≈ Rp ' . number_format(\App\Models\VisaSetting::getIdrToTargetRate('MYR'), 0, ',', '.'))
+                            ->live(),
                         Forms\Components\TextInput::make('invoice_amount')
                             ->label('Nominal Tagihan Baru')
                             ->numeric()
                             ->required()
                             ->default(fn (Application $record) => $record->metadata['invoice_amount'] ?? $record->metadata['price_breakdown']['total'] ?? ($record->visaProduct?->discount_price ?? $record->visaProduct?->base_price ?? 0))
-                            ->helperText('Perbarui nominal tagihan jika dikonversi ke mata uang baru.'),
+                            ->prefix(fn (Forms\Get $get) => in_array(strtoupper($get('currency') ?? ''), ['MYR', 'RM']) ? 'RM' : 'Rp')
+                            ->helperText('Perbarui atau pastikan nominal tagihan sesuai mata uang yang dipilih.'),
                     ])
                     ->action(function (Application $record, array $data): void {
                         $metadata = $record->metadata ?? [];
-                        $newCurrency = $data['currency'] === 'RM' ? 'MYR' : $data['currency'];
+                        $prevCurrency = in_array(strtoupper($metadata['price_breakdown']['currency'] ?? $metadata['currency'] ?? ''), ['MYR', 'RM']) ? 'MYR' : 'IDR';
+                        $newCurrency = in_array(strtoupper($data['currency']), ['MYR', 'RM']) ? 'MYR' : 'IDR';
                         $newAmount = (float) $data['invoice_amount'];
+                        $autoConvert = $data['auto_convert'] ?? true;
+                        
+                        $rate = \App\Models\VisaSetting::getIdrToTargetRate('MYR');
+                        $rate = $rate > 0 ? $rate : 3450;
+
+                        // Safety guard: If converting from IDR to MYR but amount was left in IDR scale (e.g. 4,000,000)
+                        if ($newCurrency === 'MYR' && $prevCurrency === 'IDR' && $autoConvert && $newAmount >= 50000) {
+                            $newAmount = round($newAmount / $rate);
+                        } elseif ($newCurrency === 'IDR' && $prevCurrency === 'MYR' && $autoConvert && $newAmount < 500 && $newAmount > 0) {
+                            $newAmount = round($newAmount * $rate);
+                        }
                         
                         $metadata['currency'] = $newCurrency;
                         if (!isset($metadata['price_breakdown'])) {
@@ -167,6 +202,33 @@ class InvoiceResource extends Resource
                         $metadata['price_breakdown']['currency'] = $newCurrency;
                         $metadata['price_breakdown']['total'] = $newAmount;
                         $metadata['invoice_amount'] = $newAmount;
+
+                        // If flight invoice, also keep flight_details proportional
+                        if (($metadata['type'] ?? '') === 'flight' && isset($metadata['flight_details'])) {
+                            if ($newCurrency === 'MYR' && $prevCurrency === 'IDR') {
+                                if (isset($metadata['flight_details']['price_value']) && $metadata['flight_details']['price_value'] >= 50000) {
+                                    $metadata['flight_details']['price_value'] = round($metadata['flight_details']['price_value'] / $rate);
+                                }
+                                if (isset($metadata['flight_details']['tax']) && $metadata['flight_details']['tax'] > 0) {
+                                    $metadata['flight_details']['tax'] = round($metadata['flight_details']['tax'] / $rate);
+                                }
+                                if (isset($metadata['flight_details']['extra_baggage_price']) && $metadata['flight_details']['extra_baggage_price'] > 0) {
+                                    $metadata['flight_details']['extra_baggage_price'] = round($metadata['flight_details']['extra_baggage_price'] / $rate);
+                                }
+                                $metadata['flight_details']['total'] = $newAmount;
+                            } elseif ($newCurrency === 'IDR' && $prevCurrency === 'MYR') {
+                                if (isset($metadata['flight_details']['price_value']) && $metadata['flight_details']['price_value'] < 50000) {
+                                    $metadata['flight_details']['price_value'] = round($metadata['flight_details']['price_value'] * $rate);
+                                }
+                                if (isset($metadata['flight_details']['tax']) && $metadata['flight_details']['tax'] > 0) {
+                                    $metadata['flight_details']['tax'] = round($metadata['flight_details']['tax'] * $rate);
+                                }
+                                if (isset($metadata['flight_details']['extra_baggage_price']) && $metadata['flight_details']['extra_baggage_price'] > 0) {
+                                    $metadata['flight_details']['extra_baggage_price'] = round($metadata['flight_details']['extra_baggage_price'] * $rate);
+                                }
+                                $metadata['flight_details']['total'] = $newAmount;
+                            }
+                        }
                         
                         $record->metadata = $metadata;
                         $record->save();

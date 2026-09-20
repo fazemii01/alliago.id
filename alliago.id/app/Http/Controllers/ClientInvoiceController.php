@@ -17,6 +17,16 @@ class ClientInvoiceController extends Controller
             ?? $metadata['price_breakdown']['total']
             ?? null; // null means we could not determine the paid amount
 
+        $currency = $metadata['price_breakdown']['currency'] ?? $metadata['currency'] ?? 'IDR';
+        $isMyr = in_array(strtoupper($currency), ['MYR', 'RM']);
+
+        // Safeguard for legacy or unconverted invoices: if currency is MYR but amount is in IDR magnitude (>= 50,000)
+        if ($isMyr && $invoiceAmount && $invoiceAmount >= 50000) {
+            $rate = \App\Models\VisaSetting::getIdrToTargetRate('MYR');
+            $rate = $rate > 0 ? $rate : 3450;
+            $invoiceAmount = round($invoiceAmount / $rate);
+        }
+
         return view('client.applications.invoice', [
             'application' => $application,
             'invoiceAmount' => $invoiceAmount,

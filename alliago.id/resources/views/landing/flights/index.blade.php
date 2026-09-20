@@ -1062,7 +1062,8 @@
                             
                             <div class="relative z-10 space-y-1 md:space-y-2">
                                 <span class="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-3 py-1 text-[10px] md:text-xs font-bold uppercase tracking-wider text-white backdrop-blur-sm">
-                                    Promo Spesial ✨
+                                    <svg class="h-3 w-3 text-amber-300" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                    Promo Spesial
                                 </span>
                                 <h3 class="text-lg md:text-2xl font-black tracking-tight leading-tight drop-shadow-sm">
                                     Temukan Penawaran Terbaik Hari Ini
@@ -1161,6 +1162,19 @@
                                     </button>
                                 </div>
                             </div>
+                            <!-- Real-time currency conversion notice -->
+                            <div x-show="flightCurrency === 'MYR' || flightCurrency === 'RM'" class="mt-3 flex items-start sm:items-center gap-2.5 rounded-xl bg-blue-50/80 px-3.5 py-2.5 text-xs text-blue-900 border border-blue-100">
+                                <svg class="h-4 w-4 shrink-0 text-[#0361fc] mt-0.5 sm:mt-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                                </svg>
+                                <div>
+                                    <span class="font-bold">Konversi Otomatis ke Ringgit:</span>
+                                    <span class="text-blue-700 ml-1">
+                                        Kurs 1 RM &asymp; Rp <span x-text="Number(exchangeRate).toLocaleString('id-ID')"></span>.
+                                        Nominal IDR Rp <span x-text="Number(rawPriceIdr).toLocaleString('id-ID')"></span> dikonversi menjadi RM <span x-text="Number(flight.price_value).toLocaleString('en-US')"></span>.
+                                    </span>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="grid grid-cols-2 gap-4">
@@ -1219,11 +1233,11 @@
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-500 uppercase" x-text="'Harga Pokok (' + flightCurrency + ')'">Harga Pokok</label>
-                                <input type="number" x-model="flight.price_value" @input="calculateTotal()" class="mt-1 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm focus:border-[#0361fc] focus:outline-none" required>
+                                <input type="number" x-model="flight.price_value" @input="updatePriceFromInput()" class="mt-1 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm focus:border-[#0361fc] focus:outline-none" required>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-500 uppercase" x-text="'Pajak/Biaya (' + flightCurrency + ')'">Pajak/Biaya</label>
-                                <input type="number" x-model="flight.tax" @input="calculateTotal()" class="mt-1 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm focus:border-[#0361fc] focus:outline-none">
+                                <input type="number" x-model="flight.tax" @input="updateTaxFromInput()" class="mt-1 block w-full rounded-xl border border-slate-300 px-4 py-2.5 text-sm focus:border-[#0361fc] focus:outline-none">
                             </div>
                         </div>
 
@@ -1630,14 +1644,34 @@
                     referenceNumber: '',
                     loading: false,
                     errorMessage: '',
-                    flightCurrency: '{{ \App\Models\FlightPricingConfig::current()->currency ?? "IDR" }}',
+                    flightCurrency: 'IDR',
                     exchangeRate: {{ \App\Models\VisaSetting::getIdrToTargetRate("MYR") }},
+                    rawPriceIdr: 0,
+                    rawTaxIdr: 0,
                     formatCurrency(amount) {
                         if (this.flightCurrency === 'IDR') {
                             return 'Rp ' + Number(amount).toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
                         } else {
                             return 'RM ' + Number(amount).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
                         }
+                    },
+                    updatePriceFromInput() {
+                        const rate = this.exchangeRate > 0 ? this.exchangeRate : 3450;
+                        if (this.flightCurrency === 'IDR') {
+                            this.rawPriceIdr = Number(this.flight.price_value) || 0;
+                        } else {
+                            this.rawPriceIdr = Math.round((Number(this.flight.price_value) || 0) * rate);
+                        }
+                        this.calculateTotal();
+                    },
+                    updateTaxFromInput() {
+                        const rate = this.exchangeRate > 0 ? this.exchangeRate : 3450;
+                        if (this.flightCurrency === 'IDR') {
+                            this.rawTaxIdr = Number(this.flight.tax) || 0;
+                        } else {
+                            this.rawTaxIdr = Math.round((Number(this.flight.tax) || 0) * rate);
+                        }
+                        this.calculateTotal();
                     },
                     setCurrency(targetCurrency) {
                         const newCurr = targetCurrency === 'RM' ? 'MYR' : targetCurrency;
@@ -1652,14 +1686,12 @@
                             price: newCurr === 'MYR' ? Math.round(bag.price / rate) : bag.price
                         }));
 
-                        if (this.flight.price_value > 0) {
-                            if (newCurr === 'MYR' && oldCurr === 'IDR') {
-                                this.flight.price_value = Math.round(this.flight.price_value / rate);
-                                this.flight.tax = Math.round((this.flight.tax || 0) / rate);
-                            } else if (newCurr === 'IDR' && oldCurr === 'MYR') {
-                                this.flight.price_value = Math.round(this.flight.price_value * rate);
-                                this.flight.tax = Math.round((this.flight.tax || 0) * rate);
-                            }
+                        if (newCurr === 'MYR') {
+                            this.flight.price_value = Math.round(this.rawPriceIdr / rate);
+                            this.flight.tax = Math.round((this.rawTaxIdr || 0) / rate);
+                        } else {
+                            this.flight.price_value = this.rawPriceIdr;
+                            this.flight.tax = this.rawTaxIdr;
                         }
 
                         const found = this.baggageOptions.find(b => b.weight === this.selectedBaggageWeight);
@@ -1689,6 +1721,10 @@
                     selectedBaggagePrice: 0,
                     
                     initWizard(flightData, filters) {
+                        this.flightCurrency = 'IDR';
+                        this.rawPriceIdr = Number(flightData.price_value) || 0;
+                        this.rawTaxIdr = Number(flightData.tax) || 0;
+
                         this.flight.airline = flightData.airline || 'ZZ';
                         this.flight.airline_name = flightData.airline_name || 'Virtual Airline';
                         this.flight.flight_numbers = flightData.flight_numbers || '';
@@ -1700,9 +1736,14 @@
                         this.flight.return_time = flightData.end_time || '';
                         this.flight.cabin_class = flightData.class || 'economy';
                         this.flight.trip_type = filters.trip_type || 'O';
-                        this.flight.price_value = flightData.price_value || 0;
-                        this.flight.tax = 0;
+                        this.flight.price_value = this.rawPriceIdr;
+                        this.flight.tax = this.rawTaxIdr;
                         
+                        this.baggageOptions = this.baseBaggageOptions.map(bag => ({
+                            weight: bag.weight,
+                            price: bag.price
+                        }));
+
                         this.selectedBaggageWeight = 0;
                         this.selectedBaggagePrice = 0;
                         this.calculateTotal();
@@ -1774,6 +1815,7 @@
                                     traveler_phone: this.travelerPhone,
                                     payment_method_id: this.paymentMethodId,
                                     currency: (this.flightCurrency === 'MYR' || this.flightCurrency === 'RM') ? 'MYR' : 'IDR',
+                                    convert_to_rm: (this.flightCurrency === 'MYR' || this.flightCurrency === 'RM'),
                                     flight: this.flight,
                                     baggage_weight: this.selectedBaggageWeight,
                                     baggage_price: this.selectedBaggagePrice
