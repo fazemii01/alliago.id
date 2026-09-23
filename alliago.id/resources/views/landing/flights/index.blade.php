@@ -1815,7 +1815,7 @@
                                     traveler_phone: this.travelerPhone,
                                     payment_method_id: this.paymentMethodId,
                                     currency: (this.flightCurrency === 'MYR' || this.flightCurrency === 'RM') ? 'MYR' : 'IDR',
-                                    convert_to_rm: (this.flightCurrency === 'MYR' || this.flightCurrency === 'RM'),
+                                    convert_to_rm: false,
                                     flight: this.flight,
                                     baggage_weight: this.selectedBaggageWeight,
                                     baggage_price: this.selectedBaggagePrice

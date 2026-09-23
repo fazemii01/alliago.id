@@ -137,14 +137,14 @@
                                         @endif
                                     </td>
                                      <td class="py-6 text-sm font-bold text-slate-900 text-right whitespace-nowrap">
-                                        @if($invoiceAmount)
+                                        @if(isset($invoiceAmount) && is_numeric($invoiceAmount))
                                             @if(!$application->visaProduct && isset($application->metadata['flight_details']['extra_baggage_price']) && $application->metadata['flight_details']['extra_baggage_price'] > 0)
-                                                {{ $currencySymbol }} {{ number_format($invoiceAmount - $baggagePrice, 0, ',', '.') }}
+                                                {{ $currencySymbol }} {{ number_format(max(0, $invoiceAmount - $baggagePrice), 0, ',', '.') }}
                                             @else
                                                 {{ $currencySymbol }} {{ number_format($invoiceAmount, 0, ',', '.') }}
                                             @endif
                                         @else
-                                            <span class="text-slate-400 text-xs">Menghubungi sistem...</span>
+                                            <span class="text-slate-400 text-xs">-</span>
                                         @endif
                                      </td>
                                 </tr>
@@ -186,12 +186,12 @@
                                 <div class="flex justify-between pt-2"><span class="text-base font-bold text-slate-900">Total Keseluruhan</span><span class="text-lg font-black text-[#0361fc]">{{ $currencySymbol }} {{ number_format($totalVal, 0, ',', '.') }}</span></div>
                             @else
                                 @if(!$application->visaProduct && isset($application->metadata['flight_details']['extra_baggage_weight']) && $application->metadata['flight_details']['extra_baggage_weight'] > 0)
-                                    <div class="flex justify-between"><span class="text-sm text-slate-600">Harga Tiket</span><span class="text-sm font-bold text-slate-900">{{ $currencySymbol }} {{ number_format($invoiceAmount - $baggagePrice, 0, ',', '.') }}</span></div>
+                                    <div class="flex justify-between"><span class="text-sm text-slate-600">Harga Tiket</span><span class="text-sm font-bold text-slate-900">{{ $currencySymbol }} {{ number_format(max(0, ($invoiceAmount ?? 0) - $baggagePrice), 0, ',', '.') }}</span></div>
                                     <div class="flex justify-between"><span class="text-sm text-slate-600">Bagasi Tambahan (+{{ $application->metadata['flight_details']['extra_baggage_weight'] }} kg)</span><span class="text-sm font-bold text-slate-900">{{ $currencySymbol }} {{ number_format($baggagePrice, 0, ',', '.') }}</span></div>
                                 @endif
-                                <div class="flex justify-between"><span class="text-sm text-slate-600">Subtotal</span><span class="text-sm font-bold text-slate-900">{{ $invoiceAmount ? $currencySymbol . ' ' . number_format($invoiceAmount, 0, ',', '.') : '-' }}</span></div>
+                                <div class="flex justify-between"><span class="text-sm text-slate-600">Subtotal</span><span class="text-sm font-bold text-slate-900">{{ (isset($invoiceAmount) && is_numeric($invoiceAmount)) ? $currencySymbol . ' ' . number_format($invoiceAmount, 0, ',', '.') : '-' }}</span></div>
                                 <div class="flex justify-between border-b border-slate-200 pb-4"><span class="text-sm text-slate-600">Pajak (0%)</span><span class="text-sm font-bold text-slate-900">{{ $currencySymbol }} 0</span></div>
-                                <div class="flex justify-between pt-2"><span class="text-base font-bold text-slate-900">Total Keseluruhan</span><span class="text-lg font-black text-[#0361fc]">{{ $invoiceAmount ? $currencySymbol . ' ' . number_format($invoiceAmount, 0, ',', '.') : 'Menghubungi sistem...' }}</span></div>
+                                <div class="flex justify-between pt-2"><span class="text-base font-bold text-slate-900">Total Keseluruhan</span><span class="text-lg font-black text-[#0361fc]">{{ (isset($invoiceAmount) && is_numeric($invoiceAmount)) ? $currencySymbol . ' ' . number_format($invoiceAmount, 0, ',', '.') : '-' }}</span></div>
                             @endif
                         </div>
                     </div>

@@ -31,28 +31,7 @@ class PageController extends Controller
 
     public function currencyRates()
     {
-        $apiKey = env('EXCHANGE_RATE_API_KEY') ?: config('services.abstract_currency.key');
-        
-        $ratesData = \Illuminate\Support\Facades\Cache::remember('currency_rates_data', 14400, function () use ($apiKey) {
-            if (!$apiKey) {
-                return null;
-            }
-
-            try {
-                $response = \Illuminate\Support\Facades\Http::get('https://exchange-rates.abstractapi.com/v1/live/', [
-                    'api_key' => $apiKey,
-                    'base' => 'USD'
-                ]);
-
-                if ($response->successful()) {
-                    return $response->json();
-                }
-            } catch (\Exception $e) {
-                \Log::error('Abstract API Currency fetch failed: ' . $e->getMessage());
-            }
-
-            return null;
-        });
+        $ratesData = \App\Models\VisaSetting::getExchangeRatesData();
 
         $exchangeRates = [];
         $baseCurrency = 'IDR';

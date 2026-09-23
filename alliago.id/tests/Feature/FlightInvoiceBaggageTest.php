@@ -241,6 +241,83 @@ class FlightInvoiceBaggageTest extends TestCase
         $responseMyr->assertSee('RM ' . number_format($expectedConverted, 0, ',', '.'));
         $responseMyr->assertDontSee('RM 4.000.000');
     }
+
+    public function test_admin_generates_flight_invoice_with_already_converted_rm_amounts_does_not_double_convert(): void
+    {
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+
+        $client = User::factory()->create();
+        $paymentMethod = PaymentMethod::create([
+            'name' => 'Transfer Bank BCA',
+            'provider' => 'manual',
+            'code' => 'bca_manual',
+            'is_active' => true,
+            'configuration' => [],
+        ]);
+
+        // Simulating modal submission where price was already converted to RM: 1159 RM
+        $payload = [
+            'client_id' => $client->id,
+            'traveler_name' => 'Nurul Huda',
+            'traveler_email' => 'nurul.huda@example.com',
+            'traveler_phone' => '+601122334455',
+            'payment_method_id' => $paymentMethod->id,
+            'currency' => 'MYR',
+            'convert_to_rm' => false,
+            'flight' => [
+                'airline' => 'ZZ',
+                'airline_name' => 'Virtual Airline ZZ',
+                'flight_numbers' => 'ZZ-888',
+                'origin' => 'KUL',
+                'destination' => 'CGK',
+                'depart_date' => '2026-10-01',
+                'depart_time' => '09:00',
+                'cabin_class' => 'economy',
+                'price_value' => 1159,
+                'tax' => 0,
+                'total' => 1159,
+            ],
+            'baggage_weight' => 0,
+            'baggage_price' => 0,
+        ];
+
+        $response = $this->actingAs($admin)
+            ->postJson('/admin/flights/generate-invoice', $payload);
+
+        $response->assertStatus(200);
+
+        $application = Application::where('traveler_name', 'Nurul Huda')->first();
+        $this->assertNotNull($application);
+        $this->assertEquals(1159, $application->metadata['invoice_amount']);
+        $this->assertNotEquals(0, $application->metadata['invoice_amount']);
+
+        // Check invoice view renders 1.159 and NOT "Menghubungi sistem..."
+        $invoiceResponse = $this->actingAs($client)->get(route('client.applications.invoice', $application));
+        $invoiceResponse->assertStatus(200);
+        $invoiceResponse->assertSee('RM 1.159');
+        $invoiceResponse->assertDontSee('Menghubungi sistem...');
+    }
+
+    public function test_abstract_api_integration_in_visa_setting(): void
+    {
+        \Illuminate\Support\Facades\Cache::forget('currency_rates_data');
+
+        \Illuminate\Support\Facades\Http::fake([
+            'https://exchange-rates.abstractapi.com/v1/live/*' => \Illuminate\Support\Facades\Http::response([
+                'base' => 'USD',
+                'last_updated' => 1700000000,
+                'exchange_rates' => [
+                    'USD' => 1.0,
+                    'IDR' => 16000.0,
+                    'MYR' => 4.0,
+                ],
+            ], 200),
+        ]);
+
+        $rate = \App\Models\VisaSetting::getIdrToTargetRate('MYR');
+        $this->assertEquals(4000.0, $rate); // 16000 / 4 = 4000 IDR per MYR
+    }
 }
 
 

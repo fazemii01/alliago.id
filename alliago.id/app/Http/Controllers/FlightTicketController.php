@@ -229,13 +229,19 @@ class FlightTicketController extends Controller
             $currency = 'MYR';
         }
 
-        // Convert IDR amount to MYR (RM) if target currency is MYR and conversion is requested or amount is in IDR magnitude
-        if ($currency === 'MYR' && ($request->boolean('convert_to_rm') || $total >= 50000)) {
+        // Convert IDR amount to MYR (RM) ONLY if target currency is MYR and total is still in IDR magnitude (>= 50,000)
+        // If total is < 50,000, it was already converted to RM on the client side, so DO NOT divide again!
+        if ($currency === 'MYR' && $total >= 50000) {
             $rate = \App\Models\VisaSetting::getIdrToTargetRate('MYR');
             $rate = $rate > 0 ? $rate : 3450;
             $subtotal = round($subtotal / $rate);
             $tax = round($tax / $rate);
             $baggagePrice = round($baggagePrice / $rate);
+            $total = $subtotal + $tax + $baggagePrice;
+        }
+
+        // Safeguard: Ensure total is never 0 if subtotal > 0
+        if ($total <= 0 && $subtotal > 0) {
             $total = $subtotal + $tax + $baggagePrice;
         }
 
@@ -303,15 +309,26 @@ class FlightTicketController extends Controller
             }
 
             try {
+                // Determine currency and amount for Xendit
+                // Standard Indonesian Xendit merchant accounts only support IDR
+                $xenditCurrency = $currency === 'MYR' ? 'IDR' : $currency;
+                $rate = \App\Models\VisaSetting::getIdrToTargetRate('MYR');
+                $rate = $rate > 0 ? $rate : 3450;
+                $xenditAmount = $currency === 'MYR' ? round($total * $rate) : $total;
+                $description = 'Pembayaran Tiket Pesawat: ' . ($metadata['flight_details']['airline_name'] ?? 'Penerbangan');
+                if ($currency === 'MYR') {
+                    $description .= " (RM " . number_format($total, 0, ',', '.') . ")";
+                }
+
                 $response = \Illuminate\Support\Facades\Http::withBasicAuth($secretKey, '')
                     ->post('https://api.xendit.co/v2/invoices', [
                         'external_id' => $application->reference_number,
-                        'amount' => $total,
+                        'amount' => $xenditAmount,
                         'payer_email' => $application->traveler_email,
-                        'description' => 'Pembayaran Tiket Pesawat: ' . ($metadata['flight_details']['airline_name'] ?? 'Penerbangan'),
+                        'description' => $description,
                         'success_redirect_url' => route('client.dashboard'),
                         'failure_redirect_url' => route('client.applications.checkout', $application),
-                        'currency' => $metadata['price_breakdown']['currency'] ?? 'IDR',
+                        'currency' => $xenditCurrency,
                     ]);
 
                 if ($response->successful()) {
@@ -325,12 +342,12 @@ class FlightTicketController extends Controller
 
                     $xenditUrl = $invoice['invoice_url'];
                 } else {
-                    \Illuminate\Support\Facades\Log::error('Xendit Invoice Creation Failed: ' . $response->body());
-                    return response()->json(['message' => 'Gagal membuat invoice Xendit.'], 500);
+                    \Illuminate\Support\Facades\Log::warning('Xendit Invoice Creation Failed: ' . $response->body());
+                    // Allow application creation to proceed so admin/user can view invoice and pay via manual or alternate method
                 }
             } catch (\Throwable $e) {
                 \Illuminate\Support\Facades\Log::error('Xendit API Exception: ' . $e->getMessage());
-                return response()->json(['message' => 'Terjadi kesalahan sistem saat menghubungi Xendit.'], 500);
+                // Allow application creation to proceed so user is not stuck
             }
         }
 

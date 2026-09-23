@@ -69,9 +69,15 @@ class InvoiceResource extends Resource
                         $curr = $record->metadata['price_breakdown']['currency'] ?? $record->metadata['currency'] ?? null;
                         $isRm = in_array(strtoupper($curr ?? ''), ['MYR', 'RM']) || (($record->metadata['type'] ?? '') === 'ferry');
                         $symbol = $isRm ? 'RM ' : 'Rp ';
-                        $amount = $record->metadata['invoice_amount'] 
-                            ?? $record->metadata['price_breakdown']['total'] 
-                            ?? ($record->visaProduct?->discount_price ?? $record->visaProduct?->base_price ?? 0);
+                        $amount = (!empty($record->metadata['invoice_amount']) && (float) $record->metadata['invoice_amount'] > 0)
+                            ? (float) $record->metadata['invoice_amount']
+                            : (!empty($record->metadata['price_breakdown']['total']) && (float) $record->metadata['price_breakdown']['total'] > 0
+                                ? (float) $record->metadata['price_breakdown']['total']
+                                : (!empty($record->metadata['flight_details']['total']) && (float) $record->metadata['flight_details']['total'] > 0
+                                    ? (float) $record->metadata['flight_details']['total']
+                                    : ($record->visaProduct?->discount_price ?? $record->visaProduct?->base_price ?? 0)
+                                )
+                            );
                         return $symbol . number_format($amount, 0, ',', '.');
                     })
                     ->sortable(),

@@ -9,13 +9,24 @@ class ClientInvoiceController extends Controller
 {
     public function show(Application $application)
     {
-        // invoice_amount is locked at checkout time. If missing (legacy records),
-        // use price_breakdown total. NEVER fall back to current product price,
-        // as that price may have changed since the user paid.
         $metadata = $application->metadata ?? [];
-        $invoiceAmount = $metadata['invoice_amount']
-            ?? $metadata['price_breakdown']['total']
-            ?? null; // null means we could not determine the paid amount
+        
+        // Recover invoice_amount cleanly, preferring locked invoice_amount, then breakdown, then flight_details
+        $invoiceAmount = null;
+        if (!empty($metadata['invoice_amount']) && (float) $metadata['invoice_amount'] > 0) {
+            $invoiceAmount = (float) $metadata['invoice_amount'];
+        } elseif (!empty($metadata['price_breakdown']['total']) && (float) $metadata['price_breakdown']['total'] > 0) {
+            $invoiceAmount = (float) $metadata['price_breakdown']['total'];
+        } elseif (!empty($metadata['flight_details']['total']) && (float) $metadata['flight_details']['total'] > 0) {
+            $invoiceAmount = (float) $metadata['flight_details']['total'];
+        } elseif (!empty($metadata['flight_details']['price_value'])) {
+            $ticketPrice = (float) ($metadata['flight_details']['price_value'] ?? 0);
+            $extraBag = (float) ($metadata['flight_details']['extra_baggage_price'] ?? 0);
+            $tax = (float) ($metadata['flight_details']['tax'] ?? 0);
+            $invoiceAmount = $ticketPrice + $extraBag + $tax;
+        } elseif ($application->visaProduct) {
+            $invoiceAmount = (float) ($application->visaProduct->discount_price ?? $application->visaProduct->base_price);
+        }
 
         $currency = $metadata['price_breakdown']['currency'] ?? $metadata['currency'] ?? 'IDR';
         $isMyr = in_array(strtoupper($currency), ['MYR', 'RM']);

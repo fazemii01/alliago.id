@@ -87,8 +87,7 @@ class ClientCheckoutController extends Controller
 
         if ($paymentMethod->provider === 'xendit') {
             $metadata = $application->metadata ?? [];
-            // Use the calculated total from price_breakdown to include all fees, addons, and taxes
-            $amount = $metadata['price_breakdown']['total'] ?? ($application->visaProduct ? ($application->visaProduct->discount_price ?? $application->visaProduct->base_price) : 0);
+            $amount = $metadata['invoice_amount'] ?? $metadata['price_breakdown']['total'] ?? ($application->visaProduct ? ($application->visaProduct->discount_price ?? $application->visaProduct->base_price) : 0);
             
             // Reuse existing invoice if it exists
             if (isset($metadata['xendit_invoice_url'])) {
@@ -106,17 +105,28 @@ class ClientCheckoutController extends Controller
                 return back()->with('error', 'Konfigurasi Xendit tidak valid.');
             }
 
-            $currency = $metadata['price_breakdown']['currency'] ?? 'IDR';
+            $currency = $metadata['price_breakdown']['currency'] ?? $metadata['currency'] ?? 'IDR';
+            $isMyr = in_array(strtoupper($currency), ['MYR', 'RM']);
+
+            // Xendit amount & currency: Standard Indonesian Xendit merchant accounts charge in IDR
+            $xenditCurrency = $isMyr ? 'IDR' : $currency;
+            $rate = \App\Models\VisaSetting::getIdrToTargetRate('MYR');
+            $rate = $rate > 0 ? $rate : 3450;
+            $xenditAmount = $isMyr ? round($amount * $rate) : $amount;
+            $description = 'Pembayaran ' . ($application->visaProduct ? 'Visa: ' . $application->visaProduct->name : 'Tiket Pesawat: ' . ($metadata['flight_details']['airline_name'] ?? 'Penerbangan'));
+            if ($isMyr) {
+                $description .= ' (RM ' . number_format($amount, 0, ',', '.') . ')';
+            }
 
             $response = \Illuminate\Support\Facades\Http::withBasicAuth($secretKey, '')
                 ->post('https://api.xendit.co/v2/invoices', [
                     'external_id' => $application->reference_number,
-                    'amount' => $amount,
+                    'amount' => $xenditAmount,
                     'payer_email' => $application->traveler_email,
-                    'description' => 'Pembayaran ' . ($application->visaProduct ? 'Visa: ' . $application->visaProduct->name : 'Tiket Pesawat: ' . ($metadata['flight_details']['airline_name'] ?? 'Penerbangan')),
+                    'description' => $description,
                     'success_redirect_url' => route('client.dashboard'),
                     'failure_redirect_url' => route('client.applications.checkout', $application),
-                    'currency' => $currency,
+                    'currency' => $xenditCurrency,
                 ]);
 
             if ($response->successful()) {
