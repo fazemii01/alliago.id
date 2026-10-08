@@ -19,7 +19,7 @@
     
     {{-- Optional Tooltip Label on Desktop Hover --}}
     <span class="absolute right-[68px] bg-[#001D44] text-white text-[12px] font-semibold px-3 py-1.5 rounded-lg whitespace-nowrap shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-200">
-        Bantuan WhatsApp 24/7
+        Bantuan WhatsApp
     </span>
 </a>
 
