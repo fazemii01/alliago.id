@@ -24,7 +24,7 @@ Route::get('/lang/{locale}', function (string $locale) {
 
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
-Route::get('/', LandingPageController::class);
+Route::get('/', LandingPageController::class)->name('home');
 
 Route::get('/admin-dashboard', AdminDashboardController::class)->middleware('auth')->name('admin.dashboard.view');
 

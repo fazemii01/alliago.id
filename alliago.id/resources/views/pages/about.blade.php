@@ -175,7 +175,7 @@
                                     <div>
                                         <h4 class="text-sm font-bold text-slate-900">Jam Operasional</h4>
                                         <p class="text-xs text-slate-500 font-medium mt-1">
-                                            Senin – Jumat: 08.00 – 17.00 WIB
+                                            Senin – Jumat: 09.00 – 16.00 WIB
                                         </p>
                                     </div>
                                 </div>

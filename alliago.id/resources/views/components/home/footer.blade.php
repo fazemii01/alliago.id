@@ -9,7 +9,18 @@
     </div>
     <div><h4 class="font-bold mb-5">{{ __('common.footer_services') }}</h4><ul class="space-y-3 text-sm text-slate-400 font-medium"><li><a href="#" class="hover:text-white">{{ __('home.footer_visa_japan') }}</a></li><li><a href="#" class="hover:text-white">{{ __('home.footer_visa_korea') }}</a></li><li><a href="#" class="hover:text-white">{{ __('home.footer_visa_australia') }}</a></li><li><a href="#" class="hover:text-white">{{ __('home.footer_visa_schengen') }}</a></li></ul></div>
     <div><h4 class="font-bold mb-5">{{ __('common.footer_company') }}</h4><ul class="space-y-3 text-sm text-slate-400 font-medium"><li><a href="{{ route('pages.about') }}" class="hover:text-white">{{ __('common.footer_about_us') }}</a></li><li><a href="{{ route('pages.faq') }}" class="hover:text-white">{{ __('common.footer_faq') }}</a></li><li><a href="#" class="hover:text-white">{{ __('common.footer_how_it_works') }}</a></li><li><a href="{{ route('pages.refund_policy') }}" class="hover:text-white">{{ __('common.footer_refund_policy') }}</a></li><li><a href="{{ route('pages.privacy_policy') }}" class="hover:text-white">{{ __('common.footer_privacy_policy') }}</a></li></ul></div>
-    <div><h4 class="font-bold mb-5">{{ __('common.footer_contact') }}</h4><p class="text-sm text-slate-400 font-medium leading-relaxed mb-4">{{ __('home.footer_contact_label') }}<br>{{ __('home.footer_email_label') }}</p><a href="https://wa.me/6281334455616" class="inline-flex bg-white text-slate-950 rounded-2xl px-5 py-3 text-xs font-bold tracking-wide font-semibold">{{ __('common.btn_contact_us') }}</a></div>
+    <div>
+      <h4 class="font-bold mb-5">{{ __('common.footer_contact') }}</h4>
+      <p class="text-sm text-slate-400 font-medium leading-relaxed mb-3">
+        {{ __('home.footer_contact_label') }}<br>
+        {{ __('home.footer_email_label') }}
+      </p>
+      <div class="text-xs text-slate-400 leading-relaxed space-y-1 mb-4">
+        <p><span class="text-white font-semibold">Jam Operasional:</span> 09.00 – 16.00 WIB</p>
+        <p><span class="text-white font-semibold">Alamat:</span> Jl. Adara Park No.2, Karanganyar, Kabuaran, Kec. Kunir, Kabupaten Lumajang, Jawa Timur 67383</p>
+      </div>
+      <a href="https://wa.me/6281334455616" class="inline-flex bg-white text-slate-950 rounded-2xl px-5 py-3 text-xs font-bold tracking-wide">{{ __('common.btn_contact_us') }}</a>
+    </div>
   </div>
   <div class="container mx-auto mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between gap-4 text-xs text-slate-500 font-bold">
     <p>{{ __('common.footer_rights') }}</p>

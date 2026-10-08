@@ -22,7 +22,7 @@ class LandingPageController extends Controller
             ->with('country')
             ->where('is_active', true)
             ->orderBy('sort_order')
-            ->limit(6)
+            ->limit(12)
             ->get();
 
         $highlightProduct = VisaProduct::query()
@@ -50,6 +50,20 @@ class LandingPageController extends Controller
             // Graceful fallback if migrations haven't run or table doesn't exist
         }
 
+        $myrRate = 3450.0;
+        try {
+            $ratesData = \App\Models\VisaSetting::getExchangeRatesData();
+            if ($ratesData && isset($ratesData['exchange_rates']['IDR'], $ratesData['exchange_rates']['MYR'])) {
+                $idr = (float)$ratesData['exchange_rates']['IDR'];
+                $myr = (float)$ratesData['exchange_rates']['MYR'];
+                if ($myr > 0) {
+                    $myrRate = round($idr / $myr, 2);
+                }
+            }
+        } catch (\Throwable $e) {
+            // fallback default
+        }
+
         return view('landing.home', compact(
             'countries',
             'featuredProducts',
@@ -57,6 +71,7 @@ class LandingPageController extends Controller
             'testimonials',
             'siteFaqs',
             'popupBanner',
+            'myrRate',
         ));
     }
 }

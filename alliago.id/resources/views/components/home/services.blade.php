@@ -1,140 +1,146 @@
-@props(['featuredProducts' => collect()])
+@props(['featuredProducts' => collect(), 'myrRate' => 3450.0])
 
-@php
-$flagImages = [
-    'JP' => '🇯🇵', 'KR' => '🇰🇷', 'AU' => '🇦🇺', 'CN' => '🇨🇳', 'TW' => '🇹🇼',
-    'US' => '🇺🇸', 'GB' => '🇬🇧', 'NL' => '🇳🇱', 'DE' => '🇩🇪', 'FR' => '🇫🇷',
-    'SG' => '🇸🇬', 'MY' => '🇲🇾', 'TH' => '🇹🇭', 'IN' => '🇮🇳', 'IT' => '🇮🇹',
-];
+<section id="services" class="py-14 px-4 sm:px-6">
+    <div class="mx-auto max-w-7xl">
+        {{-- Section Header --}}
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-10">
+            <div>
+                <div class="inline-flex items-center gap-2 rounded-full bg-blue-50 border border-blue-200/80 px-3.5 py-1 text-xs font-bold text-[#00275A] mb-3">
+                    <svg class="h-4 w-4 text-[#FE6A00]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>Layanan Asistensi Visa Resmi</span>
+                </div>
+                <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                    Destinasi Populer & Layanan Visa Terpercaya
+                </h2>
+                <p class="mt-2 text-xs sm:text-sm text-slate-500 max-w-2xl">
+                    Pilih produk visa untuk kebutuhan liburan, perjalanan bisnis, atau studi. Bimbingan berkas akurat dengan persetujuan tinggi.
+                </p>
+            </div>
 
-$cardImages = [
-    'Jepang' => 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=400&q=80',
-    'Korea Selatan' => 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=400&q=80',
-    'Australia' => 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&w=400&q=80',
-    'China' => 'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=400&q=80',
-    'Taiwan' => 'https://images.unsplash.com/photo-1470004914212-05527e49370b?auto=format&fit=crop&w=400&q=80',
-    'United States' => 'https://images.unsplash.com/photo-1485738422979-f5c462d49f04?auto=format&fit=crop&w=400&q=80',
-    'United Kingdom' => 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=400&q=80',
-    'Netherlands' => 'https://images.unsplash.com/photo-1534351590666-13e3e96b5017?auto=format&fit=crop&w=400&q=80',
-];
-$defaultImage = 'https://images.unsplash.com/photo-1488085061387-422e29b40080?auto=format&fit=crop&w=400&q=80';
-
-// Collect unique categories / regions from products
-$categories = [
-    ['label' => __('home.services_cat_trending'), 'icon' => '🔥', 'filter' => 'trending'],
-    ['label' => __('home.services_cat_online'), 'icon' => '🌐', 'filter' => 'online'],
-    ['label' => __('home.services_cat_schengen'), 'icon' => '🇪🇺', 'filter' => 'schengen'],
-    ['label' => __('home.services_cat_asia'), 'icon' => '🌏', 'filter' => 'asia'],
-    ['label' => __('home.services_cat_americas'), 'icon' => '🦅', 'filter' => 'amerika'],
-    ['label' => __('home.services_cat_middle_east'), 'icon' => '🕌', 'filter' => 'timteng'],
-];
-@endphp
-
-<section id="services" class="pt-8 pb-16 px-4 scroll-mt-32 md:scroll-mt-36">
-  <div class="container mx-auto">
-
-    {{-- Horizontal scrollable category pills --}}
-    <div class="flex gap-3 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide mb-6">
-      @foreach($categories as $cat)
-      <button 
-        type="button"
-        class="category-pill flex items-center gap-2 px-5 py-3 rounded-full bg-white border border-slate-200 text-sm font-semibold text-slate-700 whitespace-nowrap shadow-sm hover:border-blue-200 hover:text-brand transition-all shrink-0"
-      >
-        <span class="text-base">{{ $cat['icon'] }}</span>
-        {{ $cat['label'] }}
-        <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-        </svg>
-      </button>
-      @endforeach
-    </div>
-
-    {{-- Filter bar --}}
-    <div class="flex flex-wrap items-center gap-3 mb-8">
-      <button type="button" class="filter-btn flex items-center gap-2 px-4 py-2.5 rounded-full border border-slate-200 bg-white text-sm font-semibold text-slate-600 hover:border-blue-200 hover:text-brand transition-all">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
-        {{ __('home.services_filter') }}
-      </button>
-      <button type="button" class="filter-btn flex items-center gap-2 px-4 py-2.5 rounded-full border border-slate-200 bg-white text-sm font-semibold text-slate-600 hover:border-blue-200 hover:text-brand transition-all">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-        {{ __('home.services_departure') }}
-      </button>
-      <button type="button" class="filter-btn flex items-center gap-2 px-4 py-2.5 rounded-full border border-slate-200 bg-white text-sm font-semibold text-slate-600 hover:border-blue-200 hover:text-brand transition-all">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-        {{ __('home.services_popular') }}
-        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-      </button>
-    </div>
-
-    {{-- 3-column Visa product cards (spun.global style) --}}
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-      @forelse($featuredProducts as $product)
-      @php
-        $hasDiscount = $product->discount_price && $product->discount_price < $product->base_price;
-        $discountPercent = $hasDiscount ? round((1 - $product->discount_price / $product->base_price) * 100) : 0;
-        $countryName = $product->country->name ?? '';
-        $countryCode = $product->country->code ?? '';
-        $flagEmoji = $flagImages[$countryCode] ?? ($product->country->flag_emoji ?? '🏳️');
-        $cardImage = $product->icon_url;
-      @endphp
-      <a href="{{ route('visa.show', $product->slug) }}" class="visa-card group block rounded-2xl border border-slate-200/80 bg-white p-5 transition-all hover:shadow-lg hover:border-blue-200/60">
-        <div class="flex items-start justify-between gap-3">
-          {{-- Left: Visa info --}}
-          <div class="flex-1 min-w-0">
-            <h3 class="text-base font-bold text-slate-900 leading-snug mb-1 group-hover:text-brand transition-colors">
-              {{ $product->name }}
-            </h3>
-            <p class="text-sm text-slate-500 font-medium mb-4">
-              @if($product->processing_time)
-                {{ __('home.services_processing_prefix') }} {{ $product->processing_time }}
-              @else
-                {{ $product->short_description }}
-              @endif
-            </p>
-          </div>
-
-          {{-- Right: Country flag image --}}
-          <div class="w-20 h-20 rounded-xl overflow-hidden shrink-0 border border-slate-100 shadow-sm">
-            <img 
-              src="{{ $cardImage }}" 
-              alt="{{ $countryName }}" 
-              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-              loading="lazy"
-            >
-          </div>
+            <div class="mt-4 sm:mt-0">
+                <a href="{{ route('visa.index') }}" class="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-[#FE6A00] hover:text-[#E05D00] transition-colors group">
+                    <span>Lihat Semua 50+ Negara</span>
+                    <svg class="h-4 w-4 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                </a>
+            </div>
         </div>
 
-        {{-- Price row --}}
-        <div class="flex items-center gap-2 mt-1">
-          @if($hasDiscount)
-          <span class="text-sm font-bold text-brand">{{ __('home.services_from_price') }} {{ $product->formatted_discount_price }}</span>
-          <span class="text-xs text-slate-400 line-through font-medium">{{ $product->formatted_base_price }}</span>
-          <span class="inline-flex items-center px-2 py-0.5 rounded-md bg-red-50 text-[11px] font-bold text-red-500 border border-red-100">
-            {{ $discountPercent }}% OFF
-          </span>
-          @else
-          <span class="text-sm font-bold text-brand">{{ __('home.services_from_price') }} {{ $product->formatted_base_price }}</span>
-          @endif
+        {{-- Dynamic Visa Product Cards Grid with Prominent Cover Images --}}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @forelse($featuredProducts as $product)
+                @php
+                    $countryName = $product->country->name ?? 'Internasional';
+                    $hasDiscount = $product->discount_price && $product->discount_price < $product->base_price;
+                    $displayPrice = $hasDiscount ? $product->discount_price : $product->base_price;
+                    $approxRm = ($myrRate > 0) ? round($displayPrice / $myrRate) : 0;
+                    $imageUrl = $product->icon_url;
+                @endphp
+
+                <div class="group flex flex-col justify-between overflow-hidden rounded-[20px] border border-slate-200/90 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-blue-200">
+                    <div>
+                        {{-- Prominent Visa Cover Image Header (Height ~190px) --}}
+                        <div class="relative h-48 w-full overflow-hidden bg-slate-100">
+                            <img 
+                                src="{{ $imageUrl }}" 
+                                alt="{{ $product->name }}" 
+                                class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                loading="lazy"
+                                onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1488085061387-422e29b40080?auto=format&fit=crop&w=600&q=80';"
+                            >
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10"></div>
+
+                            {{-- Floating Country Badge --}}
+                            <div class="absolute top-3 left-3 flex items-center gap-1.5 rounded-full bg-white/95 backdrop-blur-md px-3 py-1 text-xs font-extrabold text-slate-800 shadow-sm">
+                                <svg class="h-3.5 w-3.5 text-[#00275A]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                <span>{{ $countryName }}</span>
+                            </div>
+
+                            {{-- Floating Processing Time Badge --}}
+                            <div class="absolute top-3 right-3 flex items-center gap-1 rounded-full bg-[#00275A]/90 backdrop-blur-md px-2.5 py-1 text-[11px] font-bold text-blue-100 shadow-sm">
+                                <svg class="h-3 w-3 text-[#FE6A00]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <span>{{ $product->processing_time ?: '3-5 Hari Kerja' }}</span>
+                            </div>
+
+                            @if($hasDiscount)
+                                <div class="absolute bottom-3 left-3 rounded-lg bg-red-600 px-2 py-0.5 text-[10px] font-black uppercase text-white shadow-md">
+                                    Promo Diskon
+                                </div>
+                            @endif
+                        </div>
+
+                        {{-- Card Body --}}
+                        <div class="p-5">
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="rounded-full bg-blue-50 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-blue-700">
+                                    {{ $product->type ?: 'Tourist Visa' }}
+                                </span>
+                                @if($product->validity)
+                                    <span class="text-[11px] text-slate-400 font-medium">
+                                        Masa berlaku: {{ $product->validity }}
+                                    </span>
+                                @endif
+                            </div>
+
+                            <h3 class="text-lg font-extrabold text-slate-900 group-hover:text-[#00275A] transition-colors leading-snug">
+                                {{ $product->name }}
+                            </h3>
+
+                            <p class="mt-2 text-xs text-slate-500 line-clamp-2 leading-relaxed">
+                                {{ $product->short_description ?: 'Bantuan pengurusan dokumen, pendaftaran janji temu, dan asistensi resmi kedutaan sampai visa terbit.' }}
+                            </p>
+                        </div>
+                    </div>
+
+                    {{-- Card Footer & Price Row --}}
+                    <div class="border-t border-slate-100 p-5 pt-4 bg-slate-50/50">
+                        <div class="flex items-end justify-between">
+                            <div>
+                                <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                                    Mulai dari
+                                </span>
+                                <div class="flex items-baseline gap-1.5 mt-0.5">
+                                    <span class="text-lg font-black text-[#FE6A00]">
+                                        IDR {{ number_format($displayPrice, 0, ',', '.') }}
+                                    </span>
+                                    @if($hasDiscount)
+                                        <span class="text-[11px] text-slate-400 line-through">
+                                            {{ number_format($product->base_price, 0, ',', '.') }}
+                                        </span>
+                                    @endif
+                                </div>
+                                @if($approxRm > 0)
+                                    <div class="mt-1">
+                                        <span class="inline-flex items-center gap-1 rounded-md bg-blue-100/70 px-1.5 py-0.5 text-[10px] font-bold text-blue-900">
+                                            <span>~ RM {{ number_format($approxRm, 0) }}</span>
+                                        </span>
+                                    </div>
+                                @endif
+                            </div>
+
+                            <a href="{{ route('visa.show', $product->slug) }}" style="background-color: #00275A !important; color: #ffffff !important;" class="inline-flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-xs font-bold shadow-md shadow-blue-950/20 hover:opacity-95 transition-opacity">
+                                <span>Lihat Detail</span>
+                                <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <div class="col-span-full py-12 text-center text-slate-400">
+                    <p class="font-medium text-sm">Belum ada produk visa yang ditampilkan saat ini.</p>
+                </div>
+            @endforelse
         </div>
-      </a>
-      @empty
-      <div class="col-span-full text-center py-12 text-slate-500 font-medium">
-        <p>{{ __('home.services_no_products') }}</p>
-      </div>
-      @endforelse
     </div>
-
-    {{-- "Lihat Semua" link --}}
-    @if($featuredProducts->count() > 0)
-    <div class="flex justify-center mt-10">
-      <a href="{{ route('visa.index') }}" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-brand text-white font-bold text-sm hover:brightness-110 transition-all shadow-md shadow-blue-500/20">
-        {{ __('home.services_view_all') }}
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-        </svg>
-      </a>
-    </div>
-    @endif
-
-  </div>
 </section>
+

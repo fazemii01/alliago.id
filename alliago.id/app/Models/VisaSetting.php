@@ -20,12 +20,18 @@ class VisaSetting extends Model
 
     public static function current(): self
     {
-        return Cache::remember('visa_setting', 3600, fn () =>
-            static::firstOrCreate(
-                ['id' => 1],
-                ['currency' => 'IDR']
-            )
-        );
+        try {
+            return Cache::remember('visa_setting', 3600, fn () =>
+                static::firstOrCreate(
+                    ['id' => 1],
+                    ['currency' => 'IDR']
+                )
+            );
+        } catch (\Throwable $e) {
+            $fallback = new static(['currency' => 'IDR']);
+            $fallback->id = 1;
+            return $fallback;
+        }
     }
 
     /**
