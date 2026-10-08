@@ -13,9 +13,9 @@
         <div class="box-border w-full lg:max-w-[650px] shrink-0 flex flex-col gap-[14px] justify-start items-start relative z-10 text-left">
             
             {{-- Official Badge with Active Indicator --}}
-            <div class="box-border w-fit h-[28px] shrink-0 flex items-center gap-2 px-[14px] bg-white/15 backdrop-blur-md rounded-full border border-white/20 shadow-sm">
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span class="text-[11px] sm:text-[12px] text-white font-semibold tracking-wide whitespace-nowrap">
+            <div class="box-border w-fit max-w-full h-auto min-h-[28px] py-1 shrink-0 flex items-center gap-2 px-[14px] bg-white/15 backdrop-blur-md rounded-full border border-white/20 shadow-sm">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
+                <span class="text-[11px] sm:text-[12px] text-white font-semibold tracking-wide">
                     Layanan Konsultasi &amp; Bantuan Perjalanan
                 </span>
             </div>
@@ -152,13 +152,8 @@
             </div>
         </div>
 
-        {{-- Constellation Dot Grid Pattern from alliago.pen --}}
-        <div class="box-border w-full h-[220px] absolute left-0 top-0 overflow-hidden pointer-events-none z-0">
-            @for ($cx = 40; $cx <= 1200; $cx += 60)
-                @for ($cy = 20; $cy <= 200; $cy += 40)
-                    <div class="w-[3px] h-[3px] absolute bg-white/15 rounded-full" style="left: {{ $cx }}px; top: {{ $cy }}px;"></div>
-                @endfor
-            @endfor
-        </div>
+        {{-- Constellation Dot Grid Pattern from alliago.pen (Pure CSS Radial Gradient, zero DOM nodes & zero overflow) --}}
+        <div class="box-border w-full h-full absolute inset-0 overflow-hidden pointer-events-none z-0 opacity-20"
+             style="background-image: radial-gradient(#FFFFFF 1.5px, transparent 1.5px); background-size: 50px 36px;"></div>
     </div>
 </section>

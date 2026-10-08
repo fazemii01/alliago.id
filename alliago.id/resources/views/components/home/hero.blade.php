@@ -135,7 +135,7 @@
              style="background: radial-gradient(circle, rgba(255,106,0,0.45) 0%, rgba(254,106,0,0.18) 45%, transparent 70%); filter: blur(35px);"></div>
 
         {{-- 4. Faint Continuous Flight Trajectory (Smooth flight arc across the hero, low opacity 0.15) --}}
-        <svg viewBox="0 0 1440 280" fill="none" class="box-border w-full h-[280px] absolute left-0 top-[10px] pointer-events-none opacity-15 overflow-visible z-[2]">
+        <svg viewBox="0 0 1440 280" fill="none" class="box-border w-full h-[280px] absolute left-0 top-[10px] pointer-events-none opacity-15 overflow-hidden z-[2]">
             <path d="M-60,180 C360,20 960,15 1500,130" stroke="#FFFFFF" stroke-width="2" stroke-dasharray="8 8" fill="none" vector-effect="non-scaling-stroke"/>
         </svg>
 
@@ -147,109 +147,8 @@
         </div>
     </div>
 
-    {{-- 1. Service Category Tabs --}}
-    <div class="box-border w-fit h-fit shrink-0 flex flex-row gap-[16px] sm:gap-[28px] justify-center items-end relative z-20 pt-2">
-        
-        {{-- Tab 1: Tiket Pesawat (Active) --}}
-        <a href="{{ route('flights.index') }}"
-           class="box-border w-fit shrink-0 h-fit flex flex-col gap-[8px] justify-start items-center group cursor-pointer"
-           @click.prevent="activeTab = 'flight'">
-            <div class="box-border w-[56px] h-[72px] shrink-0 flex flex-row justify-center items-center rounded-[28px] transition-all duration-200"
-                 :class="activeTab === 'flight' ? 'bg-[#FE6A00] ring-4 ring-[#FE6A00]/30 shadow-lg shadow-orange-500/25 scale-105' : 'bg-white/12 backdrop-blur-md border border-white/20 hover:bg-white/20 hover:border-white/35'">
-                <svg viewBox="0 0 24 24" class="w-[28px] h-[28px] transition-colors"
-                     :class="activeTab === 'flight' ? 'fill-white' : 'fill-white/80 group-hover:fill-white'">
-                    <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/>
-                </svg>
-            </div>
-            <span class="text-[13px] transition-colors"
-                  :class="activeTab === 'flight' ? 'text-white font-bold' : 'text-white/80 group-hover:text-white font-medium'">Tiket Pesawat</span>
-        </a>
-
-        {{-- Tab 2: Tiket Ferry --}}
-        <a href="{{ route('ferry.index') }}"
-           class="box-border w-fit shrink-0 h-fit flex flex-col gap-[8px] justify-start items-center group cursor-pointer"
-           @click.prevent="activeTab = 'ferry'">
-            <div class="box-border w-[56px] h-[72px] shrink-0 flex flex-row justify-center items-center rounded-[28px] transition-all duration-200"
-                 :class="activeTab === 'ferry' ? 'bg-[#FE6A00] ring-4 ring-[#FE6A00]/30 shadow-lg shadow-orange-500/25 scale-105' : 'bg-white/12 backdrop-blur-md border border-white/20 hover:bg-white/20 hover:border-white/35'">
-                <svg class="w-[26px] h-[26px] transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                     :class="activeTab === 'ferry' ? 'text-white' : 'text-white/80 group-hover:text-white'">
-                    <path d="M2 21c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1 .6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
-                    <path d="M19.38 20A11.6 11.6 0 0 0 21 14l-9-4-9 4c0 2.9.94 5.34 2.81 7.76"/>
-                    <path d="M19 13V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6"/>
-                    <path d="M12 10v4"/>
-                    <path d="M12 2v3"/>
-                </svg>
-            </div>
-            <span class="text-[13px] transition-colors"
-                  :class="activeTab === 'ferry' ? 'text-white font-bold' : 'text-white/80 group-hover:text-white font-medium'">Tiket Ferry</span>
-        </a>
-
-        {{-- Tab 3: Layanan Visa --}}
-        <a href="{{ route('visa.index') }}"
-           class="box-border w-fit shrink-0 h-fit flex flex-col gap-[8px] justify-start items-center group cursor-pointer"
-           @click.prevent="activeTab = 'visa'">
-            <div class="box-border w-[56px] h-[72px] shrink-0 flex flex-row justify-center items-center rounded-[28px] transition-all duration-200"
-                 :class="activeTab === 'visa' ? 'bg-[#FE6A00] ring-4 ring-[#FE6A00]/30 shadow-lg shadow-orange-500/25 scale-105' : 'bg-white/12 backdrop-blur-md border border-white/20 hover:bg-white/20 hover:border-white/35'">
-                <svg class="w-[26px] h-[26px] transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                     :class="activeTab === 'visa' ? 'text-white' : 'text-white/80 group-hover:text-white'">
-                    <rect width="18" height="20" x="3" y="2" rx="2"/>
-                    <line x1="7" x2="17" y1="7" y2="7"/>
-                    <line x1="7" x2="17" y1="11" y2="11"/>
-                    <circle cx="12" cy="16" r="1.5" fill="currentColor"/>
-                </svg>
-            </div>
-            <span class="text-[13px] transition-colors"
-                  :class="activeTab === 'visa' ? 'text-white font-bold' : 'text-white/80 group-hover:text-white font-medium'">Layanan Visa</span>
-        </a>
-
-        {{-- Tab 4: Hotel (Populer badge) --}}
-        <div class="box-border w-fit shrink-0 h-fit flex flex-col gap-[8px] justify-start items-center group cursor-pointer"
-             @click="activeTab = 'hotel'">
-            <div class="box-border w-fit h-fit shrink-0 flex flex-col gap-[4px] justify-start items-center">
-                <div class="box-border w-[40px] h-[18px] shrink-0 flex flex-row justify-center items-center bg-[#10B981] rounded-[9px] shadow-sm">
-                    <span class="text-[10px] text-white font-bold whitespace-nowrap">Populer</span>
-                </div>
-                <div class="box-border w-[56px] h-[72px] shrink-0 flex flex-row justify-center items-center rounded-[28px] transition-all duration-200"
-                     :class="activeTab === 'hotel' ? 'bg-[#FE6A00] ring-4 ring-[#FE6A00]/30 shadow-lg shadow-orange-500/25 scale-105' : 'bg-white/12 backdrop-blur-md border border-white/20 hover:bg-white/20 hover:border-white/35'">
-                    <svg class="w-[26px] h-[26px] transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                         :class="activeTab === 'hotel' ? 'text-white' : 'text-white/80 group-hover:text-white'">
-                        <path d="M18 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2Z"/>
-                        <path d="m9 16 .348-.24c1.465-1.013 3.84-1.013 5.304 0L15 16"/>
-                        <path d="M8 7h.01"/>
-                        <path d="M16 7h.01"/>
-                        <path d="M12 7h.01"/>
-                        <path d="M12 11h.01"/>
-                        <path d="M16 11h.01"/>
-                        <path d="M8 11h.01"/>
-                        <path d="M10 22v-4h4v4"/>
-                    </svg>
-                </div>
-            </div>
-            <span class="text-[13px] transition-colors"
-                  :class="activeTab === 'hotel' ? 'text-white font-bold' : 'text-white/80 group-hover:text-white font-medium'">Hotel</span>
-        </div>
-
-        {{-- Tab 5: Paket Tour (Hemat badge) --}}
-        <a href="#packages"
-           class="box-border w-fit shrink-0 h-fit flex flex-col gap-[8px] justify-start items-center group cursor-pointer"
-           @click.prevent="activeTab = 'tour'">
-            <div class="box-border w-fit h-fit shrink-0 flex flex-col gap-[4px] justify-start items-center">
-                <div class="box-border w-[40px] h-[18px] shrink-0 flex flex-row justify-center items-center bg-[#F59E0B] rounded-[9px] shadow-sm">
-                    <span class="text-[10px] text-white font-bold whitespace-nowrap">Hemat</span>
-                </div>
-                <div class="box-border w-[56px] h-[72px] shrink-0 flex flex-row justify-center items-center rounded-[28px] transition-all duration-200"
-                     :class="activeTab === 'tour' ? 'bg-[#FE6A00] ring-4 ring-[#FE6A00]/30 shadow-lg shadow-orange-500/25 scale-105' : 'bg-white/12 backdrop-blur-md border border-white/20 hover:bg-white/20 hover:border-white/35'">
-                    <svg class="w-[26px] h-[26px] transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                         :class="activeTab === 'tour' ? 'text-white' : 'text-white/80 group-hover:text-white'">
-                        <circle cx="12" cy="12" r="10"/>
-                        <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
-                    </svg>
-                </div>
-            </div>
-            <span class="text-[13px] transition-colors"
-                  :class="activeTab === 'tour' ? 'text-white font-bold' : 'text-white/80 group-hover:text-white font-medium'">Paket Tour</span>
-        </a>
-    </div>
+    {{-- 1. Reusable Service Category Tabs (Auto-resizes itself fluidly on small screens, zero overflow) --}}
+    <x-home.service-tabs activeModel="activeTab" />
 
     {{-- 2. Main Flight Search Card --}}
     <div class="box-border w-full max-w-[1120px] h-fit shrink-0 shadow-[0px_20px_50px_rgba(8,24,56,0.25)] flex flex-col gap-[16px] p-[20px_16px] sm:p-[22px_28px] justify-start items-start bg-white rounded-[32px] relative z-20 border border-slate-100">
@@ -409,10 +308,10 @@
     <div class="box-border w-full max-w-[1120px] h-fit shrink-0 flex flex-col sm:flex-row gap-4 justify-between items-center relative z-20 px-2 sm:px-0">
         
         {{-- Quick Action Pills (Glassmorphic Style) --}}
-        <div class="box-border w-fit shrink-0 h-fit flex flex-wrap gap-[10px] sm:gap-[12px] justify-start items-center">
+        <div class="box-border w-full sm:w-fit shrink-0 h-fit flex flex-wrap gap-[10px] sm:gap-[12px] justify-center sm:justify-start items-center">
             {{-- Pill Tiket Ferry --}}
             <a href="{{ route('ferry.index') }}"
-               class="box-border w-fit shrink-0 h-[44px] shadow-sm flex flex-row gap-[8px] px-[18px] justify-start items-center rounded-[22px] bg-white/12 backdrop-blur-md border border-white/25 text-white hover:bg-white/20 hover:border-white/40 transition-all duration-200 group">
+               class="box-border w-fit shrink-0 h-[44px] shadow-sm flex flex-row gap-[8px] px-[16px] sm:px-[18px] justify-start items-center rounded-[22px] bg-white/12 backdrop-blur-md border border-white/25 text-white hover:bg-white/20 hover:border-white/40 transition-all duration-200 group">
                 <svg class="w-5 h-5 text-orange-400 group-hover:text-orange-300 transition-colors shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M2 21c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1 .6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
                     <path d="M19.38 20A11.6 11.6 0 0 0 21 14l-9-4-9 4c0 2.9.94 5.34 2.81 7.76"/>
@@ -425,7 +324,7 @@
 
             {{-- Pill Asistensi Visa --}}
             <a href="{{ route('visa.index') }}"
-               class="box-border w-fit shrink-0 h-[44px] shadow-sm flex flex-row gap-[8px] px-[18px] justify-start items-center rounded-[22px] bg-white/12 backdrop-blur-md border border-white/25 text-white hover:bg-white/20 hover:border-white/40 transition-all duration-200 group">
+               class="box-border w-fit shrink-0 h-[44px] shadow-sm flex flex-row gap-[8px] px-[16px] sm:px-[18px] justify-start items-center rounded-[22px] bg-white/12 backdrop-blur-md border border-white/25 text-white hover:bg-white/20 hover:border-white/40 transition-all duration-200 group">
                 <svg class="w-5 h-5 text-orange-400 group-hover:text-orange-300 transition-colors shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <rect width="20" height="14" x="2" y="5" rx="2"/>
                     <line x1="2" x2="22" y1="10" y2="10"/>
@@ -436,7 +335,7 @@
 
             {{-- Pill Cek Jadwal & Rute --}}
             <a href="{{ route('flights.index') }}"
-               class="box-border w-fit shrink-0 h-[44px] shadow-sm flex flex-row gap-[8px] px-[18px] justify-start items-center rounded-[22px] bg-white/12 backdrop-blur-md border border-white/25 text-white hover:bg-white/20 hover:border-white/40 transition-all duration-200 group">
+               class="box-border w-fit shrink-0 h-[44px] shadow-sm flex flex-row gap-[8px] px-[16px] sm:px-[18px] justify-start items-center rounded-[22px] bg-white/12 backdrop-blur-md border border-white/25 text-white hover:bg-white/20 hover:border-white/40 transition-all duration-200 group">
                 <svg class="w-5 h-5 text-orange-400 group-hover:text-orange-300 transition-colors shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
                     <line x1="16" x2="16" y1="2" y2="6"/>
@@ -458,16 +357,16 @@
         </div>
 
         {{-- Right CTA Group (Kode Promo Glass + Solid Orange Cari Tiket Button) --}}
-        <div class="box-border w-fit shrink-0 h-fit flex flex-row gap-[14px] justify-start items-center">
+        <div class="box-border w-full sm:w-fit shrink-0 h-fit flex flex-row gap-[10px] sm:gap-[14px] justify-center sm:justify-end items-center">
             {{-- Button Kode Promo --}}
             <button type="button"
                     @click="promoCodeModalOpen = true"
-                    class="box-border w-fit shrink-0 h-[46px] shadow-sm flex flex-row gap-[8px] px-[20px] justify-start items-center bg-white/12 backdrop-blur-md border border-white/25 rounded-[23px] text-white hover:bg-white/20 hover:border-white/40 transition-all duration-200 cursor-pointer">
+                    class="box-border flex-1 sm:flex-none w-fit shrink-0 h-[46px] shadow-sm flex flex-row gap-[8px] px-[16px] sm:px-[20px] justify-center sm:justify-start items-center bg-white/12 backdrop-blur-md border border-white/25 rounded-[23px] text-white hover:bg-white/20 hover:border-white/40 transition-all duration-200 cursor-pointer">
                 <svg class="w-5 h-5 text-white/80 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/>
                     <circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/>
                 </svg>
-                <span class="text-[14px] text-white font-semibold whitespace-nowrap"
+                <span class="text-[13px] sm:text-[14px] text-white font-semibold whitespace-nowrap"
                       x-text="appliedPromo ? 'Promo: ' + appliedPromo : 'Kode Promo'">
                     Kode Promo
                 </span>
@@ -476,12 +375,12 @@
             {{-- Button Cari Tiket (Solid Orange #FE6A00 with 4px 16px shadow) --}}
             <button type="button"
                     @click="submitSearch()"
-                    class="box-border w-fit shrink-0 h-[46px] shadow-[0px_4px_20px_rgba(254,106,0,0.45)] flex flex-row gap-[8px] px-[28px] justify-start items-center bg-[#FE6A00] hover:bg-[#E05D00] text-white rounded-[23px] transition-all duration-200 hover:scale-102 active:scale-98 cursor-pointer">
+                    class="box-border flex-1 sm:flex-none w-fit shrink-0 h-[46px] shadow-[0px_4px_20px_rgba(254,106,0,0.45)] flex flex-row gap-[8px] px-[20px] sm:px-[28px] justify-center sm:justify-start items-center bg-[#FE6A00] hover:bg-[#E05D00] text-white rounded-[23px] transition-all duration-200 hover:scale-102 active:scale-98 cursor-pointer">
                 <svg class="w-5 h-5 text-white shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="11" cy="11" r="8"/>
                     <line x1="21" x2="16.65" y1="21" y2="16.65"/>
                 </svg>
-                <span class="text-[15px] font-bold whitespace-nowrap">Cari Tiket</span>
+                <span class="text-[14px] sm:text-[15px] font-bold whitespace-nowrap">Cari Tiket</span>
             </button>
         </div>
     </div>

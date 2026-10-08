@@ -8,14 +8,14 @@
     - Global Route Watermark Arcs
 --}}
 <footer style="background-color: #001D44;" class="text-white pt-12 pb-9 font-['Outfit',sans-serif] relative overflow-hidden">
-    {{-- Global Route Watermark Arcs (Background decoration from alliago.pen) --}}
-    <div class="pointer-events-none absolute inset-0 overflow-hidden z-0">
+    {{-- Global Route Watermark Arcs (Background decoration from alliago.pen, desktop/tablet only) --}}
+    <div class="pointer-events-none absolute inset-0 overflow-hidden z-0 hidden md:block">
         {{-- Route Arc 1 --}}
-        <svg viewBox="0 0 800 200" preserveAspectRatio="none" class="w-[800px] h-[200px] absolute left-[100px] top-[80px] overflow-visible opacity-50">
+        <svg viewBox="0 0 800 200" preserveAspectRatio="none" class="w-[800px] h-[200px] absolute left-[100px] top-[80px] overflow-hidden opacity-50">
             <path d="M0 160q400-150 800-40" fill="none" stroke="#ffffff08" stroke-width="2" vector-effect="non-scaling-stroke"></path>
         </svg>
         {{-- Route Arc 2 --}}
-        <svg viewBox="0 0 740 240" preserveAspectRatio="none" class="w-[740px] h-[240px] absolute left-[600px] top-[120px] overflow-visible opacity-50">
+        <svg viewBox="0 0 740 240" preserveAspectRatio="none" class="w-[740px] h-[240px] absolute left-[600px] top-[120px] overflow-hidden opacity-50">
             <path d="M0 180q370-160 740-20" fill="none" stroke="#fe6a000a" stroke-width="2" vector-effect="non-scaling-stroke"></path>
         </svg>
     </div>

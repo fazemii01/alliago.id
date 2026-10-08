@@ -185,7 +185,7 @@
 @endpush
 
     {{-- Root Homepage Scoped Wrapper (Outfit Typography & 1:1 alliago.pen Canvas) --}}
-    <div class="font-['Outfit',sans-serif] text-slate-800 antialiased bg-[#F8FAFC]">
+    <div class="font-['Outfit',sans-serif] text-slate-800 antialiased bg-[#F8FAFC] w-full max-w-full overflow-x-hidden">
         {{-- 1. Dedicated Header Navigation Bar with Top Announcement Bar (alliago.pen node x-home.home-header) --}}
         <x-home.home-header />
 

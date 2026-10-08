@@ -42,7 +42,7 @@
 
     @stack('meta')
 </head>
-<body class="pb-16 md:pb-0">
+<body class="pb-16 md:pb-0 overflow-x-hidden w-full max-w-full min-w-0">
     {{ $slot }}
 
     <x-home.bottom-nav />

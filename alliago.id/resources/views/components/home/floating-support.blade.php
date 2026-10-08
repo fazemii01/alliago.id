@@ -6,7 +6,7 @@
 <a href="https://wa.me/6281334455616"
    target="_blank"
    rel="noopener noreferrer"
-   class="fixed right-6 bottom-6 z-50 flex items-center justify-center w-[56px] h-[56px] bg-[#004780] hover:bg-[#003666] text-white rounded-[28px] shadow-[0px_8px_20px_rgba(0,39,90,0.35)] transition-all duration-300 hover:scale-105 active:scale-95 group focus:outline-none focus:ring-4 focus:ring-blue-300"
+   class="fixed right-4 sm:right-6 bottom-20 md:bottom-6 z-50 flex items-center justify-center w-[52px] sm:w-[56px] h-[52px] sm:h-[56px] bg-[#004780] hover:bg-[#003666] text-white rounded-full shadow-[0px_8px_20px_rgba(0,39,90,0.35)] transition-all duration-300 hover:scale-105 active:scale-95 group focus:outline-none focus:ring-4 focus:ring-blue-300"
    aria-label="Chat WhatsApp AlliaGo Support">
    
     {{-- Subtle Pulse Effect --}}
