@@ -22,3 +22,10 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Automated testing & Playwright artifacts
+.playwright-mcp/
+.playwright/
+test-results/
+homepage_*.png
+page-*.png
