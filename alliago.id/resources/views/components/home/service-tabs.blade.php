@@ -53,7 +53,7 @@
     - On tablet & desktop: expands to 56px x 72px pill design matching alliago.pen.
     - Zero horizontal cut-off across all screen sizes (320px - 1440px+).
 --}}
-<div {{ $attributes->merge(['class' => 'box-border w-full max-w-[680px] mx-auto px-1 min-[360px]:px-2 sm:px-4 grid grid-cols-5 gap-1 min-[360px]:gap-2 sm:gap-6 md:gap-7 justify-items-center items-end relative z-20']) }}>
+<div {{ $attributes->merge(['class' => 'service-tabs-grid box-border w-full max-w-[680px] mx-auto px-1 min-[360px]:px-2 sm:px-4 grid grid-cols-5 gap-1 min-[360px]:gap-2 sm:gap-6 md:gap-7 justify-items-center items-end relative z-20']) }} style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr));">
     @foreach($items as $tab)
         <x-home.service-tab-item
             :id="$tab['id']"

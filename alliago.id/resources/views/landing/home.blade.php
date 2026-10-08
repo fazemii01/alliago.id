@@ -139,6 +139,23 @@
         gap: 4px !important;
     }
 
+    /* Hero Service Tabs 5-Column Grid Guarantee */
+    .service-tabs-grid {
+        display: grid !important;
+        grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+        align-items: flex-end !important;
+        justify-items: center !important;
+        width: 100% !important;
+    }
+    .service-tab-item {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        width: 100% !important;
+        text-align: center !important;
+    }
+
     /* Deals 5-column grid on desktop */
     @media (min-width: 1024px) {
         .home-deals-grid {

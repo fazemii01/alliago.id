@@ -17,8 +17,9 @@
 @endphp
 
 <a href="{{ $href }}"
-   {{ $attributes->merge(['class' => 'w-full max-w-[76px] sm:max-w-[88px] flex flex-col justify-end items-center group cursor-pointer select-none text-center']) }}
-   @click.prevent="{{ $activeModel }} = '{{ $id }}'">
+   {{ $attributes->merge(['class' => 'service-tab-item w-full max-w-[76px] sm:max-w-[88px] flex flex-col justify-end items-center group cursor-pointer select-none text-center']) }}
+   @click.prevent="{{ $activeModel }} = '{{ $id }}'"
+   style="display: flex; flex-direction: column; align-items: center; justify-content: flex-end;">
     
     {{-- Badge or Vertical Spacer (Keeps all 5 pill baselines perfectly aligned) --}}
     <div class="h-[16px] sm:h-[18px] flex items-center justify-center mb-1 w-full">
